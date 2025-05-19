@@ -13,8 +13,8 @@ const onSliderEnd = (value: number) => {
 </script>
 
 <template>
-  <div class="wind-absolute wind-inset-0">
-    <div class="wind-absolute wind-inset-0 wind-p-4 wind-overflow-auto">
+  <div class="wind-inset-0 wind-absolute">
+    <div class="wind-p-4 wind-inset-0 wind-absolute wind-overflow-auto">
       <comic-vertical-pic
         v-for="(item, index) of picList"
         ref="comicVerticalPicListRef"
@@ -23,7 +23,7 @@ const onSliderEnd = (value: number) => {
         @intersect="sliderValue = index + 1"
       />
     </div>
-    <div class="wind-absolute wind-bottom-4 wind-inset-x-4">
+    <div class="wind-inset-x-4 wind-bottom-4 wind-absolute">
       <v-card>
         <v-card-text>
           <v-slider
@@ -36,7 +36,7 @@ const onSliderEnd = (value: number) => {
             @end="onSliderEnd"
           >
             <template #append>
-              <div class="wind-flex wind-items-center wind-gap-2">
+              <div class="wind-flex wind-gap-2 wind-items-center">
                 <div>{{ sliderValue }} / {{ picList.length }}</div>
               </div>
             </template>

@@ -41,7 +41,7 @@ defineExpose({
           rootMargin: '-50% 0% -50% 0%',
         },
       }"
-      class="wind-absolute wind-inset-0"
+      class="wind-inset-0 wind-absolute"
     ></div>
     <v-img :src="src" alt="" @load="isLoaded = true" />
   </div>

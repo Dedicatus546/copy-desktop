@@ -84,7 +84,7 @@ onError((e) => {
               type="warning"
             >
               <template #text>
-                <div class="wind-flex wind-flex-col wind-gap-2 wind-py-2">
+                <div class="wind-py-2 wind-flex wind-flex-col wind-gap-2">
                   <div>1.TODO</div>
                   <div>2.TODO</div>
                 </div>

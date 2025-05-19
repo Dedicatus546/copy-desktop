@@ -79,7 +79,7 @@ const useAutoLogin = () => {
     (username: string, password: string) => loginApi({ username, password }),
     {
       immediate: false,
-    }
+    },
   );
   const { decrypt } = useDecodeUserInfo();
   onSuccess(() => {

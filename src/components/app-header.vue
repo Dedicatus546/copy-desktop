@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { useTheme } from "vuetify";
 
+import { trpcClient } from "@/apis/ipc";
 import useAppStore from "@/stores/use-app-store";
 import useUserStore from "@/stores/use-user-store";
 
@@ -38,11 +39,12 @@ const logout = () => {
 
 // TODO
 const minimizeWin = () => {
+  trpcClient.minimizeWin.query();
   // getCurrentWindow().minimize();
 };
 
 const closeWin = () => {
-  // getCurrentWindow().close();
+  trpcClient.closeWin.query();
 };
 </script>
 
@@ -52,15 +54,15 @@ const closeWin = () => {
       <router-link :to="{ name: 'HOME' }" custom>
         <template #default="{ navigate }">
           <div
-            class="wind-flex wind-h-full wind-items-center wind-gap-4"
+            class="wind-flex wind-gap-4 wind-h-full wind-items-center"
             @click="navigate"
           >
             <div
-              class="wind-flex wind-items-center wind-gap-4 wind-cursor-pointer app-region-nodrag"
+              class="wind-flex wind-gap-4 wind-cursor-pointer wind-items-center app-region-nodrag"
             >
               <img
                 src="@/assets/logo.png"
-                class="wind-block wind-w-[50px]"
+                class="wind-w-[50px] wind-block"
                 alt="cm"
               />
               <div class="text-6">拷贝漫画</div>

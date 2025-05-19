@@ -16,7 +16,7 @@ const toRepo = () => {
   <v-card title="关于">
     <v-card-text>
       <div
-        class="wind-flex wind-flex-col wind-gap-4 wind-items-center wind-py-4"
+        class="wind-py-4 wind-flex wind-flex-col wind-gap-4 wind-items-center"
       >
         <v-avatar size="100" :image="LOGO" rounded="0" />
         <div class="text-h5">cm-desktop</div>

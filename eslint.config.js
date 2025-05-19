@@ -7,9 +7,10 @@ import unocss from "@unocss/eslint-config/flat";
 import pluginPrettierRecomended from "eslint-plugin-prettier/recommended";
 import eslintPluginSimpleImportSort from "eslint-plugin-simple-import-sort";
 import autoImportJson from "./.eslintrc-auto-import.json" with { type: "json" };
+import defineImportJson from "./.eslintrc-auto-import.json" with { type: "json" };
 
 export default defineConfig([
-  globalIgnores(["**/dist/**", "**/node_modules/**"]),
+  globalIgnores(["dist/**", "dist-electron/**", "node_modules/**"]),
   {
     files: ["src/**/*.{vue,ts}", "electron/**/*.ts"],
     plugins: {
@@ -18,6 +19,7 @@ export default defineConfig([
     },
     extends: ["js/recommended"],
     languageOptions: {
+      globals: Object.assign({}, defineImportJson.globals),
       parser: tseslint.parser,
     },
     rules: {
@@ -32,7 +34,7 @@ export default defineConfig([
     },
   },
   {
-    files: ["electron/**/*.ts"],
+    files: ["electron/**/*.ts", "common/**/*.ts"],
     languageOptions: {
       globals: Object.assign({}, globals.node),
     },

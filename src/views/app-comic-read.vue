@@ -41,7 +41,7 @@ const picList = computed(() => {
 <template>
   <div
     v-if="loading"
-    class="wind-absolute wind-inset-0 wind-flex wind-items-center wind-justify-center"
+    class="wind-flex wind-items-center wind-inset-0 wind-justify-center wind-absolute"
   >
     <v-progress-circular indeterminate></v-progress-circular>
   </div>

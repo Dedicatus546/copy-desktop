@@ -31,6 +31,11 @@ export default defineConfig(async () => ({
         // Shortcut of `build.lib.entry`.
         entry: "electron/main.ts",
         vite: {
+          resolve: {
+            alias: {
+              "@common": resolve(__dirname, "common"),
+            },
+          },
           build: {
             rollupOptions: {
               // https://github.com/electron-vite/vite-plugin-electron/blob/main/README.zh-CN.md
@@ -77,6 +82,7 @@ export default defineConfig(async () => ({
     alias: {
       "@": resolve(__dirname, "src"),
       "@electron": resolve(__dirname, "electron"),
+      "@common": resolve(__dirname, "common"),
     },
   },
 }));

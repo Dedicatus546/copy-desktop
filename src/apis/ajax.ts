@@ -279,9 +279,9 @@ export const commentComicApi = (query: {
 export type User = {
   token: string;
   user_id: string;
-  username: string; 
+  username: string;
   nickname: string;
-  avatar: string; 
+  avatar: string;
   datetime_created: string;
   ticket: number;
   reward_ticket: number;
@@ -305,10 +305,10 @@ export const loginApi = (query: { username: string; password: string }) => {
   return http.Post<
     RespWrapper<{
       token: string;
-      user_id: string; 
-      username: string; 
-      nickname: string; 
-      avatar: string; 
+      user_id: string;
+      username: string;
+      nickname: string;
+      avatar: string;
       datetime_created: string;
       ticket: number;
       reward_ticket: number;

@@ -8,11 +8,11 @@ const isLoaded = ref(false);
 
 <template>
   <div
-    class="wind-w-full wind-h-full"
+    class="wind-h-full wind-w-full"
     :class="{ 'wind-aspect-[9/16]': !isLoaded }"
   >
     <img
-      class="wind-block wind-w-full wind-h-full wind-object-contain"
+      class="wind-h-full wind-w-full wind-block wind-object-contain"
       :src="src"
       alt=""
       @load="isLoaded = true"

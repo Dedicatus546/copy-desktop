@@ -79,7 +79,7 @@ const toQuickQueryPage = (query: string) => {
       :cols="12"
     >
       <div
-        class="wind-h-[30vh] wind-flex wind-items-center wind-justify-center"
+        class="wind-flex wind-h-[30vh] wind-items-center wind-justify-center"
       >
         <v-progress-circular indeterminate></v-progress-circular>
       </div>
@@ -90,7 +90,7 @@ const toQuickQueryPage = (query: string) => {
           <v-card-text>
             <div class="wind-flex wind-gap-4">
               <div
-                class="wind-flex-shrink-0 wind-w-1/4 wind-max-w-[300px] wind-min-w-[200px]"
+                class="wind-flex-shrink-0 wind-max-w-[300px] wind-min-w-[200px] wind-w-1/4"
               >
                 <v-card variant="text">
                   <v-img
@@ -100,7 +100,7 @@ const toQuickQueryPage = (query: string) => {
                   />
                 </v-card>
               </div>
-              <div class="wind-flex wind-flex-col wind-gap-4 wind-flex-grow">
+              <div class="wind-flex wind-flex-grow wind-flex-col wind-gap-4">
                 <div class="wind-flex wind-flex-col">
                   <div class="text-h5">{{ comicInfo.results.comic.name }}</div>
                 </div>
@@ -142,7 +142,7 @@ const toQuickQueryPage = (query: string) => {
                     >
                       <div class="wind-flex wind-gap-1">
                         <div
-                          class="wind-text-nowrap wind-h-[30px] wind-leading-[30px]"
+                          class="wind-leading-[30px] wind-h-[30px] wind-text-nowrap"
                         >
                           标签：
                         </div>
@@ -172,7 +172,7 @@ const toQuickQueryPage = (query: string) => {
                       v-if="comicInfo.results.comic.theme.length > 0"
                       :cols="12"
                     >
-                      <div class="wind-flex wind-items-start wind-gap-1">
+                      <div class="wind-flex wind-gap-1 wind-items-start">
                         <div class="wind-h-[30px] wind-text-nowrap">简介：</div>
                         <div>
                           {{ comicInfo.results.comic.brief }}

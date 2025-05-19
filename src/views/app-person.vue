@@ -31,7 +31,7 @@ const tabList = [
                 :image="`https://${appStore.network!.static}/${userInfo.avatar}`"
               >
               </v-avatar>
-              <div class="wind-mt-2 text-h6">{{ userInfo.nickname }}</div>
+              <div class="text-h6 wind-mt-2">{{ userInfo.nickname }}</div>
             </div>
           </div>
         </v-card-text>

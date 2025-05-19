@@ -17,7 +17,7 @@ defineProps<{
     <v-card-item>
       <v-card-title>{{ comic.name }}</v-card-title>
       <v-card-subtitle class="wind-cursor-default">
-        <div class="wind-flex wind-gap-2 wind-flex-wrap">
+        <div class="wind-flex wind-flex-wrap wind-gap-2">
           <!-- TODO route name -->
           <router-link
             v-for="author of comic.author"

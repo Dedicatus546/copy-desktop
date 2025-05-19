@@ -82,12 +82,12 @@ onSuccess(() => {
     <div class="wind-flex-shrink-0">
       <v-avatar :image="comment.user_avatar" :size="50" />
     </div>
-    <div class="wind-flex wind-flex-col wind-gap-2 wind-flex-grow">
+    <div class="wind-flex wind-flex-grow wind-flex-col wind-gap-2">
       <div class="wind-flex wind-flex-col">
         <div class="wind-text-base">
           <span :data-user-id="comment.user_id">{{ comment.user_name }}</span>
           <template v-if="isReply">
-            <span class="wind-text-gray-500 wind-inline-block wind-px-2">
+            <span class="wind-text-gray-500 wind-px-2 wind-inline-block">
               回复
             </span>
             <span :data-user-id="comment.parent_id">
@@ -95,7 +95,7 @@ onSuccess(() => {
             </span>
           </template>
         </div>
-        <div class="wind-text-gray-400 wind-text-sm">
+        <div class="wind-text-sm wind-text-gray-400">
           {{ comment.create_at }}
         </div>
       </div>
