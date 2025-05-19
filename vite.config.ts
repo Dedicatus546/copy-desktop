@@ -33,7 +33,7 @@ export default defineConfig(async () => ({
         vite: {
           resolve: {
             alias: {
-              "@common": resolve(__dirname, "common"),
+              "@electron": resolve(__dirname, "electron"),
             },
           },
           build: {
@@ -82,7 +82,6 @@ export default defineConfig(async () => ({
     alias: {
       "@": resolve(__dirname, "src"),
       "@electron": resolve(__dirname, "electron"),
-      "@common": resolve(__dirname, "common"),
     },
   },
 }));
