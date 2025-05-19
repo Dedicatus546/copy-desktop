@@ -29,6 +29,7 @@ declare module 'vue' {
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     SelectFolderInput: typeof import('./src/components/select-folder-input.vue')['default']
+    VAlert: typeof import('vuetify/components')['VAlert']
     VApp: typeof import('vuetify/components')['VApp']
     VAppBar: typeof import('vuetify/components')['VAppBar']
     VAppBarTitle: typeof import('vuetify/components')['VAppBarTitle']
@@ -40,6 +41,7 @@ declare module 'vue' {
     VCardSubtitle: typeof import('vuetify/components')['VCardSubtitle']
     VCardText: typeof import('vuetify/components')['VCardText']
     VCardTitle: typeof import('vuetify/components')['VCardTitle']
+    VCheckbox: typeof import('vuetify/components')['VCheckbox']
     VChip: typeof import('vuetify/components')['VChip']
     VCol: typeof import('vuetify/components')['VCol']
     VContainer: typeof import('vuetify/components')['VContainer']
@@ -65,6 +67,7 @@ declare module 'vue' {
     VTabsWindow: typeof import('vuetify/components')['VTabsWindow']
     VTabsWindowItem: typeof import('vuetify/components')['VTabsWindowItem']
     VTextarea: typeof import('vuetify/components')['VTextarea']
+    VTextField: typeof import('vuetify/components')['VTextField']
     VTooltip: typeof import('vuetify/components')['VTooltip']
   }
 }
