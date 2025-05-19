@@ -1,12 +1,12 @@
-// import { createRequire } from "node:module";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
 import { app, BrowserWindow } from "electron";
+import { debounce } from "radash";
 import { createIPCHandler } from "trpc-electron/main";
 
+import { getConfig, saveConfig } from "./module/config";
 import { router } from "./trpc";
-
 // const require = createRequire(import.meta.url);
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
@@ -23,7 +23,9 @@ process.env.VITE_PUBLIC = VITE_DEV_SERVER_URL
 
 let win: BrowserWindow | null;
 
-function createWindow() {
+const createWindow = async () => {
+  const config = await getConfig();
+
   win = new BrowserWindow({
     icon: join(process.env.VITE_PUBLIC!, "electron-vite.svg"),
     webPreferences: {
@@ -32,12 +34,18 @@ function createWindow() {
     },
     autoHideMenuBar: true,
     frame: false,
+    ...(config.windowInfo ?? {}),
   });
 
-  // Test active push message to Renderer-process.
-  win.webContents.on("did-finish-load", () => {
-    win?.webContents.send("main-process-message", new Date().toLocaleString());
+  const saveCurrentWindowInfo = debounce({ delay: 1000 }, async () => {
+    const windowInfo = win!.getBounds();
+    config.windowInfo = windowInfo;
+    await saveConfig(config);
   });
+
+  win.on("close", saveCurrentWindowInfo);
+  win.on("move", saveCurrentWindowInfo);
+  win.on("resize", saveCurrentWindowInfo);
 
   if (VITE_DEV_SERVER_URL) {
     win.loadURL(VITE_DEV_SERVER_URL);
@@ -53,7 +61,7 @@ function createWindow() {
       win: win!,
     }),
   });
-}
+};
 
 // Quit when all windows are closed, except on macOS. There, it's common
 // for applications and their menu bar to stay active until the user quits
