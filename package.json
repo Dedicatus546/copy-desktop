@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "vite",
     "preview": "vite preview",
-    "lint": "eslint .",
+    "lint": "eslint . --fix",
     "build": "vue-tsc && vite build && electron-builder --publish always",
     "build:latest": "vue-tsc && vite build && electron-builder --publish never",
     "postinstall": "electron-builder install-app-deps"

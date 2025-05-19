@@ -7,7 +7,7 @@ import unocss from "@unocss/eslint-config/flat";
 import pluginPrettierRecomended from "eslint-plugin-prettier/recommended";
 import eslintPluginSimpleImportSort from "eslint-plugin-simple-import-sort";
 import autoImportJson from "./.eslintrc-auto-import.json" with { type: "json" };
-import defineImportJson from "./.eslintrc-auto-import.json" with { type: "json" };
+import defineImportJson from "./.eslintrc-define-import.json" with { type: "json" };
 
 export default defineConfig([
   globalIgnores(["dist/**", "dist-electron/**", "node_modules/**"]),
@@ -19,7 +19,6 @@ export default defineConfig([
     },
     extends: ["js/recommended"],
     languageOptions: {
-      globals: Object.assign({}, defineImportJson.globals),
       parser: tseslint.parser,
     },
     rules: {
@@ -30,11 +29,16 @@ export default defineConfig([
   {
     files: ["src/**/*.{vue,ts}"],
     languageOptions: {
-      globals: Object.assign({}, globals.browser, autoImportJson.globals),
+      globals: Object.assign(
+        {},
+        globals.browser,
+        autoImportJson.globals,
+        defineImportJson.globals,
+      ),
     },
   },
   {
-    files: ["electron/**/*.ts", "common/**/*.ts"],
+    files: ["electron/**/*.ts"],
     languageOptions: {
       globals: Object.assign({}, globals.node),
     },

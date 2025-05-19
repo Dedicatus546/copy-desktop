@@ -62,7 +62,7 @@ onSuccess(() => {
           </div>
         </template>
         <template #header>
-          <div class="mb-2 flex">
+          <div class="wind-flex wind-mb-2">
             <div class="w-[200px]">
               <v-select
                 v-model:model-value="formState.order"
