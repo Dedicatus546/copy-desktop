@@ -6,7 +6,7 @@ import { app } from "electron";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
-export const appRoot = join(__dirname, "..", "..");
+export const appRoot = join(__dirname, "..");
 export const distElectron = join(appRoot, "dist-electron");
 export const distRenderer = join(appRoot, "dist");
 export const publicDir = import.meta.env.DEV
