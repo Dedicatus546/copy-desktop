@@ -1,14 +1,12 @@
 <script setup lang="ts">
+import { trpcClient } from "@/apis/ipc";
+
 const value = defineModel<string>("modelValue");
 const loading = ref(false);
 
-// TODO
 const changeDownloadDir = async () => {
-  // const dir = await open({
-  //   multiple: false,
-  //   directory: true,
-  // });
-  // value.value = dir ?? "";
+  const dir = await trpcClient.selectFolder.query();
+  value.value = dir;
 };
 </script>
 

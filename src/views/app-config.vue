@@ -1,42 +1,73 @@
 <script setup lang="ts">
+import { Config } from "@electron/module/config";
+
+import { trpcClient } from "@/apis/ipc";
+import useDialog from "@/compositions/use-dialog";
+
 const loading = ref(false);
 const saveLoading = ref(false);
 
 const formValid = ref<boolean | null>(null);
 
-interface State {
-  api: string;
-  readMode: number;
-  zoomFactor: number;
-}
-
-const formState = reactive<State>({
-  api: "",
-  readMode: 1,
-  zoomFactor: 1,
+const formState = reactive<
+  Config & {
+    useProxy: boolean;
+  }
+>({
+  theme: "light",
+  apiUrl: "",
+  downloadDir: "",
+  readMode: "click",
+  autoLogin: false,
+  loginUserInfo: "",
+  zoomFactor: 0,
+  windowInfo: undefined,
+  proxyInfo: undefined,
+  useProxy: false,
 });
 
 const getConfig = async () => {
-  // TODO
   try {
-    // const res = await invoke<State>("get_config");
-    // Object.assign(formState, res);
+    const config = await trpcClient.getConfig.query();
+    Object.assign(formState, config);
   } catch (e) {
     console.error("读取配置文件失败", e);
   }
 };
 
+const dialog = useDialog();
 const submit = async () => {
   if (!formValid.value) {
     return;
   }
   try {
-    // TODO
-    // await invoke<void>("save_config", {
-    //   configStr: JSON.stringify(formState),
-    // });
+    await trpcClient.saveConfig.query(toRaw(formState));
+    dialog({
+      width: "50%",
+      title: "更新成功",
+      content: "除下载位置、阅读模式之外的配置重启后生效，是否立即重启？",
+      okText: "重启",
+      onOk() {
+        // TODO
+        // relaunchAppIpc();
+      },
+    });
   } catch (e) {
     console.error("保存配置失败", e);
+  }
+};
+
+const onUseProxyChange = (useProxy: boolean) => {
+  formState.useProxy = useProxy;
+  if (formState.useProxy) {
+    formState.proxyInfo = {
+      host: "",
+      port: 0,
+      username: "",
+      password: "",
+    };
+  } else {
+    formState.proxyInfo = undefined;
   }
 };
 
@@ -55,21 +86,37 @@ onMounted(() => {
         <v-row>
           <v-col :cols="12">
             <v-select
+              v-model:model-value="formState.apiUrl"
+              hide-details
+              label="代理域名"
+              placeholder="如果发现无法使用可以切换此处的域名"
+              item-title="value"
+              item-value="value"
+              :items="[{ value: 'https://api.mangacopy.com/api/v3' }]"
+            >
+            </v-select>
+          </v-col>
+          <v-col :cols="12">
+            <v-select
+              hide-details
               v-model:model-value="formState.readMode"
               label="阅读模式"
               item-title="text"
               item-value="value"
               :items="[
                 {
-                  value: 1,
+                  value: 'scroll',
                   text: '竖向滚动',
                 },
                 {
-                  value: 2,
+                  value: 'click',
                   text: '按钮切换',
                 },
               ]"
             ></v-select>
+          </v-col>
+          <v-col :cols="12">
+            <select-folder-input v-model:model-value="formState.downloadDir" />
           </v-col>
           <v-col :cols="12">
             <v-slider
@@ -81,6 +128,58 @@ onMounted(() => {
               label="缩放等级"
             ></v-slider>
           </v-col>
+          <v-col :cols="12">
+            <v-select
+              hide-details
+              :model-value="formState.useProxy"
+              label="代理设置"
+              item-title="text"
+              item-value="value"
+              :items="[
+                {
+                  value: false,
+                  text: '不使用代理',
+                },
+                {
+                  value: true,
+                  text: '使用 HTTP 代理',
+                },
+              ]"
+              @update:model-value="onUseProxyChange"
+            ></v-select>
+          </v-col>
+          <template v-if="formState.useProxy && formState.proxyInfo">
+            <v-col :cols="6">
+              <v-text-field
+                v-model:model-value="formState.proxyInfo.host"
+                label="IP"
+                placeholder="一般为 127.0.0.1"
+                :rules="[(value) => !!value || 'IP 不能为空']"
+              ></v-text-field>
+            </v-col>
+            <v-col :cols="6">
+              <v-number-input
+                v-model:model-value="formState.proxyInfo.port"
+                label="端口"
+                placeholder="V2rayN 为 10809"
+                :rules="[(value) => !!value || '端口不能为空']"
+              ></v-number-input>
+            </v-col>
+            <v-col :cols="6">
+              <v-text-field
+                v-model:model-value="formState.proxyInfo.username"
+                label="用户名"
+                placeholder="一般为空"
+              ></v-text-field>
+            </v-col>
+            <v-col :cols="6">
+              <v-text-field
+                v-model:model-value="formState.proxyInfo.password"
+                label="密码"
+                placeholder="一般为空"
+              ></v-text-field>
+            </v-col>
+          </template>
           <v-col :cols="12">
             <v-btn
               size="large"
