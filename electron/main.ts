@@ -1,7 +1,7 @@
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
-import { app, BrowserWindow } from "electron";
+import { app, BrowserWindow, session } from "electron";
 import { debounce } from "radash";
 import { createIPCHandler } from "trpc-electron/main";
 
@@ -36,6 +36,31 @@ const createWindow = async () => {
     frame: false,
     ...(config.windowInfo ?? {}),
   });
+
+  const resolveProxyUrl = () => {
+    const { proxyInfo } = config;
+    if (!proxyInfo) {
+      return undefined;
+    }
+    const { host, port, username, password } = proxyInfo;
+    const url = new URL(`http://${host}:${port}`);
+    url.username = username;
+    url.password = password;
+    // 去除末尾斜杠
+    return url.toString().slice(0, -1);
+  };
+
+  if (config.proxyInfo) {
+    const proxyUrl = resolveProxyUrl();
+    await session.defaultSession.setProxy({
+      mode: "fixed_servers",
+      proxyRules: proxyUrl,
+    });
+  } else {
+    await session.defaultSession.setProxy({
+      mode: "direct",
+    });
+  }
 
   const saveCurrentWindowInfo = debounce({ delay: 1000 }, async () => {
     const windowInfo = win!.getBounds();
