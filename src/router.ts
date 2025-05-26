@@ -78,11 +78,11 @@ const routes: RouteRecordRaw[] = [
   //   name: "SIGN_IN",
   //   component: () => import("@/views/app-sign-in.vue"),
   // },
-  // {
-  //   path: "/comic-latest",
-  //   name: "COMIC_LATEST",
-  //   component: () => import("@/views/app-comic-latest.vue"),
-  // },
+  {
+    path: "/comic-latest",
+    name: "COMIC_LATEST",
+    component: () => import("@/views/app-comic-latest.vue"),
+  },
   {
     path: "/about",
     name: "ABOUT",

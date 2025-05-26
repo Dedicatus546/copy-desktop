@@ -432,3 +432,25 @@ export const getComicPicListApi = (query: {
     }>
   >(`comic/${query.comicPathWord}/chapter2/${query.seriesId}`);
 };
+
+export const getLatestComicListApi = (
+  query: {
+    limit?: number;
+    offset?: number;
+  } = {},
+) => {
+  return http.Get<
+    RespWrapper<
+      ListResultWrapper<{
+        name: string;
+        datetime_created: string;
+        comic: Comic;
+      }>
+    >
+  >(`update/newest`, {
+    params: {
+      limit: query.limit ?? 10,
+      offset: query.offset ?? 0,
+    },
+  });
+};

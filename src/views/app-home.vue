@@ -19,6 +19,10 @@ const swiperList = computed(() => {
       title: "全新上架",
       list: data.value.results.newComics.map((item) => item.comic),
     },
+    {
+      title: "已完结",
+      list: data.value.results.finishComics.list,
+    },
   ];
 });
 
@@ -72,7 +76,9 @@ const rankTabList = [
             <v-card-title>漫画推荐</v-card-title>
             <router-link custom :to="{ name: 'HOME' }">
               <template #default="{ navigate }">
-                <v-btn variant="text" @click="navigate()">更多</v-btn>
+                <div class="wind-px-4 wind-py-2">
+                  <v-btn variant="text" @click="navigate()">更多</v-btn>
+                </div>
               </template>
             </router-link>
           </div>
@@ -94,7 +100,25 @@ const rankTabList = [
       </v-card>
     </v-col>
     <v-col v-for="swiperItem of swiperList" :key="swiperItem.title" :cols="12">
-      <v-card :title="swiperItem.title">
+      <v-card>
+        <v-card-item>
+          <div class="wind-flex wind-items-center wind-justify-between">
+            <v-card-title>{{ swiperItem.title }}</v-card-title>
+            <router-link
+              v-if="
+                swiperItem.title === '全新上架' || swiperItem.title === '已完结'
+              "
+              custom
+              :to="{
+                name: swiperItem.title === '全新上架' ? 'COMIC_LATEST' : 'HOME',
+              }"
+            >
+              <template #default="{ navigate }">
+                <v-btn variant="text" @click="navigate()">更多</v-btn>
+              </template>
+            </router-link>
+          </div>
+        </v-card-item>
         <v-card-text>
           <v-row v-if="swiperItem.list.length < minListCount">
             <v-col
