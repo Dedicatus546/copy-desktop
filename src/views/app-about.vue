@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { trpcClient } from "@/apis/ipc";
 import LOGO from "@/assets/logo.png";
 
 import { version } from "../../package.json";
@@ -7,8 +8,9 @@ const hash = __COMIT_HASH__;
 const isDev = import.meta.env.DEV;
 
 const toRepo = () => {
-  // TODO 关于页面
-  // openLinkIpc("https://github.com/Dedicatus546/cm-desktop");
+  trpcClient.openLink.query({
+    url: "https://github.com/Dedicatus546/copy-desktop",
+  });
 };
 </script>
 
@@ -19,7 +21,7 @@ const toRepo = () => {
         class="wind-py-4 wind-flex wind-flex-col wind-gap-4 wind-items-center"
       >
         <v-avatar size="100" :image="LOGO" rounded="0" />
-        <div class="text-h5">cm-desktop</div>
+        <div class="text-h5">copy-desktop</div>
       </div>
       <v-divider />
       <v-list>
@@ -36,7 +38,7 @@ const toRepo = () => {
         <v-list-item title="仓库地址">
           <template #append>
             <div class="wind-cursor-pointer" @click="toRepo">
-              https://github.com/Dedicatus546/cm-desktop
+              https://github.com/Dedicatus546/copy-desktop
             </div>
           </template>
         </v-list-item>
