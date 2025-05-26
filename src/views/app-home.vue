@@ -76,9 +76,7 @@ const rankTabList = [
             <v-card-title>漫画推荐</v-card-title>
             <router-link custom :to="{ name: 'HOME' }">
               <template #default="{ navigate }">
-                <div class="wind-px-4 wind-py-2">
-                  <v-btn variant="text" @click="navigate()">更多</v-btn>
-                </div>
+                <v-btn variant="text" @click="navigate()">更多</v-btn>
               </template>
             </router-link>
           </div>
