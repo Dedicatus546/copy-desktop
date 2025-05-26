@@ -30,6 +30,9 @@ const getConfig = async () => {
   try {
     const config = await trpcClient.getConfig.query();
     Object.assign(formState, config);
+    if (formState.proxyInfo) {
+      formState.useProxy = true;
+    }
   } catch (e) {
     console.error("读取配置文件失败", e);
   }
