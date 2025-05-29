@@ -16,6 +16,7 @@ const formState = reactive<
 >({
   theme: "light",
   apiUrl: "",
+  apiUrlList: [],
   downloadDir: "",
   readMode: "click",
   autoLogin: false,
@@ -95,7 +96,7 @@ onMounted(() => {
               placeholder="如果发现无法使用可以切换此处的域名"
               item-title="value"
               item-value="value"
-              :items="[{ value: 'https://api.mangacopy.com/api/v3' }]"
+              :items="formState.apiUrlList"
             >
             </v-select>
           </v-col>
@@ -157,7 +158,7 @@ onMounted(() => {
                 v-model:model-value="formState.proxyInfo.host"
                 label="IP"
                 placeholder="一般为 127.0.0.1"
-                :rules="[(value) => !!value || 'IP 不能为空']"
+                :rules="[(value?: string) => !!value || 'IP 不能为空']"
               ></v-text-field>
             </v-col>
             <v-col :cols="6">
@@ -165,7 +166,7 @@ onMounted(() => {
                 v-model:model-value="formState.proxyInfo.port"
                 label="端口"
                 placeholder="V2rayN 为 10809"
-                :rules="[(value) => !!value || '端口不能为空']"
+                :rules="[(value?: number) => !!value || '端口不能为空']"
               ></v-number-input>
             </v-col>
             <v-col :cols="6">

@@ -68,7 +68,7 @@ onCollectComicSuccess(() => {
 
 const toQuickQueryPage = (query: string) => {
   // TODO
-  return { name: "HOME", query: { query } };
+  return { name: "COMIC_HOME", query: { query } };
 };
 </script>
 

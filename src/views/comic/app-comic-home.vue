@@ -74,7 +74,8 @@ const rankTabList = [
         <v-card-item>
           <div class="wind-flex wind-items-center wind-justify-between">
             <v-card-title>漫画推荐</v-card-title>
-            <router-link custom :to="{ name: 'HOME' }">
+            <!-- TODO -->
+            <router-link custom :to="{ name: 'COMIC_HOME' }">
               <template #default="{ navigate }">
                 <v-btn variant="text" @click="navigate()">更多</v-btn>
               </template>
@@ -108,7 +109,10 @@ const rankTabList = [
               "
               custom
               :to="{
-                name: swiperItem.title === '全新上架' ? 'COMIC_LATEST' : 'HOME',
+                name:
+                  swiperItem.title === '全新上架'
+                    ? 'COMIC_LATEST'
+                    : 'COMIC_HOME',
               }"
             >
               <template #default="{ navigate }">
@@ -144,7 +148,7 @@ const rankTabList = [
           <div class="wind-flex wind-items-center wind-justify-between">
             <v-card-title>排行榜（男频）</v-card-title>
             <!-- TODO -->
-            <router-link custom :to="{ name: 'HOME' }">
+            <router-link custom :to="{ name: 'COMIC_HOME' }">
               <template #default="{ navigate }">
                 <v-btn variant="text" @click="navigate()">全部排行</v-btn>
               </template>

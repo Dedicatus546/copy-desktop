@@ -21,6 +21,7 @@ export type ProxyInfo = {
 export type Config = {
   theme: Theme;
   apiUrl: string;
+  apiUrlList: Array<string>;
   downloadDir: string;
   readMode: ReadMode;
   autoLogin: boolean;
@@ -35,6 +36,10 @@ export const configFilepath = resolve(dataDir, "config.json");
 export const defaultConfig: Config = {
   theme: "light",
   apiUrl: "https://api.mangacopy.com/api/v3",
+  apiUrlList: [
+    "https://api.copy2000.online/api/v3",
+    "https://api.mangacopy.com/api/v3",
+  ],
   downloadDir: "",
   readMode: "scroll",
   autoLogin: true,

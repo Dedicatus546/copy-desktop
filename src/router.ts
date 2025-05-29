@@ -1,22 +1,40 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router";
 
-import AppComicDetail from "@/views/app-comic-detail.vue";
-// import { scrollBehavior } from "@/compositions/use-recovery-scroll-position";
-// import AppComicDetail from "@/views/app-comic-detail.vue";
-// import AppComicRead from "@/views/app-comic-read.vue";
-import AppHome from "@/views/app-home.vue";
-
-import AppComicRead from "./views/app-comic-read.vue";
-
 const routes: RouteRecordRaw[] = [
   {
     path: "/",
-    redirect: "/home",
+    redirect: {
+      name: "COMIC",
+    },
   },
   {
-    path: "/home",
-    name: "HOME",
-    component: AppHome,
+    path: "/comic",
+    name: "COMIC",
+    component: () => import("@/views/comic/index.vue"),
+    children: [
+      {
+        path: "home",
+        name: "COMIC_HOME",
+        component: () => import("@/views/comic/app-comic-home.vue"),
+      },
+      {
+        path: "detail/:comicPathWord",
+        name: "COMIC_DETAIL",
+        props: true,
+        component: () => import("@/views/comic/app-comic-detail.vue"),
+      },
+      {
+        path: "read/:comicPathWord/:seriesId",
+        name: "COMIC_READ",
+        props: true,
+        component: () => import("@/views/comic/app-comic-read.vue"),
+      },
+      {
+        path: "latest",
+        name: "COMIC_LATEST",
+        component: () => import("@/views/comic/app-comic-latest.vue"),
+      },
+    ],
   },
   // {
   //   path: "/search",
@@ -55,33 +73,6 @@ const routes: RouteRecordRaw[] = [
     path: "/config",
     name: "CONFIG",
     component: () => import("@/views/app-config.vue"),
-  },
-  {
-    path: "/comic-detail/:comicPathWord",
-    name: "COMIC_DETAIL",
-    props: true,
-    component: AppComicDetail,
-  },
-  {
-    path: "/comic-read/:comicPathWord/:seriesId",
-    name: "COMIC_READ",
-    props: true,
-    component: AppComicRead,
-  },
-  // {
-  //   path: "/download",
-  //   name: "DOWNLOAD",
-  //   component: () => import("@/views/app-download.vue"),
-  // },
-  // {
-  //   path: "/sign-in",
-  //   name: "SIGN_IN",
-  //   component: () => import("@/views/app-sign-in.vue"),
-  // },
-  {
-    path: "/comic-latest",
-    name: "COMIC_LATEST",
-    component: () => import("@/views/app-comic-latest.vue"),
   },
   {
     path: "/about",

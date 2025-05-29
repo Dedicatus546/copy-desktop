@@ -51,25 +51,44 @@ const closeWin = () => {
 <template>
   <v-app-bar color="primary" class="app-region-drag">
     <v-app-bar-title>
-      <router-link :to="{ name: 'HOME' }" custom>
-        <template #default="{ navigate }">
-          <div
-            class="wind-flex wind-gap-4 wind-h-full wind-items-center"
-            @click="navigate"
-          >
+      <!-- TODO -->
+      <div class="wind-flex wind-gap-4 wind-items-center">
+        <router-link :to="{ name: 'COMIC_HOME' }" custom>
+          <template #default="{ navigate }">
             <div
-              class="wind-flex wind-gap-4 wind-cursor-pointer wind-items-center app-region-nodrag"
+              class="wind-flex wind-gap-4 wind-h-full wind-items-center"
+              @click="navigate"
             >
-              <img
-                src="@/assets/logo.png"
-                class="wind-w-[50px] wind-block"
-                alt="cm"
-              />
-              <div class="text-6">拷贝漫画</div>
+              <div
+                class="wind-flex wind-gap-4 wind-cursor-pointer wind-items-center app-region-nodrag"
+              >
+                <img
+                  src="@/assets/logo.png"
+                  class="wind-w-[50px] wind-block"
+                  alt="cm"
+                />
+                <div class="wind-text-6">拷贝漫画</div>
+              </div>
             </div>
-          </div>
-        </template>
-      </router-link>
+          </template>
+        </router-link>
+        <v-tabs height="40" class="wind-ml-auto">
+          <v-tab value="COMIC_HOME">漫画</v-tab>
+          <v-tab value="BOOK_HOME">轻小说</v-tab>
+          <v-tab value="ANIME_HOME">动漫</v-tab>
+        </v-tabs>
+        <!-- <div class="wind-flex wind-gap-2">
+          <router-link class="wind-text-4" :to="{ name: 'COMIC_HOME' }">
+            漫画
+          </router-link>
+          <router-link class="wind-text-4" :to="{ name: 'COMIC_HOME' }">
+            轻小说
+          </router-link>
+          <router-link class="wind-text-4" :to="{ name: 'COMIC_HOME' }">
+            动漫
+          </router-link>
+        </div> -->
+      </div>
     </v-app-bar-title>
     <template #append>
       <div class="app-region-nodrag">

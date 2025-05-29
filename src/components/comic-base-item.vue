@@ -23,7 +23,7 @@ defineProps<{
             v-for="author of comic.author"
             :key="author.path_word"
             :to="{
-              name: 'HOME',
+              name: 'COMIC_HOME',
               query: { query: author.name },
             }"
           >
