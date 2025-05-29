@@ -71,9 +71,12 @@ const { loading, data, page } = usePagination(
             <v-tab value="month">月榜</v-tab>
             <v-tab value="total">总榜</v-tab>
           </v-tabs>
+          <div class="wind-h-8"></div>
         </template>
         <template #loader>
-          <div class="h-[30vh] flex items-center justify-center">
+          <div
+            class="wind-flex wind-h-[30vh] wind-items-center wind-justify-center"
+          >
             <v-progress-circular indeterminate></v-progress-circular>
           </div>
         </template>
