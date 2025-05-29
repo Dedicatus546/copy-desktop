@@ -147,8 +147,7 @@ const rankTabList = [
         <v-card-item>
           <div class="wind-flex wind-items-center wind-justify-between">
             <v-card-title>排行榜（男频）</v-card-title>
-            <!-- TODO -->
-            <router-link custom :to="{ name: 'COMIC_HOME' }">
+            <router-link custom :to="{ name: 'RANK' }">
               <template #default="{ navigate }">
                 <v-btn variant="text" @click="navigate()">全部排行</v-btn>
               </template>

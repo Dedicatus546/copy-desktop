@@ -36,6 +36,11 @@ const routes: RouteRecordRaw[] = [
       },
     ],
   },
+  {
+    path: "/rank",
+    name: "RANK",
+    component: () => import("@/views/app-rank.vue"),
+  },
   // {
   //   path: "/search",
   //   name: "SEARCH",

@@ -1,15 +1,25 @@
 {
   "theme": "light",
-  "apiUrl": "https://api.mangacopy.com/api/v3",
+  "apiUrl": "https://api.copy2000.online/api/v3",
+  "apiUrlList": [
+    "https://api.copy2000.online/api/v3",
+    "https://api.mangacopy.com/api/v3"
+  ],
   "downloadDir": "",
   "readMode": "scroll",
   "autoLogin": true,
   "loginUserInfo": "",
   "zoomFactor": 1,
   "windowInfo": {
-    "x": 1058,
-    "y": 186,
-    "width": 1147,
-    "height": 772
+    "x": 390,
+    "y": 59,
+    "width": 1158,
+    "height": 777
+  },
+  "proxyInfo": {
+    "host": "localhost",
+    "port": 10808,
+    "username": "",
+    "password": ""
   }
 }

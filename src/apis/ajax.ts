@@ -454,3 +454,21 @@ export const getLatestComicListApi = (
     },
   });
 };
+
+export const getRankListApi = (query: {
+  type: number;
+  dateType: string;
+  limit: number;
+  offset: number;
+  audienceType: string;
+}) => {
+  return http.Get<RespWrapper<ListResultWrapper<RankComic>>>("ranks", {
+    params: {
+      type: query.type,
+      date_type: query.dateType,
+      limit: query.limit,
+      offset: query.offset,
+      audience_type: query.audienceType,
+    },
+  });
+};
