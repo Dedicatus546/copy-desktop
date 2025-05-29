@@ -12,25 +12,25 @@
     "postinstall": "electron-builder install-app-deps"
   },
   "dependencies": {
-    "@alova/adapter-xhr": "^2.1.1",
-    "@vueuse/core": "^13.2.0",
-    "alova": "^3.2.11",
+    "@alova/adapter-xhr": "^2.1.2",
+    "@vueuse/core": "^13.3.0",
+    "alova": "^3.2.13",
     "crypto-js": "^4.2.0",
     "pinia": "^3.0.2",
     "radash": "^12.1.0",
     "scroll-into-view-if-needed": "^3.1.0",
     "swiper": "^11.2.8",
     "typeface-roboto": "^1.1.13",
-    "vue": "^3.5.15",
+    "vue": "^3.5.16",
     "vue-router": "^4.5.1",
-    "vuetify": "^3.8.6"
+    "vuetify": "^3.8.7"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3.3.1",
     "@eslint/js": "^9.27.0",
     "@mdi/font": "^7.4.47",
-    "@trpc/client": "^11.1.2",
-    "@trpc/server": "^11.1.2",
+    "@trpc/client": "^11.1.4",
+    "@trpc/server": "^11.1.4",
     "@unocss/eslint-config": "^66.1.2",
     "@vitejs/plugin-vue": "^5.2.4",
     "electron": "^30.5.1",
@@ -44,7 +44,7 @@
     "sass": "^1.89.0",
     "trpc-electron": "^0.1.2",
     "typescript": "^5.8.3",
-    "typescript-eslint": "^8.32.1",
+    "typescript-eslint": "^8.33.0",
     "unocss": "^66.1.2",
     "unplugin-auto-import": "^19.3.0",
     "unplugin-vue-components": "^28.7.0",
@@ -53,7 +53,7 @@
     "vite-plugin-electron-renderer": "^0.14.6",
     "vite-plugin-vue-devtools": "^7.7.6",
     "vue-tsc": "^2.2.10",
-    "zod": "^3.25.28"
+    "zod": "^3.25.34"
   },
   "main": "dist-electron/main.js",
   "packageManager": "pnpm@10.10.0"
