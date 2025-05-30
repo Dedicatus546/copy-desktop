@@ -493,3 +493,20 @@ export const getComicRecommendListApi = (query: {
     },
   });
 };
+
+export const getComicCompleteListApi = (query: {
+  ordering: string;
+  limit: number;
+  offset: number;
+}) => {
+  return http.Get<RespWrapper<ListResultWrapper<Comic>>>("comics", {
+    params: {
+      top: "finish",
+      // TODO 未知参数
+      free_type: 1,
+      ordering: query.ordering,
+      offset: query.offset,
+      limit: query.limit,
+    },
+  });
+};

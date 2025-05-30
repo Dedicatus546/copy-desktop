@@ -148,11 +148,10 @@ const rankTabList = [
         <v-card-item>
           <div class="wind-flex wind-items-center wind-justify-between">
             <v-card-title>已完结</v-card-title>
-            <!-- TODO -->
             <router-link
               custom
               :to="{
-                name: 'COMIC_HOME',
+                name: 'COMIC_COMPLETE',
               }"
             >
               <template #default="{ navigate }">
