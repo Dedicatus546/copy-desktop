@@ -4,24 +4,26 @@ import vueHook from "alova/vue";
 
 import useUserStore from "@/stores/use-user-store";
 
+import { trpcClient } from "./ipc";
+
+const port = await trpcClient.getProxyServerPort.query();
+const baseURL = `http://localhost:${port}/api`;
+console.log("baseURL: ", baseURL);
+
 const http = createAlova({
   statesHook: vueHook,
   requestAdapter: xhrRequestAdapter({}),
-  baseURL: "https://api.mangacopy.com/api/v3",
+  baseURL,
   beforeRequest(method) {
     const userStore = useUserStore();
     if (userStore.isLogin) {
       method.config.headers.authorization = `Token ${userStore.userInfo!.token}`;
     }
-    // method.config.headers.referer = "com.copymanga.app-2.2.5";
-    method.config.headers.version = "2.2.5";
-    method.config.headers.region = 1;
-    // method.config.headers.device = 1;
+    // method.config.headers.version = "2.3.0";
+    // method.config.headers.region = 1;
+    // method.config.headers.device = "V417IR";
     method.config.params.platform = 3;
-    method.config.params.in_mainland = true;
-    // method.config.headers["Content-Type"] = "application/x-www-form-urlencoded";
-    // method.config.headers.tokenparam = `${ts},${version}`;
-    // method.config.headers.token = tokenHash;
+    // method.config.params.in_mainland = true;
   },
   responded: {
     async onSuccess(response, method) {
