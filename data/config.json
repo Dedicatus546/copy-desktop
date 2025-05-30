@@ -7,14 +7,14 @@
   ],
   "downloadDir": "",
   "readMode": "scroll",
-  "autoLogin": true,
+  "autoLogin": false,
   "loginUserInfo": "",
   "zoomFactor": 1,
   "windowInfo": {
-    "x": 390,
-    "y": 59,
-    "width": 1158,
-    "height": 777
+    "x": 339,
+    "y": 163,
+    "width": 1240,
+    "height": 807
   },
   "proxyInfo": {
     "host": "localhost",
