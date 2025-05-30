@@ -25,7 +25,7 @@ proxyExpress.use(cors());
 
 proxyExpress.use(
   "/api",
-  (req, _res, _next) => {
+  (req, _res, next) => {
     req.headers["user-agent"] = "COPY/2.3.0";
     req.headers.source = "copyApp";
     // mumu 模拟器设备
@@ -39,8 +39,7 @@ proxyExpress.use(
     req.headers.version = "2.3.0";
     // TODO 未知参数
     req.headers.umstring = "b4c89ca4104ea9a97750314d791520ac";
-    console.log("req.headers:", req.headers);
-    _next();
+    next();
   },
   createProxyMiddleware({
     target: config.apiUrl,
