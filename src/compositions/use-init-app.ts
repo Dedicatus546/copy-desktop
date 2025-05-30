@@ -7,7 +7,7 @@ import useAppStore from "@/stores/use-app-store";
 import useUserStore from "@/stores/use-user-store";
 import { delay } from "@/utils";
 
-import useDecodeUserInfo from "./use-decode-user-info";
+// import useDecodeUserInfo from "./use-decode-user-info";
 
 const useInitNetwork = () => {
   const appStore = useAppStore();
@@ -20,7 +20,8 @@ const useInitNetwork = () => {
 
   return {
     init: async () => {
-      return send().catch(() => {
+      return send().catch((e) => {
+        console.error(e);
         throw new Error("读取网络配置失败");
       });
     },
@@ -72,7 +73,7 @@ const useInitNetwork = () => {
 
 const useAutoLogin = () => {
   const userStore = useUserStore();
-  const appStore = useAppStore();
+  // const appStore = useAppStore();
   let username = "",
     password = "";
   const { send, onSuccess, data } = useRequest(
@@ -81,7 +82,7 @@ const useAutoLogin = () => {
       immediate: false,
     },
   );
-  const { decrypt } = useDecodeUserInfo();
+  // const { decrypt } = useDecodeUserInfo();
   onSuccess(() => {
     userStore.updateUserInfoAction(data.value.results);
     userStore.updateLoginInfoAction(username, password);
@@ -102,7 +103,7 @@ const useAutoLogin = () => {
 };
 
 const useInitApp = () => {
-  const appStore = useAppStore();
+  // const appStore = useAppStore();
   const networkJob = useInitNetwork();
   // const setting = useInitSetting();
   // const config = useInitConfig();
@@ -123,6 +124,7 @@ const useInitApp = () => {
       // await config.init();
       // await delay(300);
       // TODO
+      // eslint-disable-next-line no-constant-condition
       if (true) {
         // if (appStore.config.autoLogin && appStore.config.loginUserInfo) {
         currentStatus.value = "自动登录";

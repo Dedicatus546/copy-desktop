@@ -509,3 +509,19 @@ export const getComicCompleteListApi = (query: {
     },
   });
 };
+
+export const searchComicListApi = (query: {
+  type: string;
+  text: string;
+  limit: number;
+  offset: number;
+}) => {
+  return http.Get<RespWrapper<ListResultWrapper<Comic>>>("search/comic", {
+    params: {
+      offset: query.offset,
+      limit: query.limit,
+      q: query.text,
+      q_type: query.type,
+    },
+  });
+};

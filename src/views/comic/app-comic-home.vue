@@ -6,6 +6,7 @@ import { getHomeIndexApi } from "@/apis";
 
 const { loading, data } = useRequest(() => getHomeIndexApi());
 
+const router = useRouter();
 const breakpoints = useBreakpoints(breakpointsVuetifyV3);
 const isGreaterXXL = breakpoints.greater("xxl");
 const isGreaterXL = breakpoints.greater("xl");
@@ -39,6 +40,16 @@ const rankTabList = [
   { label: "周榜", value: "rankWeekComics" },
   { label: "月榜", value: "rankMonthComics" },
 ] as const;
+
+const searchText = ref("");
+const search = () => {
+  router.push({
+    name: "COMIC_SEARCH",
+    query: {
+      q: searchText.value,
+    },
+  });
+};
 </script>
 
 <template>
@@ -49,6 +60,20 @@ const rankTabList = [
     <v-progress-circular indeterminate></v-progress-circular>
   </div>
   <v-row v-else>
+    <v-col :cols="12">
+      <v-form @submit.prevent="search">
+        <v-text-field
+          v-model:model-value="searchText"
+          variant="solo"
+          placeholder="输入漫画名称进行搜索"
+          hide-details
+        >
+          <template #append-inner>
+            <v-btn variant="text" icon="mdi-magnify" @click="search"></v-btn>
+          </template>
+        </v-text-field>
+      </v-form>
+    </v-col>
     <v-col :cols="12">
       <v-card>
         <v-card-item>
