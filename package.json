@@ -9,7 +9,7 @@
     "lint": "eslint . --fix",
     "build": "vue-tsc && vite build && electron-builder --publish always",
     "build:latest": "vue-tsc && vite build && electron-builder --publish never",
-    "postinstall": "electron-builder install-app-deps"
+    "postinstall": "electron-builder install-app-deps && simple-git-hooks"
   },
   "dependencies": {
     "@alova/adapter-xhr": "^2.1.2",
@@ -41,7 +41,9 @@
     "eslint-plugin-simple-import-sort": "^12.1.1",
     "eslint-plugin-vue": "^10.1.0",
     "globals": "^16.2.0",
+    "lint-staged": "^16.1.0",
     "sass": "^1.89.0",
+    "simple-git-hooks": "^2.13.0",
     "trpc-electron": "^0.1.2",
     "typescript": "^5.8.3",
     "typescript-eslint": "^8.33.0",
@@ -56,5 +58,12 @@
     "zod": "^3.25.34"
   },
   "main": "dist-electron/main.js",
-  "packageManager": "pnpm@10.10.0"
+  "packageManager": "pnpm@10.10.0",
+  "simple-git-hooks": {
+    "pre-commit": "pnpm lint-staged"
+  },
+  "lint-staged": {
+    "src/**": "eslint . --fix",
+    "electron/**": "eslint . --fix"
+  }
 }

@@ -2,3 +2,4 @@ onlyBuiltDependencies:
   - '@parcel/watcher'
   - electron
   - esbuild
+  - simple-git-hooks
