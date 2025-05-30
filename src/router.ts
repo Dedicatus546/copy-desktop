@@ -40,6 +40,36 @@ const routes: RouteRecordRaw[] = [
     ],
   },
   {
+    path: "/light-novel",
+    name: "LIGHT_NOVEL",
+    redirect: {
+      name: "LIGHT_NOVEL_HOME",
+    },
+    component: () => import("@/views/light-novel/index.vue"),
+    children: [
+      {
+        path: "home",
+        name: "LIGHT_NOVEL_HOME",
+        component: () => import("@/views/light-novel/app-light-novel-home.vue"),
+      },
+    ],
+  },
+  {
+    path: "/anime",
+    name: "ANIME",
+    redirect: {
+      name: "ANIME_HOME",
+    },
+    component: () => import("@/views/anime/index.vue"),
+    children: [
+      {
+        path: "home",
+        name: "ANIME_HOME",
+        component: () => import("@/views/anime/app-anime-home.vue"),
+      },
+    ],
+  },
+  {
     path: "/rank",
     name: "RANK",
     component: () => import("@/views/app-rank.vue"),

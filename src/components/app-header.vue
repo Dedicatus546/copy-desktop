@@ -13,6 +13,7 @@ const appStore = useAppStore();
 const userStore = useUserStore();
 const userInfo = computed(() => userStore.userInfo);
 const router = useRouter();
+const route = useRoute();
 const theme = useTheme();
 
 onKeyStroke(
@@ -37,15 +38,28 @@ const logout = () => {
   router.replace({ name: "LOGIN" });
 };
 
-// TODO
 const minimizeWin = () => {
   trpcClient.minimizeWin.query();
-  // getCurrentWindow().minimize();
 };
 
 const closeWin = () => {
   trpcClient.closeWin.query();
 };
+
+const tabRouteNameList = ["COMIC", "LIGHT_NOVEL", "ANIME"];
+const tab = computed({
+  get() {
+    const r = route.matched.find((item) =>
+      tabRouteNameList.includes(item.name as string),
+    );
+    return r?.name;
+  },
+  set(routeName) {
+    router.push({
+      name: routeName,
+    });
+  },
+});
 </script>
 
 <template>
@@ -72,22 +86,13 @@ const closeWin = () => {
             </div>
           </template>
         </router-link>
-        <v-tabs height="40" class="wind-ml-auto">
-          <v-tab value="COMIC_HOME">漫画</v-tab>
-          <v-tab value="BOOK_HOME">轻小说</v-tab>
-          <v-tab value="ANIME_HOME">动漫</v-tab>
-        </v-tabs>
-        <!-- <div class="wind-flex wind-gap-2">
-          <router-link class="wind-text-4" :to="{ name: 'COMIC_HOME' }">
-            漫画
-          </router-link>
-          <router-link class="wind-text-4" :to="{ name: 'COMIC_HOME' }">
-            轻小说
-          </router-link>
-          <router-link class="wind-text-4" :to="{ name: 'COMIC_HOME' }">
-            动漫
-          </router-link>
-        </div> -->
+        <div class="wind-ml-auto app-region-nodrag">
+          <v-tabs v-model="tab" height="40">
+            <v-tab value="COMIC">漫画</v-tab>
+            <v-tab value="LIGHT_NOVEL">轻小说</v-tab>
+            <v-tab value="ANIME">动漫</v-tab>
+          </v-tabs>
+        </div>
       </div>
     </v-app-bar-title>
     <template #append>
