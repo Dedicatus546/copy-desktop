@@ -36,7 +36,9 @@ const { loading, data, page } = usePagination(
         :loading="loading"
       >
         <template #loader>
-          <div class="h-[30vh] flex items-center justify-center">
+          <div
+            class="wind-flex wind-h-[30vh] wind-items-center wind-justify-center"
+          >
             <v-progress-circular indeterminate></v-progress-circular>
           </div>
         </template>
