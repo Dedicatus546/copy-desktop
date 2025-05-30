@@ -47,6 +47,11 @@ const routes: RouteRecordRaw[] = [
         name: "COMIC_COMPLETE",
         component: () => import("@/views/comic/app-comic-complete.vue"),
       },
+      {
+        path: "rank",
+        name: "COMIC_RANK",
+        component: () => import("@/views/comic/app-comic-rank.vue"),
+      },
     ],
   },
   {
@@ -78,11 +83,6 @@ const routes: RouteRecordRaw[] = [
         component: () => import("@/views/anime/app-anime-home.vue"),
       },
     ],
-  },
-  {
-    path: "/rank",
-    name: "RANK",
-    component: () => import("@/views/app-rank.vue"),
   },
   // {
   //   path: "/search",

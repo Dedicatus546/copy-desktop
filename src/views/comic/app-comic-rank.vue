@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { usePagination } from "alova/client";
 
-import { getRankListApi } from "@/apis";
+import { getComicRankListApi } from "@/apis";
 import EMPTY_STATE_IMG from "@/assets/empty-state/2.jpg";
 
 const createComputed = <T,>(r: Ref<T>, fn: () => void) => {
@@ -16,7 +16,6 @@ const createComputed = <T,>(r: Ref<T>, fn: () => void) => {
   });
 };
 
-const type = createComputed(ref<number>(1), () => (data.value = []));
 const audienceType = createComputed(
   ref<string>("male"),
   () => (data.value = []),
@@ -25,8 +24,7 @@ const dateType = createComputed(ref<string>("day"), () => (data.value = []));
 
 const { loading, data, page } = usePagination(
   (page, pageSize) =>
-    getRankListApi({
-      type: type.value,
+    getComicRankListApi({
       audienceType: audienceType.value,
       dateType: dateType.value,
       limit: pageSize,
@@ -37,7 +35,7 @@ const { loading, data, page } = usePagination(
     append: true,
     initialPage: 1,
     initialPageSize: 18,
-    watchingStates: [type, audienceType, dateType],
+    watchingStates: [audienceType, dateType],
     data: (res) => res.results.list,
     total: (res) => res.results.total,
     initialData: {
@@ -51,7 +49,7 @@ const { loading, data, page } = usePagination(
 </script>
 
 <template>
-  <v-card title="全新上架">
+  <v-card title="排行榜">
     <v-card-text>
       <v-data-iterator
         :items="data"
@@ -60,15 +58,6 @@ const { loading, data, page } = usePagination(
       >
         <template #header>
           <v-tabs
-            v-model:model-value="type"
-            align-tabs="center"
-            color="primary"
-          >
-            <v-tab :value="1">漫画</v-tab>
-            <v-tab :value="5">轻小说</v-tab>
-          </v-tabs>
-          <v-tabs
-            v-if="type === 1"
             v-model:model-value="audienceType"
             align-tabs="center"
             color="primary"

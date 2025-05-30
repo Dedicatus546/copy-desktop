@@ -455,8 +455,7 @@ export const getLatestComicListApi = (
   });
 };
 
-export const getRankListApi = (query: {
-  type: number;
+export const getComicRankListApi = (query: {
   dateType: string;
   limit: number;
   offset: number;
@@ -464,7 +463,7 @@ export const getRankListApi = (query: {
 }) => {
   return http.Get<RespWrapper<ListResultWrapper<RankComic>>>("ranks", {
     params: {
-      type: query.type,
+      type: 1,
       date_type: query.dateType,
       limit: query.limit,
       offset: query.offset,

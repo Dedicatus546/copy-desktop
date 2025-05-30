@@ -186,7 +186,7 @@ const rankTabList = [
         <v-card-item>
           <div class="wind-flex wind-items-center wind-justify-between">
             <v-card-title>排行榜（男频）</v-card-title>
-            <router-link custom :to="{ name: 'RANK' }">
+            <router-link custom :to="{ name: 'COMIC_RANK' }">
               <template #default="{ navigate }">
                 <v-btn variant="text" @click="navigate()">全部排行</v-btn>
               </template>
@@ -227,33 +227,5 @@ const rankTabList = [
         </v-card-text>
       </v-card>
     </v-col>
-    <!-- <v-col :cols="12">
-      <v-card>
-        <v-card-item>
-          <div class="flex items-center justify-between">
-            <v-card-title>最新发布</v-card-title>
-            <router-link custom :to="{ name: 'COMIC_LATEST' }">
-              <template #default="{ navigate }">
-                <v-btn variant="text" @click="navigate()">更多</v-btn>
-              </template>
-            </router-link>
-          </div>
-        </v-card-item>
-        <v-card-text>
-          <v-row>
-            <v-col
-              v-for="item of latestData.data"
-              :key="item.id"
-              :cols="6"
-              :sm="4"
-              :md="3"
-              :lg="2"
-            >
-              <comic-route-item :comic="item" />
-            </v-col>
-          </v-row>
-        </v-card-text>
-      </v-card>
-    </v-col> -->
   </v-row>
 </template>
