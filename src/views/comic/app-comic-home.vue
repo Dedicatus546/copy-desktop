@@ -6,26 +6,6 @@ import { getHomeIndexApi } from "@/apis";
 
 const { loading, data } = useRequest(() => getHomeIndexApi());
 
-const swiperList = computed(() => {
-  if (!data.value) {
-    return [];
-  }
-  return [
-    {
-      title: "热门漫画",
-      list: data.value.results.hotComics.map((item) => item.comic),
-    },
-    {
-      title: "全新上架",
-      list: data.value.results.newComics.map((item) => item.comic),
-    },
-    {
-      title: "已完结",
-      list: data.value.results.finishComics.list,
-    },
-  ];
-});
-
 const breakpoints = useBreakpoints(breakpointsVuetifyV3);
 const isGreaterXXL = breakpoints.greater("xxl");
 const isGreaterXL = breakpoints.greater("xl");
@@ -74,8 +54,7 @@ const rankTabList = [
         <v-card-item>
           <div class="wind-flex wind-items-center wind-justify-between">
             <v-card-title>漫画推荐</v-card-title>
-            <!-- TODO -->
-            <router-link custom :to="{ name: 'COMIC_HOME' }">
+            <router-link custom :to="{ name: 'COMIC_RECOMMEND' }">
               <template #default="{ navigate }">
                 <v-btn variant="text" @click="navigate()">更多</v-btn>
               </template>
@@ -98,21 +77,43 @@ const rankTabList = [
         </v-card-text>
       </v-card>
     </v-col>
-    <v-col v-for="swiperItem of swiperList" :key="swiperItem.title" :cols="12">
+    <v-col :cols="12">
       <v-card>
         <v-card-item>
           <div class="wind-flex wind-items-center wind-justify-between">
-            <v-card-title>{{ swiperItem.title }}</v-card-title>
+            <v-card-title>热门漫画</v-card-title>
+          </div>
+        </v-card-item>
+        <v-card-text>
+          <v-row v-if="data.results.hotComics.length < minListCount">
+            <v-col
+              v-for="item of data.results.hotComics"
+              :key="item.comic.path_word"
+              :cols="6"
+              :sm="4"
+              :md="3"
+              :lg="2"
+            >
+              <comic-route-item :comic="item.comic" />
+            </v-col>
+          </v-row>
+          <app-home-swiper
+            v-else
+            :list="data.results.hotComics.map((item) => item.comic)"
+            :slides-per-view="slidesPerView"
+          ></app-home-swiper>
+        </v-card-text>
+      </v-card>
+    </v-col>
+    <v-col :cols="12">
+      <v-card>
+        <v-card-item>
+          <div class="wind-flex wind-items-center wind-justify-between">
+            <v-card-title>全新上架</v-card-title>
             <router-link
-              v-if="
-                swiperItem.title === '全新上架' || swiperItem.title === '已完结'
-              "
               custom
               :to="{
-                name:
-                  swiperItem.title === '全新上架'
-                    ? 'COMIC_LATEST'
-                    : 'COMIC_HOME',
+                name: 'COMIC_LATEST',
               }"
             >
               <template #default="{ navigate }">
@@ -122,21 +123,60 @@ const rankTabList = [
           </div>
         </v-card-item>
         <v-card-text>
-          <v-row v-if="swiperItem.list.length < minListCount">
+          <v-row v-if="data.results.newComics.length < minListCount">
             <v-col
-              v-for="subItem of swiperItem.list"
-              :key="subItem.path_word"
+              v-for="item of data.results.newComics"
+              :key="item.comic.path_word"
               :cols="6"
               :sm="4"
               :md="3"
               :lg="2"
             >
-              <comic-route-item :comic="subItem" />
+              <comic-route-item :comic="item.comic" />
             </v-col>
           </v-row>
           <app-home-swiper
             v-else
-            :list="swiperItem.list"
+            :list="data.results.newComics.map((item) => item.comic)"
+            :slides-per-view="slidesPerView"
+          ></app-home-swiper>
+        </v-card-text>
+      </v-card>
+    </v-col>
+    <v-col :cols="12">
+      <v-card>
+        <v-card-item>
+          <div class="wind-flex wind-items-center wind-justify-between">
+            <v-card-title>已完结</v-card-title>
+            <!-- TODO -->
+            <router-link
+              custom
+              :to="{
+                name: 'COMIC_HOME',
+              }"
+            >
+              <template #default="{ navigate }">
+                <v-btn variant="text" @click="navigate()">更多</v-btn>
+              </template>
+            </router-link>
+          </div>
+        </v-card-item>
+        <v-card-text>
+          <v-row v-if="data.results.finishComics.list.length < minListCount">
+            <v-col
+              v-for="item of data.results.finishComics.list"
+              :key="item.path_word"
+              :cols="6"
+              :sm="4"
+              :md="3"
+              :lg="2"
+            >
+              <comic-route-item :comic="item" />
+            </v-col>
+          </v-row>
+          <app-home-swiper
+            v-else
+            :list="data.results.finishComics.list"
             :slides-per-view="slidesPerView"
           ></app-home-swiper>
         </v-card-text>

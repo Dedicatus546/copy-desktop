@@ -472,3 +472,24 @@ export const getRankListApi = (query: {
     },
   });
 };
+
+export const getComicRecommendListApi = (query: {
+  limit: number;
+  offset: number;
+}) => {
+  return http.Get<
+    RespWrapper<
+      ListResultWrapper<{
+        type: number;
+        comic: Comic;
+      }>
+    >
+  >("recs", {
+    params: {
+      // TODO 不确定该参数为固定还是？
+      pos: 3200102,
+      offset: query.offset,
+      limit: query.limit,
+    },
+  });
+};

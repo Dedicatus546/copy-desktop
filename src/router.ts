@@ -37,6 +37,11 @@ const routes: RouteRecordRaw[] = [
         name: "COMIC_LATEST",
         component: () => import("@/views/comic/app-comic-latest.vue"),
       },
+      {
+        path: "recommend",
+        name: "COMIC_RECOMMEND",
+        component: () => import("@/views/comic/app-comic-recommend.vue"),
+      },
     ],
   },
   {
