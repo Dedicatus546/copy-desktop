@@ -10,6 +10,9 @@ const routes: RouteRecordRaw[] = [
   {
     path: "/comic",
     name: "COMIC",
+    redirect: {
+      name: "COMIC_HOME",
+    },
     component: () => import("@/views/comic/index.vue"),
     children: [
       {
