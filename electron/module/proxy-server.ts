@@ -3,6 +3,7 @@ import { AddressInfo } from "node:net";
 import { join } from "node:path";
 
 import { distElectron } from "@electron/shared/path";
+import { resolveProxyUrl } from "@electron/shared/utils";
 import cors from "cors";
 import { format } from "date-fns";
 import Express from "express";
@@ -13,22 +14,8 @@ import { getConfig } from "./config";
 
 const config = await getConfig();
 
-const resolveProxyUrl = () => {
-  const { proxyInfo } = config;
-  if (!proxyInfo) {
-    return undefined;
-  }
-  const { host, port, username, password } = proxyInfo;
-  const url = new URL(`http://${host}:${port}`);
-  url.username = username;
-  url.password = password;
-  // 去除末尾斜杠
-  return url.toString().slice(0, -1);
-};
-
 let agent: Agent | undefined;
-const proxyUrl = resolveProxyUrl();
-console.log("proxyUrl:", proxyUrl);
+const proxyUrl = resolveProxyUrl(config.proxyInfo);
 if (proxyUrl) {
   agent = new HttpsProxyAgent(proxyUrl);
 }

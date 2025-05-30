@@ -6,6 +6,7 @@ import { debounce } from "radash";
 import { createIPCHandler } from "trpc-electron/main";
 
 import { getConfig, saveConfig } from "./module/config";
+import { resolveProxyUrl } from "./shared/utils";
 import { router } from "./trpc";
 // const require = createRequire(import.meta.url);
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -37,21 +38,8 @@ const createWindow = async () => {
     ...(config.windowInfo ?? {}),
   });
 
-  const resolveProxyUrl = () => {
-    const { proxyInfo } = config;
-    if (!proxyInfo) {
-      return undefined;
-    }
-    const { host, port, username, password } = proxyInfo;
-    const url = new URL(`http://${host}:${port}`);
-    url.username = username;
-    url.password = password;
-    // 去除末尾斜杠
-    return url.toString().slice(0, -1);
-  };
-
   if (config.proxyInfo) {
-    const proxyUrl = resolveProxyUrl();
+    const proxyUrl = resolveProxyUrl(config.proxyInfo);
     await session.defaultSession.setProxy({
       mode: "fixed_servers",
       proxyRules: proxyUrl,
