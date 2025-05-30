@@ -1,16 +1,19 @@
 <script setup lang="ts">
 import { Config } from "@electron/module/config";
+import { clone } from "radash";
 
 import { trpcClient } from "@/apis/ipc";
 import useDialog from "@/compositions/use-dialog";
+import useAppStore from "@/stores/use-app-store.ts";
 
 const loading = ref(false);
 const saveLoading = ref(false);
+const appStore = useAppStore();
 
 const formValid = ref<boolean | null>(null);
 
 const formState = reactive<
-  Config & {
+  Omit<Config, "windowInfo" | "loginUserInfo" | "autoLogin"> & {
     useProxy: boolean;
   }
 >({
@@ -19,10 +22,7 @@ const formState = reactive<
   apiUrlList: [],
   downloadDir: "",
   readMode: "click",
-  autoLogin: false,
-  loginUserInfo: "",
   zoomFactor: 0,
-  windowInfo: undefined,
   proxyInfo: undefined,
   useProxy: false,
 });
@@ -30,10 +30,8 @@ const formState = reactive<
 const getConfig = async () => {
   try {
     const config = await trpcClient.getConfig.query();
-    Object.assign(formState, config);
-    if (formState.proxyInfo) {
-      formState.useProxy = true;
-    }
+    await appStore.updateConfigAction(config);
+    Object.assign(formState, clone(appStore.config));
   } catch (e) {
     console.error("读取配置文件失败", e);
   }
@@ -52,8 +50,7 @@ const submit = async () => {
       content: "除下载位置、阅读模式之外的配置重启后生效，是否立即重启？",
       okText: "重启",
       onOk() {
-        // TODO
-        // relaunchAppIpc();
+        trpcClient.relaunchApp.query();
       },
     });
   } catch (e) {

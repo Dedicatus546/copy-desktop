@@ -14,7 +14,7 @@ const userStore = useUserStore();
 const userInfo = computed(() => userStore.userInfo);
 const router = useRouter();
 const route = useRoute();
-const theme = useTheme();
+const gTheme = useTheme();
 
 onKeyStroke(
   "Escape",
@@ -26,15 +26,17 @@ onKeyStroke(
   },
 );
 
-const changeMode = (mode: "dark" | "light") => {
-  appStore.updateConfigAction({ mode });
-  //  TODO
-  theme.global.name.value = mode;
+const changeMode = (theme: "dark" | "light") => {
+  appStore.updateConfigAction({ theme });
+  gTheme.global.name.value = theme;
 };
 
 const logout = () => {
   userStore.logoutAction();
-  // TODO
+  appStore.updateConfigAction({
+    autoLogin: false,
+    loginUserInfo: "",
+  });
   router.replace({ name: "LOGIN" });
 };
 
@@ -104,10 +106,10 @@ const tab = computed({
             @click="router.back()"
           />
           <app-header-icon-btn
-            :tooltip-text="`切换${appStore.config.mode === 'dark' ? '日间模式' : '夜间模式'}`"
+            :tooltip-text="`切换${appStore.config.theme === 'dark' ? '日间模式' : '夜间模式'}`"
             icon="mdi-swap-horizontal"
             @click="
-              changeMode(appStore.config.mode === 'dark' ? 'light' : 'dark')
+              changeMode(appStore.config.theme === 'dark' ? 'light' : 'dark')
             "
           />
           <template v-if="userInfo">

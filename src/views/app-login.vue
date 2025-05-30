@@ -2,12 +2,14 @@
 import { useRequest } from "alova/client";
 
 import { loginApi } from "@/apis";
-import useDecodeUserInfo from "@/compositions/use-decode-user-info";
 import useSnackbar from "@/compositions/use-snack-bar";
+import useAppStore from "@/stores/use-app-store";
 import useUserStore from "@/stores/use-user-store";
+import { encryptLoginUser } from "@/utils/login-user-info";
 
 const router = useRouter();
 const userStore = useUserStore();
+const appStore = useAppStore();
 
 const formState = reactive({
   username: "",
@@ -15,7 +17,6 @@ const formState = reactive({
   autoLogin: false,
 });
 
-const { encrypt } = useDecodeUserInfo();
 const { loading, data, onSuccess, onError, send } = useRequest(
   () =>
     loginApi({
@@ -34,10 +35,18 @@ onSuccess(() => {
   userStore.updateUserInfoAction(data.value.results);
   userStore.updateLoginInfoAction(formState.username, formState.password);
   if (formState.autoLogin) {
-    // TODO
-    const encryptStr = encrypt({
+    const encryptStr = encryptLoginUser({
       username: formState.username,
       password: formState.password,
+    });
+    appStore.updateConfigAction({
+      loginUserInfo: encryptStr,
+      autoLogin: true,
+    });
+  } else {
+    appStore.updateConfigAction({
+      loginUserInfo: "",
+      autoLogin: false,
     });
   }
   router.replace({ name: "PERSON" });
@@ -85,8 +94,12 @@ onError((e) => {
             >
               <template #text>
                 <div class="wind-py-2 wind-flex wind-flex-col wind-gap-2">
-                  <div>1.TODO</div>
-                  <div>2.TODO</div>
+                  <div>
+                    1.自动登录会使用对称加密的方式将你的账号和密码写在本地，如果不希望这么做请勿开启。
+                  </div>
+                  <div>
+                    2.建议在官方web站上修改密码（比如通过谷歌生成随机密码）后再开启此功能。
+                  </div>
                 </div>
               </template>
             </v-alert>

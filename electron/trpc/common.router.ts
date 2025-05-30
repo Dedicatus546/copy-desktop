@@ -3,17 +3,17 @@ import { z } from "zod";
 
 import { trpc } from "./trpc";
 
-const minimizeWin = trpc.procedure.query(({ ctx }) => {
+const minimizeWinRpc = trpc.procedure.query(({ ctx }) => {
   const win = ctx.win;
   win.minimize();
 });
 
-const closeWin = trpc.procedure.query(({ ctx }) => {
+const closeWinRpc = trpc.procedure.query(({ ctx }) => {
   const win = ctx.win;
   win.close();
 });
 
-const openLink = trpc.procedure
+const openLinkRpc = trpc.procedure
   .input(
     z.object({
       url: z.string(),
@@ -23,7 +23,7 @@ const openLink = trpc.procedure
     shell.openExternal(input.url);
   });
 
-const showItemInFolder = trpc.procedure
+const showItemInFolderRpc = trpc.procedure
   .input(
     z.object({
       path: z.string(),
@@ -33,7 +33,7 @@ const showItemInFolder = trpc.procedure
     shell.showItemInFolder(input.path);
   });
 
-const selectFolder = trpc.procedure.query(async ({ ctx }) => {
+const selectFolderRpc = trpc.procedure.query(async ({ ctx }) => {
   const { win } = ctx;
   const result = await dialog.showOpenDialog(win, {
     properties: ["openDirectory"],
@@ -41,10 +41,15 @@ const selectFolder = trpc.procedure.query(async ({ ctx }) => {
   return result.filePaths[0];
 });
 
+const relaunchAppRpc = trpc.procedure.query(async () => {
+  // TODO
+});
+
 export const router = {
-  minimizeWin,
-  closeWin,
-  openLink,
-  showItemInFolder,
-  selectFolder,
+  minimizeWin: minimizeWinRpc,
+  closeWin: closeWinRpc,
+  openLink: openLinkRpc,
+  showItemInFolder: showItemInFolderRpc,
+  selectFolder: selectFolderRpc,
+  relaunchApp: relaunchAppRpc,
 };
