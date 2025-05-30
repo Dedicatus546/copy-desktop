@@ -72,7 +72,7 @@
     "pre-commit": "pnpm lint-staged"
   },
   "lint-staged": {
-    "src/**": "eslint . --fix",
-    "electron/**": "eslint . --fix"
+    "src/**": "eslint --fix",
+    "electron/**": "eslint --fix"
   }
 }
