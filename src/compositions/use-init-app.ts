@@ -60,6 +60,7 @@ const useAutoLogin = () => {
       // 开发环境下读 env 直接登录，该 env 为 .local ，不上传仓库
       if (
         import.meta.env.DEV &&
+        import.meta.env.VITE_AUTO_LOGIN_DEV === "1" &&
         import.meta.env.VITE_LOGIN_USERNAME &&
         import.meta.env.VITE_LOGIN_PASSWORD
       ) {
