@@ -4,7 +4,16 @@ import { usePagination } from "alova/client";
 import { getComicCompleteListApi } from "@/apis";
 import EMPTY_STATE_IMG from "@/assets/empty-state/4.jpg";
 
-const ordering = ref<string>("datetime_updated");
+const _ordering = ref<string>("datetime_updated");
+const ordering = computed({
+  get() {
+    return _ordering.value;
+  },
+  set(val) {
+    _ordering.value = val;
+    data.value = [];
+  },
+});
 
 const { loading, data, page } = usePagination(
   (page, pageSize) =>

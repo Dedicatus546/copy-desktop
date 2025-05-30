@@ -4,9 +4,24 @@ import { usePagination } from "alova/client";
 import { getRankListApi } from "@/apis";
 import EMPTY_STATE_IMG from "@/assets/empty-state/2.jpg";
 
-const type = ref<number>(1);
-const audienceType = ref<string>("male");
-const dateType = ref<string>("day");
+const createComputed = <T,>(r: Ref<T>, fn: () => void) => {
+  return computed<T>({
+    get() {
+      return r.value;
+    },
+    set(val) {
+      r.value = val;
+      fn();
+    },
+  });
+};
+
+const type = createComputed(ref<number>(1), () => (data.value = []));
+const audienceType = createComputed(
+  ref<string>("male"),
+  () => (data.value = []),
+);
+const dateType = createComputed(ref<string>("day"), () => (data.value = []));
 
 const { loading, data, page } = usePagination(
   (page, pageSize) =>
