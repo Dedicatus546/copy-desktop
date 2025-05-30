@@ -32,6 +32,11 @@ const getConfig = async () => {
     const config = await trpcClient.getConfig.query();
     await appStore.updateConfigAction(config);
     Object.assign(formState, clone(appStore.config));
+    if (formState.proxyInfo) {
+      formState.useProxy = true;
+    } else {
+      formState.useProxy = false;
+    }
   } catch (e) {
     console.error("读取配置文件失败", e);
   }
@@ -81,7 +86,10 @@ onMounted(() => {
   <v-card title="软件设置">
     <v-card-text>
       <v-form v-model:model-value="formValid" @submit.prevent="submit">
-        <div v-if="loading" class="flex h-[30vh] items-center justify-center">
+        <div
+          v-if="loading"
+          class="wind-flex wind-h-[30vh] wind-items-center wind-justify-center"
+        >
           <v-progress-circular indeterminate></v-progress-circular>
         </div>
         <v-row>

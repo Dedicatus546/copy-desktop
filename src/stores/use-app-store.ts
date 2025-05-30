@@ -31,7 +31,7 @@ const useAppStore = defineStore("app", () => {
 
   const updateConfigAction = async (config: Partial<State["config"]>) => {
     Object.assign(state.config, config);
-    await trpcClient.saveConfig.query(state.config);
+    await trpcClient.saveConfig.query(toRaw(state.config));
   };
 
   return {
