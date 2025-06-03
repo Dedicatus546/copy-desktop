@@ -1,3 +1,11 @@
 {
-  "recommendations": ["Vue.volar"]
+  "recommendations": [
+    "Vue.volar",
+    "dbaeumer.vscode-eslint",
+    "editorconfig.editorconfig",
+    "github.vscode-github-actions",
+    "syler.sass-indented",
+    "antfu.unocss",
+    "esbenp.prettier-vscode"
+  ]
 }
