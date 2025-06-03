@@ -47,7 +47,7 @@ const picList = computed(() => {
   </div>
   <template v-else>
     <app-comic-scroll-read
-      v-if="appStore.config.readMode === 0"
+      v-if="appStore.config.readMode === 'scroll'"
       :pic-list="picList"
     />
     <app-comic-page-read v-else :pic-list="picList" />
