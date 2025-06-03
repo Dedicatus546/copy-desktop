@@ -39,7 +39,6 @@ const formState = reactive({
 const {
   loading: commentComicLoading,
   send,
-  data: commentData,
   onSuccess,
 } = useRequest(
   () =>

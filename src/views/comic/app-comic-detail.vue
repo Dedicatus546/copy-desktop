@@ -66,17 +66,22 @@ onCollectComicSuccess(() => {
   snackBar.success(collectComicData.value.message ?? "操作成功");
 });
 
-const toQuickQueryPage = (query: string) => {
-  // TODO
-  return { name: "COMIC_HOME", query: { query } };
-};
-
 const toComicThemePage = (pathWord: string, name: string) => {
   return {
     name: "COMIC_THEME",
     params: {
       themePathWord: pathWord,
       themeName: name,
+    },
+  };
+};
+
+const toComicAuthorPage = (pathWord: string, name: string) => {
+  return {
+    name: "COMIC_AUTHOR",
+    params: {
+      authorPathWord: pathWord,
+      authorName: name,
     },
   };
 };
@@ -126,7 +131,7 @@ const toComicThemePage = (pathWord: string, name: string) => {
                           <router-link
                             v-for="item of comicInfo.results.comic.author"
                             :key="item.path_word"
-                            :to="toQuickQueryPage(item.path_word)"
+                            :to="toComicAuthorPage(item.path_word, item.name)"
                           >
                             <span class="wind-font-bold">
                               {{ item.name }}

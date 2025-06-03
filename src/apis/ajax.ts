@@ -543,3 +543,21 @@ export const getComicListByThemeApi = (query: {
     },
   });
 };
+
+export const getComicListByAuthorApi = (query: {
+  limit: number;
+  offset: number;
+  author: string;
+  ordering: string;
+}) => {
+  return http.Get<RespWrapper<ListResultWrapper<Comic>>>("comics", {
+    params: {
+      // TODO 未知参数
+      free_type: 1,
+      author: query.author,
+      ordering: query.ordering,
+      offset: query.offset,
+      limit: query.limit,
+    },
+  });
+};

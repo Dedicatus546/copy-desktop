@@ -62,6 +62,11 @@ const routes: RouteRecordRaw[] = [
         name: "COMIC_THEME",
         component: () => import("@/views/comic/app-comic-theme.vue"),
       },
+      {
+        path: "author/:authorPathWord/:authorName",
+        name: "COMIC_AUTHOR",
+        component: () => import("@/views/comic/app-comic-author.vue"),
+      },
     ],
   },
   {
