@@ -184,6 +184,17 @@ const toComicAuthorPage = (pathWord: string, name: string) => {
                       </div>
                     </v-col>
                     <v-col
+                      v-if="comicInfo.results.comic.datetime_updated"
+                      :cols="12"
+                    >
+                      <div class="wind-flex wind-gap-1">
+                        <div class="wind-text-nowrap">更新时间：</div>
+                        <div class="wind-flex wind-flex-wrap wind-gap-2">
+                          {{ comicInfo.results.comic.datetime_updated }}
+                        </div>
+                      </div>
+                    </v-col>
+                    <v-col
                       v-if="comicInfo.results.comic.theme.length > 0"
                       :cols="12"
                     >
