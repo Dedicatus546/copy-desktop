@@ -7,13 +7,17 @@ import useUserStore from "@/stores/use-user-store";
 export default function useRefreshUser() {
   const userStore = useUserStore();
   const { data, send, onSuccess, onError } = useRequest(
-    (username: string, password: string) => loginApi(username, password),
+    (username: string, password: string) =>
+      loginApi({
+        username,
+        password,
+      }),
     {
       immediate: false,
     },
   );
   onSuccess(() => {
-    userStore.updateUserInfoAction(data.value!.data);
+    userStore.updateUserInfoAction(data.value!.results);
   });
   onError(() => {
     userStore.logoutAction();
