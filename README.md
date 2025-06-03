@@ -1,18 +1,93 @@
-# Vue 3 + TypeScript + Vite
+# copy-desktop
 
-This template should help get you started developing with Vue 3 and TypeScript in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
+这是一个拷贝漫画的第三方客户端，基于 electron + vue 构建。
 
-## Recommended IDE Setup
+## NSFW 警告⚠
 
-- [VS Code](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur) + [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin).
+本软件可能存在裸露、暴力、色情或冒犯等不适宜公众场合的内容，请勿在公共场合使用本软件，避免不必要的纷争。
 
-## Type Support For `.vue` Imports in TS
+## 功能
 
-TypeScript cannot handle type information for `.vue` imports by default, so we replace the `tsc` CLI with `vue-tsc` for type checking. In editors, we need [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin) to make the TypeScript language service aware of `.vue` types.
+- [x] 登录
+- [x] 日夜间模式
+- [x] 简易用户信息
+- [x] 自动登录
+- [ ] 阅读历史
+- [-] 漫画模块
+  - [x] 搜索
+  - [x] 阅读
+  - [x] 加入书架
+  - [x] 漫画详情
+  - [x] 漫画评论
+  - [x] 发表评论
+  - [x] 首页推荐
+  - [x] 目录阅读
+  - [ ] 漫画下载
+  - [ ] 漫画分类
+- [ ] 轻小说模块
+  - [ ] 待实现中...
+- [ ] 动漫模块
+  - [ ] 待实现中...
 
-If the standalone TypeScript plugin doesn't feel fast enough to you, Volar has also implemented a [Take Over Mode](https://github.com/johnsoncodehk/volar/discussions/471#discussioncomment-1361669) that is more performant. You can enable it by the following steps:
+## 截图
 
-1. Disable the built-in TypeScript Extension
-   1. Run `Extensions: Show Built-in Extensions` from VSCode's command palette
-   2. Find `TypeScript and JavaScript Language Features`, right click and select `Disable (Workspace)`
-2. Reload the VSCode window by running `Developer: Reload Window` from the command palette.
+这里只以漫画模块举例。
+
+### 首页
+![](./readme-assets/首页.png)
+
+### 个人中心
+![](./readme-assets/个人中心.png)
+
+### 详情（日间模式）
+![](./readme-assets/详情页（日间模式）.png)
+
+### 详情（夜间模式）
+![](./readme-assets/详情页（夜间模式）.png)
+
+### 阅读（翻页模式）
+![](./readme-assets/阅读（翻页模式）.png)
+
+### 阅读（滚动模式）
+![](./readme-assets/阅读（滚动模式）.png)
+
+### 搜索
+![](./readme-assets/搜索页.png)
+
+## 声明
+
+本软件仅用于教育、学习和研究目的，旨在帮助开发者和用户理解应用程序的工作原理。作者与原始应用程序的开发者、公司或组织无关。所有涉及的代码或技术分析均为个人研究成果，并未用于商业用途或恶意活动。请勿将本软件用于任何违反法律或侵犯原开发者权利的活动。作者不对他人使用本软件产生的任何法律或财务后果承担责任。请在 24 小时内删除本软件。
+
+## 安装包
+
+目前还在开发阶段，请自行构建
+
+~~只提供 win 、 linux 的 x86 绿色包，所有数据只在解压的目录中，整体文件夹可随意拷贝移动（下载路径除外）。mac 用户请使用源码自行构建。~~
+
+## 问题
+
+### 读取网址设置失败
+
+TIPS：虽然使用的为拷贝国内的 api ，但依然推荐使用代理进行浏览，速度会快很多。
+
+请在设置中启用代理，这里填写的为默认的 V2rayN 的代理地址，如下图所示：
+
+![](./readme-assets/启用代理.png)
+
+并将选择的 api 添加到你的代理规则中，V2rayN 默认的 v3 路由规则已可以代理 api.copy2000.online 该域名，手动添加如下图：
+
+![](./readme-assets/V2rayN添加代理.png)
+
+### 高分辨率下字体过小
+
+windows 百分百缩放设置下，请在设置中更改缩放等级，建议 2k 屏幕设置为 1.4 ， 4k 屏幕为 1.8 ，如下图
+
+![](./readme-assets/设置缩放等级.png)
+
+### 没有写真模块
+
+这个不做
+
+---
+
+如果你喜欢该软件，动动小手点个 star 就是对我最大的鼓励和帮助🙇‍！
