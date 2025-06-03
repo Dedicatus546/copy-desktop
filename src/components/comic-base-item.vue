@@ -63,7 +63,7 @@ watch(
     }
     const duration = Math.floor(innerWidth / containerWidth) * 10000;
     animate.value?.effect?.updateTiming({
-      duration,
+      duration: duration <= 0 ? "auto" : duration,
     });
     play();
   },

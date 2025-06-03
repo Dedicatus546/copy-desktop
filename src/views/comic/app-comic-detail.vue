@@ -6,6 +6,7 @@ import {
   getComicDetailApi,
   getComicReadDetailApi,
 } from "@/apis";
+import useComicLastReadChapter from "@/compositions/use-comic-last-read-chapter";
 import useSnackbar from "@/compositions/use-snack-bar";
 import useUserStore from "@/stores/use-user-store";
 
@@ -14,6 +15,7 @@ const { comicPathWord } = defineProps<{
 }>();
 const userStore = useUserStore();
 const snackBar = useSnackbar();
+const lastReadChapter = useComicLastReadChapter(comicPathWord);
 
 const {
   loading,
@@ -209,14 +211,17 @@ const toComicAuthorPage = (pathWord: string, name: string) => {
                 </div>
                 <div class="wind-mt-auto">
                   <v-row>
-                    <v-col v-if="comicReadInfo.results.browse" :cols="6">
+                    <v-col
+                      v-if="comicReadInfo.results.browse || lastReadChapter"
+                      :cols="6"
+                    >
                       <router-link
+                        v-if="comicReadInfo.results.browse"
                         v-slot="{ navigate }"
                         :to="{
                           name: 'COMIC_READ',
                           params: {
-                            comicPathWord:
-                              comicReadInfo.results.browse.path_word,
+                            comicPathWord,
                             seriesId: comicReadInfo.results.browse.chapter_uuid,
                           },
                         }"
@@ -233,6 +238,31 @@ const toComicAuthorPage = (pathWord: string, name: string) => {
                             <v-icon icon="mdi-book-open"></v-icon>
                           </template>
                           {{ comicReadInfo.results.browse.chapter_name }}
+                        </v-btn>
+                      </router-link>
+                      <router-link
+                        v-else-if="lastReadChapter"
+                        v-slot="{ navigate }"
+                        :to="{
+                          name: 'COMIC_READ',
+                          params: {
+                            comicPathWord,
+                            seriesId: lastReadChapter.chatperUuid,
+                          },
+                        }"
+                        custom
+                      >
+                        <v-btn
+                          color="primary"
+                          variant="flat"
+                          size="large"
+                          block
+                          @click="navigate()"
+                        >
+                          <template #prepend>
+                            <v-icon icon="mdi-book-open"></v-icon>
+                          </template>
+                          {{ lastReadChapter.chatperName }}
                         </v-btn>
                       </router-link>
                     </v-col>

@@ -1,13 +1,23 @@
 <script setup lang="ts">
 import { usePagination } from "alova/client";
 
-import { getComicSeriesListApi } from "@/apis";
+import { getComicSeriesListApi, Series } from "@/apis";
 import EMPTY_STATE_IMG from "@/assets/empty-state/1.jpg";
+import useComicLastReadChapter from "@/compositions/use-comic-last-read-chapter";
 
 const { comicPathWord, seriesPathWord } = defineProps<{
   comicPathWord: string;
   seriesPathWord: string;
 }>();
+
+const lastReadChapter = useComicLastReadChapter(comicPathWord);
+
+const updateLastReadChapter = (series: Series) => {
+  lastReadChapter.value = {
+    chatperUuid: series.uuid,
+    chatperName: series.name,
+  };
+};
 
 const { loading, data, page, pageSize, total } = usePagination(
   (page, pageSize) =>
@@ -84,7 +94,11 @@ const seriesTabList = computed(() => {
               custom
             >
               <template #default="{ navigate }">
-                <v-btn size="large" block @click="navigate()">
+                <v-btn
+                  size="large"
+                  block
+                  @click="() => (updateLastReadChapter(item.raw), navigate())"
+                >
                   {{ item.raw.name }}
                 </v-btn>
               </template>
