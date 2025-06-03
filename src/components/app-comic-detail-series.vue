@@ -3,17 +3,17 @@ import { usePagination } from "alova/client";
 
 import { getComicSeriesListApi, Series } from "@/apis";
 import EMPTY_STATE_IMG from "@/assets/empty-state/1.jpg";
-import useComicLastReadChapter from "@/compositions/use-comic-last-read-chapter";
+import useLocalComicLastReadChapter from "@/compositions/use-local-comic-last-read-chapter";
 
 const { comicPathWord, seriesPathWord } = defineProps<{
   comicPathWord: string;
   seriesPathWord: string;
 }>();
 
-const lastReadChapter = useComicLastReadChapter(comicPathWord);
+const localLastReadChapter = useLocalComicLastReadChapter(comicPathWord);
 
 const updateLastReadChapter = (series: Series) => {
-  lastReadChapter.value = {
+  localLastReadChapter.value = {
     chatperUuid: series.uuid,
     chatperName: series.name,
   };

@@ -3,7 +3,9 @@ import { StorageSerializers } from "@vueuse/core";
 /**
  * @description 非登录下保存在本地下
  */
-const useComicLastReadChapter = (comicPathWord: MaybeRefOrGetter<string>) => {
+const useLocalComicLastReadChapter = (
+  comicPathWord: MaybeRefOrGetter<string>,
+) => {
   return useStorage<{
     chatperName: string;
     chatperUuid: string;
@@ -17,4 +19,4 @@ const useComicLastReadChapter = (comicPathWord: MaybeRefOrGetter<string>) => {
   );
 };
 
-export default useComicLastReadChapter;
+export default useLocalComicLastReadChapter;

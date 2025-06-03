@@ -6,7 +6,7 @@ import {
   getComicDetailApi,
   getComicReadDetailApi,
 } from "@/apis";
-import useComicLastReadChapter from "@/compositions/use-comic-last-read-chapter";
+import useLocalComicLastReadChapter from "@/compositions/use-local-comic-last-read-chapter";
 import useSnackbar from "@/compositions/use-snack-bar";
 import useUserStore from "@/stores/use-user-store";
 
@@ -15,7 +15,7 @@ const { comicPathWord } = defineProps<{
 }>();
 const userStore = useUserStore();
 const snackBar = useSnackbar();
-const lastReadChapter = useComicLastReadChapter(comicPathWord);
+const localLastReadChapter = useLocalComicLastReadChapter(comicPathWord);
 
 const {
   loading,
@@ -212,7 +212,9 @@ const toComicAuthorPage = (pathWord: string, name: string) => {
                 <div class="wind-mt-auto">
                   <v-row>
                     <v-col
-                      v-if="comicReadInfo.results.browse || lastReadChapter"
+                      v-if="
+                        comicReadInfo.results.browse || localLastReadChapter
+                      "
                       :cols="6"
                     >
                       <router-link
@@ -241,13 +243,13 @@ const toComicAuthorPage = (pathWord: string, name: string) => {
                         </v-btn>
                       </router-link>
                       <router-link
-                        v-else-if="lastReadChapter"
+                        v-else-if="localLastReadChapter"
                         v-slot="{ navigate }"
                         :to="{
                           name: 'COMIC_READ',
                           params: {
                             comicPathWord,
-                            seriesId: lastReadChapter.chatperUuid,
+                            seriesId: localLastReadChapter.chatperUuid,
                           },
                         }"
                         custom
@@ -262,7 +264,7 @@ const toComicAuthorPage = (pathWord: string, name: string) => {
                           <template #prepend>
                             <v-icon icon="mdi-book-open"></v-icon>
                           </template>
-                          {{ lastReadChapter.chatperName }}
+                          {{ localLastReadChapter.chatperName }}
                         </v-btn>
                       </router-link>
                     </v-col>
