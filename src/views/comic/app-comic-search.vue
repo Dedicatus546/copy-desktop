@@ -129,7 +129,7 @@ onMounted(() => {
         </template>
         <template #footer>
           <v-btn
-            v-if="data.length > 0 && data.length < total"
+            v-if="data.length > 0 && data.length < (total ?? 0)"
             :loading="loading"
             block
             color="primary"

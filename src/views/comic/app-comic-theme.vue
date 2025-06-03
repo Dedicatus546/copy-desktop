@@ -55,7 +55,7 @@ const { loading, data, page, total } = usePagination(
       <v-data-iterator
         :items="data"
         :items-per-page="data.length"
-        :loading="loading"
+        :loading="data.length === 0 && loading"
       >
         <template #header>
           <v-tabs
@@ -106,7 +106,7 @@ const { loading, data, page, total } = usePagination(
         </template>
         <template #footer>
           <v-btn
-            v-if="data.length > 0 && data.length < total"
+            v-if="data.length > 0 && data.length < (total ?? 0)"
             :loading="loading"
             block
             color="primary"

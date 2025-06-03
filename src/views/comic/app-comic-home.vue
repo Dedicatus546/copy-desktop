@@ -91,10 +91,7 @@ const search = () => {
             <v-col
               v-for="item of data.results.recComics.list"
               :key="item.comic.path_word"
-              :cols="6"
-              :sm="4"
-              :md="3"
-              :lg="2"
+              :cols="4"
             >
               <comic-route-item :comic="item.comic" />
             </v-col>

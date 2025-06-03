@@ -4,7 +4,7 @@ import { usePagination } from "alova/client";
 import { getComicCompleteListApi } from "@/apis";
 import EMPTY_STATE_IMG from "@/assets/empty-state/4.jpg";
 
-const _ordering = ref<string>("datetime_updated");
+const _ordering = ref<string>("-datetime_updated");
 const ordering = computed({
   get() {
     return _ordering.value;
@@ -15,7 +15,7 @@ const ordering = computed({
   },
 });
 
-const { loading, data, page } = usePagination(
+const { loading, data, page, total } = usePagination(
   (page, pageSize) =>
     getComicCompleteListApi({
       ordering: ordering.value,
@@ -46,7 +46,7 @@ const { loading, data, page } = usePagination(
       <v-data-iterator
         :items="data"
         :items-per-page="data.length"
-        :loading="loading"
+        :loading="data.length === 0 && loading"
       >
         <template #header>
           <v-tabs
@@ -54,21 +54,21 @@ const { loading, data, page } = usePagination(
             align-tabs="center"
             color="primary"
           >
-            <v-tab value="datetime_updated">
-              更新时间
-              <v-icon icon="mdi-chevron-up"></v-icon>
-            </v-tab>
             <v-tab value="-datetime_updated">
               更新时间
               <v-icon icon="mdi-chevron-down"></v-icon>
             </v-tab>
-            <v-tab value="popular">
-              热度
+            <v-tab value="datetime_updated">
+              更新时间
               <v-icon icon="mdi-chevron-up"></v-icon>
             </v-tab>
             <v-tab value="-popular">
               热度
               <v-icon icon="mdi-chevron-down"></v-icon>
+            </v-tab>
+            <v-tab value="popular">
+              热度
+              <v-icon icon="mdi-chevron-up"></v-icon>
             </v-tab>
           </v-tabs>
           <div class="wind-h-8"></div>
@@ -97,7 +97,7 @@ const { loading, data, page } = usePagination(
         </template>
         <template #footer>
           <v-btn
-            v-if="data.length > 0"
+            v-if="data.length > 0 && data.length < (total ?? 0)"
             :loading="loading"
             block
             color="primary"

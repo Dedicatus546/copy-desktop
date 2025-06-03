@@ -22,7 +22,7 @@ const audienceType = createComputed(
 );
 const dateType = createComputed(ref<string>("day"), () => (data.value = []));
 
-const { loading, data, page } = usePagination(
+const { loading, data, page, total } = usePagination(
   (page, pageSize) =>
     getComicRankListApi({
       audienceType: audienceType.value,
@@ -54,7 +54,7 @@ const { loading, data, page } = usePagination(
       <v-data-iterator
         :items="data"
         :items-per-page="data.length"
-        :loading="loading"
+        :loading="data.length === 0 && loading"
       >
         <template #header>
           <v-tabs
@@ -101,7 +101,7 @@ const { loading, data, page } = usePagination(
         </template>
         <template #footer>
           <v-btn
-            v-if="data.length > 0"
+            v-if="data.length > 0 && data.length < (total ?? 0)"
             :loading="loading"
             block
             color="primary"
