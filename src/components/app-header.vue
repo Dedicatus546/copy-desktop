@@ -79,7 +79,7 @@ const tab = computed({
                 class="wind-flex wind-gap-4 wind-cursor-pointer wind-items-center app-region-nodrag"
               >
                 <img
-                  src="@/assets/logo.png"
+                  src="/logo.png"
                   class="wind-w-[50px] wind-block"
                   alt="cm"
                 />

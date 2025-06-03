@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { trpcClient } from "@/apis/ipc";
-import LOGO from "@/assets/logo.png";
 
 import { version } from "../../package.json";
 
@@ -20,7 +19,7 @@ const toRepo = () => {
       <div
         class="wind-py-4 wind-flex wind-flex-col wind-gap-4 wind-items-center"
       >
-        <v-avatar size="100" :image="LOGO" rounded="0" />
+        <v-avatar size="100" image="/logo.png" rounded="0" />
         <div class="text-h5">copy-desktop</div>
       </div>
       <v-divider />
