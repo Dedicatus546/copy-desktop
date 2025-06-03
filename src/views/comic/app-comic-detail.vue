@@ -70,6 +70,16 @@ const toQuickQueryPage = (query: string) => {
   // TODO
   return { name: "COMIC_HOME", query: { query } };
 };
+
+const toComicThemePage = (pathWord: string, name: string) => {
+  return {
+    name: "COMIC_THEME",
+    params: {
+      themePathWord: pathWord,
+      themeName: name,
+    },
+  };
+};
 </script>
 
 <template>
@@ -150,7 +160,7 @@ const toQuickQueryPage = (query: string) => {
                           <router-link
                             v-for="item of comicInfo.results.comic.theme"
                             :key="item.path_word"
-                            :to="toQuickQueryPage(item.path_word)"
+                            :to="toComicThemePage(item.path_word, item.name)"
                           >
                             <v-chip>{{ item.name }}</v-chip>
                           </router-link>

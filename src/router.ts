@@ -57,6 +57,11 @@ const routes: RouteRecordRaw[] = [
         name: "COMIC_SEARCH",
         component: () => import("@/views/comic/app-comic-search.vue"),
       },
+      {
+        path: "theme/:themePathWord/:themeName",
+        name: "COMIC_THEME",
+        component: () => import("@/views/comic/app-comic-theme.vue"),
+      },
     ],
   },
   {
