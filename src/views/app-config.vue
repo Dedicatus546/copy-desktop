@@ -49,6 +49,7 @@ const submit = async () => {
   }
   try {
     await trpcClient.saveConfig.query(toRaw(formState));
+    getConfig();
     dialog({
       width: "50%",
       title: "更新成功",
