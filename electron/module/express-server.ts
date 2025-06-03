@@ -2,7 +2,7 @@ import { Agent, Server } from "node:http";
 import { AddressInfo } from "node:net";
 import { join } from "node:path";
 
-import { distElectron } from "@electron/shared/path";
+import { distElectron, distRenderer } from "@electron/shared/path";
 import { resolveProxyUrl } from "@electron/shared/utils";
 import cors from "cors";
 import { format } from "date-fns";
@@ -20,10 +20,11 @@ if (proxyUrl) {
   agent = new HttpsProxyAgent(proxyUrl);
 }
 
-const proxyExpress = Express();
-proxyExpress.use(cors());
+const express = Express();
+express.use(cors());
+express.use("/", Express.static(distRenderer));
 
-proxyExpress.use(
+express.use(
   "/api",
   (req, _res, next) => {
     req.headers["user-agent"] = "COPY/2.3.0";
@@ -37,7 +38,6 @@ proxyExpress.use(
     req.headers.referer = "com.copymanga.app-2.3.0";
     req.headers.region = "1";
     req.headers.version = "2.3.0";
-    // TODO 未知参数
     req.headers.umstring = "b4c89ca4104ea9a97750314d791520ac";
     next();
   },
@@ -52,34 +52,53 @@ proxyExpress.use(
   }),
 );
 
-// TODO 生产环境下启用
 // vue 路由
-proxyExpress.get("/:rest", (_req, res) => {
+express.get("/:rest", (_req, res) => {
   res.sendFile(join(distElectron, "index.html"));
 });
 
-let proxyServer: Server | undefined;
-const proxyServerInitPromise = new Promise<void>((resolve, reject) => {
-  const devServerUrl = process.env["VITE_DEV_SERVER_URL"];
-  const port = devServerUrl ? 6174 : 0;
-  proxyServer = proxyExpress.listen(port, () => {
-    resolve();
-  });
+let expressServer: Server | undefined;
+let expressServerInitPromise: Promise<void> | undefined;
 
-  proxyServer.on("error", (err) => {
-    reject(err);
-  });
-});
-
-export const getProxyServerPort = async () => {
-  if (!proxyServer) {
+export const getExpressServerPort = async () => {
+  if (!expressServer) {
     return;
   }
-  await proxyServerInitPromise;
-  const address = proxyServer.address() as AddressInfo;
+  await expressServerInitPromise;
+  const address = expressServer.address() as AddressInfo;
   return address.port;
 };
 
-export const closeProxyServer = () => {
-  proxyServer?.close();
+export const closeExpressServer = async () => {
+  return new Promise<void>((resolve, reject) => {
+    expressServer?.close((err) => {
+      if (err) {
+        reject(err);
+        return;
+      }
+      expressServer = undefined;
+      expressServerInitPromise = undefined;
+      resolve();
+    });
+  });
 };
+
+export const startExpressServer = async () => {
+  const lastServerPort = await getExpressServerPort();
+  if (expressServer) {
+    await closeExpressServer();
+  }
+  expressServerInitPromise = new Promise<void>((resolve, reject) => {
+    const devServerUrl = process.env["VITE_DEV_SERVER_URL"];
+    const port = devServerUrl ? 6174 : (lastServerPort ?? 0);
+    expressServer = express.listen(port, () => {
+      resolve();
+    });
+
+    expressServer.on("error", (err) => {
+      reject(err);
+    });
+  });
+};
+
+startExpressServer();

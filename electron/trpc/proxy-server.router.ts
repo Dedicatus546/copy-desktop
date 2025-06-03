@@ -1,9 +1,9 @@
-import { getProxyServerPort } from "@electron/module/proxy-server";
+import { getExpressServerPort } from "@electron/module/express-server";
 
 import { trpc } from "./trpc";
 
 const getProxyServerPortRpc = trpc.procedure.query(async () => {
-  return getProxyServerPort();
+  return getExpressServerPort();
 });
 
 export const router = {

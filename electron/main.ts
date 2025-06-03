@@ -6,6 +6,7 @@ import { debounce } from "radash";
 import { createIPCHandler } from "trpc-electron/main";
 
 import { getConfig, saveConfig } from "./module/config";
+import { getExpressServerPort } from "./module/express-server";
 import { resolveProxyUrl } from "./shared/utils";
 import { router } from "./trpc";
 // const require = createRequire(import.meta.url);
@@ -63,8 +64,8 @@ const createWindow = async () => {
   if (VITE_DEV_SERVER_URL) {
     win.loadURL(VITE_DEV_SERVER_URL);
   } else {
-    // win.loadFile('dist/index.html')
-    win.loadFile(join(RENDERER_DIST, "index.html"));
+    const port = await getExpressServerPort();
+    win.loadURL(`http://localhost:${port}`);
   }
 
   createIPCHandler({
