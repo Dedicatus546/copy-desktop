@@ -3,19 +3,21 @@ import { usePagination } from "alova/client";
 
 import { getComicSeriesListApi, Series } from "@/apis";
 import EMPTY_STATE_IMG from "@/assets/empty-state/1.jpg";
-import useLocalComicLastReadChapter from "@/compositions/use-local-comic-last-read-chapter";
 
 const { comicPathWord, seriesPathWord } = defineProps<{
   comicPathWord: string;
   seriesPathWord: string;
 }>();
 
-const localLastReadChapter = useLocalComicLastReadChapter(comicPathWord);
+const lastChapterModel = defineModel<{
+  chapterName: string;
+  chapterUuid: string;
+}>("lastReadChapter");
 
 const updateLastReadChapter = (series: Series) => {
-  localLastReadChapter.value = {
-    chatperUuid: series.uuid,
-    chatperName: series.name,
+  lastChapterModel.value = {
+    chapterUuid: series.uuid,
+    chapterName: series.name,
   };
 };
 
@@ -96,6 +98,11 @@ const seriesTabList = computed(() => {
               <template #default="{ navigate }">
                 <v-btn
                   size="large"
+                  :color="
+                    lastChapterModel?.chapterUuid === item.raw.uuid
+                      ? 'primary'
+                      : undefined
+                  "
                   block
                   @click="() => (updateLastReadChapter(item.raw), navigate())"
                 >

@@ -7,8 +7,8 @@ const useLocalComicLastReadChapter = (
   comicPathWord: MaybeRefOrGetter<string>,
 ) => {
   return useStorage<{
-    chatperName: string;
-    chatperUuid: string;
+    chapterName: string;
+    chapterUuid: string;
   }>(
     computed(() => `comic:lastReadChapter:${toValue(comicPathWord)}`),
     null,

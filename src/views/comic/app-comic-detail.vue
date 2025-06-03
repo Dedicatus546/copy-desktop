@@ -16,6 +16,28 @@ const { comicPathWord } = defineProps<{
 const userStore = useUserStore();
 const snackBar = useSnackbar();
 const localLastReadChapter = useLocalComicLastReadChapter(comicPathWord);
+const lastReadChapter = computed({
+  get() {
+    if (comicReadInfo.value.results.browse) {
+      return {
+        chapterName: comicReadInfo.value.results.browse.chapter_name,
+        chapterUuid: comicReadInfo.value.results.browse.chapter_uuid,
+      };
+    }
+    return {
+      chapterName: localLastReadChapter.value.chapterName,
+      chapterUuid: localLastReadChapter.value.chapterUuid,
+    };
+  },
+  set(val) {
+    if (comicReadInfo.value.results.browse) {
+      comicReadInfo.value.results.browse.chapter_name = val.chapterName;
+      comicReadInfo.value.results.browse.chapter_uuid = val.chapterUuid;
+    }
+    localLastReadChapter.value.chapterName = val.chapterName;
+    localLastReadChapter.value.chapterUuid = val.chapterUuid;
+  },
+});
 
 const {
   loading,
@@ -249,7 +271,7 @@ const toComicAuthorPage = (pathWord: string, name: string) => {
                           name: 'COMIC_READ',
                           params: {
                             comicPathWord,
-                            seriesId: localLastReadChapter.chatperUuid,
+                            seriesId: localLastReadChapter.chapterUuid,
                           },
                         }"
                         custom
@@ -264,7 +286,7 @@ const toComicAuthorPage = (pathWord: string, name: string) => {
                           <template #prepend>
                             <v-icon icon="mdi-book-open"></v-icon>
                           </template>
-                          {{ localLastReadChapter.chatperName }}
+                          {{ localLastReadChapter.chapterName }}
                         </v-btn>
                       </router-link>
                     </v-col>
@@ -314,6 +336,7 @@ const toComicAuthorPage = (pathWord: string, name: string) => {
                 :value="item.value"
               >
                 <app-comic-detail-series
+                  v-model:last-read-chapter="lastReadChapter"
                   :comic-path-word="comicInfo.results.comic.path_word"
                   :series-path-word="item.value"
                   :total="item.total"
