@@ -561,3 +561,51 @@ export const getComicListByAuthorApi = (query: {
     },
   });
 };
+
+export const getComicFilterApi = () => {
+  return http.Get<
+    RespWrapper<{
+      theme: Array<{
+        initials: number;
+        name: string;
+        logo: null;
+        color_h5: null;
+        path_word: string;
+        count: number;
+      }>;
+      ordering: Array<{
+        name: string;
+        path_word: string;
+      }>;
+      top: Array<{
+        name: string;
+        path_word: string;
+      }>;
+    }>
+  >("h5/filter/comic/tags", {
+    params: {
+      type: 1,
+    },
+  });
+};
+
+// TODO 接口压缩
+export const getComicListByFilter = (query: {
+  limit: number;
+  offset: number;
+  ordering?: string;
+  theme?: string;
+  top?: string;
+}) => {
+  return http.Get<RespWrapper<ListResultWrapper<Comic>>>("comics", {
+    params: {
+      // TODO 未知参数
+      free_type: 1,
+      theme: query.theme,
+      top: query.top,
+      ordering: query.ordering,
+      offset: query.offset,
+      limit: query.limit,
+    },
+  });
+};

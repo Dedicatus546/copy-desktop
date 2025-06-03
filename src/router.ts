@@ -67,6 +67,11 @@ const routes: RouteRecordRaw[] = [
         name: "COMIC_AUTHOR",
         component: () => import("@/views/comic/app-comic-author.vue"),
       },
+      {
+        path: "filter",
+        name: "COMIC_FILTER",
+        component: () => import("@/views/comic/app-comic-filter.vue"),
+      },
     ],
   },
   {

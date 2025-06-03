@@ -61,18 +61,41 @@ const search = () => {
   </div>
   <v-row v-else>
     <v-col :cols="12">
-      <v-form @submit.prevent="search">
-        <v-text-field
-          v-model:model-value="searchText"
-          variant="solo"
-          placeholder="输入漫画名称进行搜索"
-          hide-details
-        >
-          <template #append-inner>
-            <v-btn variant="text" icon="mdi-magnify" @click="search"></v-btn>
-          </template>
-        </v-text-field>
-      </v-form>
+      <v-row>
+        <v-col>
+          <v-form @submit.prevent="search">
+            <v-text-field
+              v-model:model-value="searchText"
+              variant="solo"
+              placeholder="输入漫画名称进行搜索"
+              hide-details
+            >
+              <template #append-inner>
+                <v-btn
+                  variant="text"
+                  icon="mdi-magnify"
+                  @click="search"
+                ></v-btn>
+              </template>
+            </v-text-field>
+          </v-form>
+        </v-col>
+        <v-col cols="auto">
+          <v-tooltip text="发现" location="bottom">
+            <template #activator="{ props }">
+              <v-btn
+                v-bind="props"
+                color="primary"
+                size="large"
+                icon="mdi-filter-variant"
+                :to="{
+                  name: 'COMIC_FILTER',
+                }"
+              ></v-btn>
+            </template>
+          </v-tooltip>
+        </v-col>
+      </v-row>
     </v-col>
     <v-col :cols="12">
       <v-card>
