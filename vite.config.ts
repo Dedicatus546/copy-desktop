@@ -85,4 +85,7 @@ export default defineConfig(async () => ({
       "@electron": resolve(__dirname, "electron"),
     },
   },
+  build: {
+    target: "esnext",
+  },
 }));
