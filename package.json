@@ -13,7 +13,7 @@
     "preview": "vite preview",
     "lint": "eslint . --fix",
     "build": "vue-tsc && vite build && electron-builder --publish always",
-    "build:latest": "vue-tsc && vite build && electron-builder --publish never",
+    "build:latest": "vite build && electron-builder --publish never",
     "postinstall": "electron-builder install-app-deps && simple-git-hooks"
   },
   "dependencies": {
@@ -51,6 +51,7 @@
     "@vitejs/plugin-vue": "^5.2.4",
     "electron": "^30.5.1",
     "electron-builder": "^26.0.12",
+    "electron-icon-builder": "^2.0.1",
     "eslint": "^9.27.0",
     "eslint-config-prettier": "^10.1.5",
     "eslint-plugin-prettier": "^5.4.0",

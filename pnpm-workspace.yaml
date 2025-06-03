@@ -2,4 +2,5 @@ onlyBuiltDependencies:
   - '@parcel/watcher'
   - electron
   - esbuild
+  - phantomjs-prebuilt
   - simple-git-hooks
