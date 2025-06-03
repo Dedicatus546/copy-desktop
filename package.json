@@ -1,5 +1,10 @@
 {
   "name": "copy-desktop",
+  "description": "A copymanga desktop app for windows and linux by vue + electron.",
+  "author": {
+    "name": "Par9uet",
+    "email": "par9uet@qq.com"
+  },
   "private": true,
   "version": "1.0.0",
   "type": "module",
