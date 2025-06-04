@@ -92,17 +92,17 @@ onMounted(() => {
               </template>
             </v-text-field>
           </v-form>
-          <div class="wind-h-8"></div>
-          <v-tabs
-            v-model:model-value="type"
-            align-tabs="center"
+          <v-divider />
+          <v-chip-group
+            filter
+            column
             color="primary"
+            v-model:model-value="type"
           >
-            <v-tab value="">全部</v-tab>
-            <v-tab value="name">名称</v-tab>
-            <v-tab value="author">作者</v-tab>
-            <v-tab value="local">汉化组</v-tab>
-          </v-tabs>
+            <v-chip value="name">名称</v-chip>
+            <v-chip value="author">作者</v-chip>
+            <v-chip value="local">汉化组</v-chip>
+          </v-chip-group>
           <div class="wind-h-8"></div>
         </template>
         <template #loader>

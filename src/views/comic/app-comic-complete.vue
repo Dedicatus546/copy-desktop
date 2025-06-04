@@ -49,28 +49,29 @@ const { loading, data, page, total } = usePagination(
         :loading="data.length === 0 && loading"
       >
         <template #header>
-          <v-tabs
+          <v-chip-group
+            filter
+            column
             v-model:model-value="ordering"
-            align-tabs="center"
             color="primary"
           >
-            <v-tab value="-datetime_updated">
+            <v-chip value="-datetime_updated">
               更新时间
               <v-icon icon="mdi-chevron-down"></v-icon>
-            </v-tab>
-            <v-tab value="datetime_updated">
+            </v-chip>
+            <v-chip value="datetime_updated">
               更新时间
               <v-icon icon="mdi-chevron-up"></v-icon>
-            </v-tab>
-            <v-tab value="-popular">
+            </v-chip>
+            <v-chip value="-popular">
               热度
               <v-icon icon="mdi-chevron-down"></v-icon>
-            </v-tab>
-            <v-tab value="popular">
+            </v-chip>
+            <v-chip value="popular">
               热度
               <v-icon icon="mdi-chevron-up"></v-icon>
-            </v-tab>
-          </v-tabs>
+            </v-chip>
+          </v-chip-group>
           <div class="wind-h-8"></div>
         </template>
         <template #loader>

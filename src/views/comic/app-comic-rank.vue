@@ -57,24 +57,27 @@ const { loading, data, page, total } = usePagination(
         :loading="data.length === 0 && loading"
       >
         <template #header>
-          <v-tabs
+          <v-chip-group
+            filter
+            column
             v-model:model-value="audienceType"
-            align-tabs="center"
             color="primary"
           >
-            <v-tab value="male">男频</v-tab>
-            <v-tab value="female">女频</v-tab>
-          </v-tabs>
-          <v-tabs
+            <v-chip value="male">男频</v-chip>
+            <v-chip value="female">女频</v-chip>
+          </v-chip-group>
+          <v-divider />
+          <v-chip-group
+            filter
+            column
             v-model:model-value="dateType"
-            align-tabs="center"
             color="primary"
           >
-            <v-tab value="day">上升最快</v-tab>
-            <v-tab value="week">周榜</v-tab>
-            <v-tab value="month">月榜</v-tab>
-            <v-tab value="total">总榜</v-tab>
-          </v-tabs>
+            <v-chip value="day">上升最快</v-chip>
+            <v-chip value="week">周榜</v-chip>
+            <v-chip value="month">月榜</v-chip>
+            <v-chip value="total">总榜</v-chip>
+          </v-chip-group>
           <div class="wind-h-8"></div>
         </template>
         <template #loader>
