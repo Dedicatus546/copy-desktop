@@ -24,18 +24,23 @@ const lastReadChapter = computed({
         chapterUuid: comicReadInfo.value.results.browse.chapter_uuid,
       };
     }
-    return {
-      chapterName: localLastReadChapter.value.chapterName,
-      chapterUuid: localLastReadChapter.value.chapterUuid,
-    };
+    if (localLastReadChapter.value) {
+      return {
+        chapterName: localLastReadChapter.value.chapterName,
+        chapterUuid: localLastReadChapter.value.chapterUuid,
+      };
+    }
+    return undefined;
   },
   set(val) {
     if (comicReadInfo.value.results.browse) {
-      comicReadInfo.value.results.browse.chapter_name = val.chapterName;
-      comicReadInfo.value.results.browse.chapter_uuid = val.chapterUuid;
+      comicReadInfo.value.results.browse.chapter_name = val!.chapterName;
+      comicReadInfo.value.results.browse.chapter_uuid = val!.chapterUuid;
     }
-    localLastReadChapter.value.chapterName = val.chapterName;
-    localLastReadChapter.value.chapterUuid = val.chapterUuid;
+    localLastReadChapter.value = {
+      chapterName: val!.chapterName,
+      chapterUuid: val!.chapterUuid,
+    };
   },
 });
 
