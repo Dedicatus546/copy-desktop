@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { useRouteQuery } from "@vueuse/router";
-import { usePagination } from "alova/client";
+import { usePagination, useRequest } from "alova/client";
 
-import { searchComicListApi } from "@/apis";
+import { getComicFilterApi, getComicListApi } from "@/apis";
 import EMPTY_STATE_IMG from "@/assets/empty-state/2.jpg";
 
 const query = useRouteQuery("q");
@@ -20,32 +20,45 @@ const createComputed = <T,>(r: Ref<T>, fn: () => void) => {
   });
 };
 
-const type = createComputed(ref(""), () => {
-  data.value = [];
-});
-
 const search = () => {
   data.value = [];
   page.value = 1;
   send(1, 18);
 };
 
+const theme = createComputed(ref(""), () => (data.value = []));
+const ordering = createComputed(ref(""), () => (data.value = []));
+const top = createComputed(ref(""), () => (data.value = []));
+
+const { loading: filterLoading, data: filterData } = useRequest(
+  () => getComicFilterApi(),
+  {
+    initialData: {
+      results: {
+        theme: [],
+        top: [],
+        ordering: [],
+      },
+    },
+  },
+);
+
 const { loading, data, page, send, total } = usePagination(
   (page, pageSize) =>
-    searchComicListApi({
-      text: searchText.value,
-      type: type.value,
+    getComicListApi({
+      theme: theme.value,
+      ordering: ordering.value,
+      top: top.value,
       limit: pageSize,
       offset: (page - 1) * pageSize,
     }),
   {
-    immediate: false,
     preloadPreviousPage: false,
     preloadNextPage: false,
     append: true,
     initialPage: 1,
     initialPageSize: 18,
-    watchingStates: [type],
+    watchingStates: [theme, ordering, top],
     data: (res) => res.results.list,
     total: (res) => res.results.total,
     initialData: {
@@ -72,19 +85,64 @@ onMounted(() => {
       <v-data-iterator
         :items="data"
         :items-per-page="data.length"
-        :loading="data.length === 0 && loading"
+        :loading="data.length === 0 && (filterLoading || loading)"
       >
         <template #header>
-          <v-tabs
-            v-model:model-value="type"
-            align-tabs="center"
-            color="primary"
-          >
-            <v-tab value="">全部</v-tab>
-            <v-tab value="name">名称</v-tab>
-            <v-tab value="author">作者</v-tab>
-            <v-tab value="local">汉化组</v-tab>
-          </v-tabs>
+          <template v-if="!filterLoading">
+            <v-chip-group
+              color="primary"
+              v-model:model-value="theme"
+              filter
+              column
+            >
+              <v-chip
+                v-for="item of filterData.results.theme"
+                :key="item.path_word"
+                :value="item.path_word"
+              >
+                {{ item.name }}
+              </v-chip>
+            </v-chip-group>
+            <v-divider />
+            <v-chip-group
+              color="primary"
+              v-model:model-value="top"
+              filter
+              column
+            >
+              <v-chip
+                v-for="item of filterData.results.top"
+                :key="item.path_word"
+                :value="item.path_word"
+              >
+                {{ item.name }}
+              </v-chip>
+            </v-chip-group>
+            <v-divider />
+            <v-chip-group
+              color="primary"
+              v-model:model-value="ordering"
+              filter
+              column
+            >
+              <v-chip value="-datetime_updated">
+                更新时间
+                <v-icon icon="mdi-chevron-down"></v-icon>
+              </v-chip>
+              <v-chip value="datetime_updated">
+                更新时间
+                <v-icon icon="mdi-chevron-up"></v-icon>
+              </v-chip>
+              <v-chip value="-popular">
+                热度
+                <v-icon icon="mdi-chevron-down"></v-icon>
+              </v-chip>
+              <v-chip value="popular">
+                热度
+                <v-icon icon="mdi-chevron-up"></v-icon>
+              </v-chip>
+            </v-chip-group>
+          </template>
           <div class="wind-h-8"></div>
         </template>
         <template #loader>
@@ -111,7 +169,7 @@ onMounted(() => {
         </template>
         <template #footer>
           <v-btn
-            v-if="data.length > 0 && data.length < total"
+            v-if="data.length > 0 && data.length < (total ?? 0)"
             :loading="loading"
             block
             color="primary"

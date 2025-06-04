@@ -590,17 +590,24 @@ export const getComicFilterApi = () => {
 };
 
 // TODO 接口压缩
-export const getComicListByFilter = (query: {
-  limit: number;
-  offset: number;
-  ordering?: string;
-  theme?: string;
-  top?: string;
-}) => {
+export const getComicListApi = (
+  query: {
+    limit?: number;
+    offset?: number;
+    ordering?: string;
+    theme?: string;
+    top?: string;
+    freeType?: number;
+  } = {
+    freeType: 1,
+    limit: 18,
+    offset: 0,
+  },
+) => {
   return http.Get<RespWrapper<ListResultWrapper<Comic>>>("comics", {
     params: {
-      // TODO 未知参数
-      free_type: 1,
+      // TODO free_type 未知参数
+      free_type: query.freeType,
       theme: query.theme,
       top: query.top,
       ordering: query.ordering,
