@@ -83,8 +83,38 @@ onMounted(() => {
               placeholder="搜索"
               hide-details
             >
+              <template #prepend>
+                <v-select
+                  v-model:model-value="type"
+                  color="primary"
+                  variant="outlined"
+                  class="wind-w-[120px]"
+                  hide-details
+                  item-title="title"
+                  item-value="value"
+                  :items="[
+                    {
+                      title: '全部',
+                      value: '',
+                    },
+                    {
+                      title: '名称',
+                      value: 'name',
+                    },
+                    {
+                      title: '作者',
+                      value: 'author',
+                    },
+                    {
+                      title: '汉化组',
+                      value: 'local',
+                    },
+                  ]"
+                ></v-select>
+              </template>
               <template #append-inner>
                 <v-btn
+                  type="submit"
                   variant="text"
                   icon="mdi-magnify"
                   @click="search"
@@ -92,17 +122,6 @@ onMounted(() => {
               </template>
             </v-text-field>
           </v-form>
-          <v-divider />
-          <v-chip-group
-            filter
-            column
-            color="primary"
-            v-model:model-value="type"
-          >
-            <v-chip value="name">名称</v-chip>
-            <v-chip value="author">作者</v-chip>
-            <v-chip value="local">汉化组</v-chip>
-          </v-chip-group>
           <div class="wind-h-8"></div>
         </template>
         <template #loader>

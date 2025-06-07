@@ -72,6 +72,7 @@ const search = () => {
             >
               <template #append-inner>
                 <v-btn
+                  type="submit"
                   variant="text"
                   icon="mdi-magnify"
                   @click="search"
