@@ -18,6 +18,9 @@ jobs:
       - name: Checkout Repo
         uses: actions/checkout@v4
 
+      - name: Git
+        run: git config --global url."https://".insteadOf git://
+
       - name: Set Up Node.js
         uses: actions/setup-node@v4
         with:
