@@ -89,13 +89,15 @@ watch(
             ref="authorListInnerElRef"
             class="wind-inline-flex wind-gap-2 wind-truncate"
           >
-            <!-- TODO route name -->
             <router-link
               v-for="author of comic.author"
               :key="author.path_word"
               :to="{
-                name: 'COMIC_HOME',
-                query: { query: author.name },
+                name: 'COMIC_AUTHOR',
+                params: {
+                  authorPathWord: author.path_word,
+                  authorName: author.name,
+                },
               }"
             >
               {{ author.name }}
