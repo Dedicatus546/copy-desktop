@@ -1,7 +1,35 @@
-import { Config, getConfig, saveConfig } from "@electron/module/config";
+import {
+  Config,
+  getConfig,
+  ProxyInfo,
+  saveConfig,
+} from "@electron/module/config";
+import { restartExpressServer } from "@electron/module/express-server";
+import { emitter } from "@electron/shared/mitt";
 import { z } from "zod";
 
 import { trpc } from "./trpc";
+
+const shouldRestartProxyServer = (
+  newProxyInfo?: ProxyInfo,
+  oldProxyInfo?: ProxyInfo,
+) => {
+  if (!oldProxyInfo && !newProxyInfo) {
+    return false;
+  }
+  if ((!oldProxyInfo && newProxyInfo) || (oldProxyInfo && !newProxyInfo)) {
+    return true;
+  }
+  if (
+    oldProxyInfo?.host === newProxyInfo?.host &&
+    oldProxyInfo?.port === newProxyInfo?.port &&
+    oldProxyInfo?.username === newProxyInfo?.username &&
+    oldProxyInfo?.password === newProxyInfo?.password
+  ) {
+    return false;
+  }
+  return true;
+};
 
 const getConfigRpc = trpc.procedure.query(async () => {
   return getConfig();
@@ -10,13 +38,14 @@ const getConfigRpc = trpc.procedure.query(async () => {
 const saveConfigRpc = trpc.procedure
   .input(
     z.object({
-      theme: z.enum(["light", "dark"]).optional(),
-      apiUrl: z.string().optional(),
-      downloadDir: z.string().optional(),
-      readMode: z.enum(["scroll", "click"]).optional(),
-      autoLogin: z.boolean().optional(),
-      loginUserInfo: z.string().optional(),
-      zoomFactor: z.number().optional(),
+      theme: z.enum(["light", "dark"]),
+      apiUrl: z.string(),
+      apiUrlList: z.array(z.string()),
+      downloadDir: z.string(),
+      readMode: z.enum(["scroll", "click"]),
+      autoLogin: z.boolean(),
+      loginUserInfo: z.string(),
+      zoomFactor: z.number(),
       windowInfo: z
         .object({
           x: z.number(),
@@ -33,10 +62,15 @@ const saveConfigRpc = trpc.procedure
           password: z.string(),
         })
         .optional(),
-    }) satisfies z.ZodType<Partial<Config>>,
+    }) satisfies z.ZodType<Config>,
   )
-  .query(async ({ input }) => {
-    await saveConfig(input);
+  .query(async ({ input: newConfig }) => {
+    const config = await getConfig();
+    await saveConfig(newConfig);
+    if (shouldRestartProxyServer(newConfig.proxyInfo, config.proxyInfo)) {
+      await restartExpressServer();
+      emitter.emit("onProxyInfoChange");
+    }
   });
 
 export const router = {

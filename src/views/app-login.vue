@@ -39,15 +39,21 @@ onSuccess(() => {
       username: formState.username,
       password: formState.password,
     });
-    appStore.updateConfigAction({
-      loginUserInfo: encryptStr,
-      autoLogin: true,
-    });
+    appStore.updateConfigAction(
+      {
+        loginUserInfo: encryptStr,
+        autoLogin: true,
+      },
+      true,
+    );
   } else {
-    appStore.updateConfigAction({
-      loginUserInfo: "",
-      autoLogin: false,
-    });
+    appStore.updateConfigAction(
+      {
+        loginUserInfo: "",
+        autoLogin: false,
+      },
+      true,
+    );
   }
   router.replace({ name: "PERSON" });
 });

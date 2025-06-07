@@ -27,8 +27,8 @@ export type Config = {
   autoLogin: boolean;
   loginUserInfo: string;
   zoomFactor: number;
-  windowInfo: WindowInfo | undefined;
-  proxyInfo: ProxyInfo | undefined;
+  windowInfo?: WindowInfo | undefined;
+  proxyInfo?: ProxyInfo | undefined;
 };
 
 export const configFilepath = resolve(dataDir, "config.json");
@@ -58,8 +58,6 @@ export const getConfig = async () => {
   return JSON.parse(str) as Config;
 };
 
-export const saveConfig = async (config: Partial<Config>) => {
-  const currentConfig = await getConfig();
-  const newConfig = Object.assign({}, currentConfig, config);
-  await writeFile(configFilepath, JSON.stringify(newConfig, undefined, 2));
+export const saveConfig = async (config: Config) => {
+  await writeFile(configFilepath, JSON.stringify(config, undefined, 2));
 };

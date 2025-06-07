@@ -7,9 +7,13 @@ import { createIPCHandler } from "trpc-electron/main";
 
 import { getConfig, saveConfig } from "./module/config";
 import { getExpressServerPort } from "./module/express-server";
+import { createLogger } from "./module/logger";
+import { emitter } from "./shared/mitt";
 import { resolveProxyUrl } from "./shared/utils";
 import { router } from "./trpc";
-// const require = createRequire(import.meta.url);
+
+const { info } = createLogger("main");
+
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
 process.env.APP_ROOT = join(__dirname, "..");
@@ -26,7 +30,7 @@ process.env.VITE_PUBLIC = VITE_DEV_SERVER_URL
 let win: BrowserWindow | null;
 
 const createWindow = async () => {
-  const config = await getConfig();
+  let config = await getConfig();
 
   win = new BrowserWindow({
     icon: join(process.env.VITE_PUBLIC!, "electron-vite.svg"),
@@ -39,17 +43,21 @@ const createWindow = async () => {
     ...(config.windowInfo ?? {}),
   });
 
-  if (config.proxyInfo) {
-    const proxyUrl = resolveProxyUrl(config.proxyInfo);
-    await session.defaultSession.setProxy({
-      mode: "fixed_servers",
-      proxyRules: proxyUrl,
-    });
-  } else {
-    await session.defaultSession.setProxy({
-      mode: "direct",
-    });
-  }
+  const setSessionProxy = async () => {
+    if (config.proxyInfo) {
+      const proxyUrl = resolveProxyUrl(config.proxyInfo);
+      await session.defaultSession.setProxy({
+        mode: "fixed_servers",
+        proxyRules: proxyUrl,
+      });
+    } else {
+      await session.defaultSession.setProxy({
+        mode: "direct",
+      });
+    }
+  };
+
+  await setSessionProxy();
 
   const saveCurrentWindowInfo = debounce({ delay: 1000 }, async () => {
     const windowInfo = win!.getBounds();
@@ -74,6 +82,12 @@ const createWindow = async () => {
     createContext: async () => ({
       win: win!,
     }),
+  });
+
+  emitter.on("onProxyInfoChange", async () => {
+    info("proxyInfo 变化，重新设置 sessionProxy");
+    config = await getConfig();
+    await setSessionProxy();
   });
 };
 

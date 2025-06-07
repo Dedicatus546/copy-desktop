@@ -3,7 +3,7 @@ import { Config } from "@electron/module/config";
 import { clone } from "radash";
 
 import { trpcClient } from "@/apis/ipc";
-import useDialog from "@/compositions/use-dialog";
+import useSnackbar from "@/compositions/use-snack-bar";
 import useAppStore from "@/stores/use-app-store.ts";
 
 const loading = ref(false);
@@ -42,23 +42,14 @@ const getConfig = async () => {
   }
 };
 
-const dialog = useDialog();
+const snackbar = useSnackbar();
 const submit = async () => {
   if (!formValid.value) {
     return;
   }
   try {
-    await trpcClient.saveConfig.query(toRaw(formState));
-    getConfig();
-    dialog({
-      width: "50%",
-      title: "更新成功",
-      content: "除下载位置、阅读模式之外的配置重启后生效，是否立即重启？",
-      okText: "重启",
-      onOk() {
-        trpcClient.relaunchApp.query();
-      },
-    });
+    await appStore.updateConfigAction(formState, true);
+    snackbar.success("更新成功");
   } catch (e) {
     console.error("保存配置失败", e);
   }
