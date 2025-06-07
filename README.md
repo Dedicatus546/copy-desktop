@@ -34,7 +34,9 @@
 这里只以漫画模块举例。
 
 ### 首页
-![](./readme-assets/首页.png)
+![](./readme-assets/首页1.png)
+![](./readme-assets/首页2.png)
+![](./readme-assets/首页3.png)
 
 ### 个人中心
 ![](./readme-assets/个人中心.png)
