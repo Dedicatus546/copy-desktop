@@ -20,7 +20,6 @@ withDefaults(
       replace,
     }"
   >
-    <!-- TODO route name -->
     <comic-base-item :comic="comic"></comic-base-item>
   </router-link>
 </template>

@@ -101,7 +101,6 @@ onSuccess(() => {
       </div>
       <!-- eslint-disable-next-line vue/no-v-html -->
       <div v-html="comment.comment"></div>
-      <!-- TODO 回复设计 -->
       <v-row no-gutters class="wind-gap-2">
         <v-col v-if="!isReply && comment.count > 0" cols="auto">
           <v-btn

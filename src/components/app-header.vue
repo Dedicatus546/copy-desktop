@@ -67,7 +67,6 @@ const tab = computed({
 <template>
   <v-app-bar color="primary" class="app-region-drag">
     <v-app-bar-title>
-      <!-- TODO -->
       <div class="wind-flex wind-gap-4 wind-items-center">
         <router-link :to="{ name: 'COMIC_HOME' }" custom>
           <template #default="{ navigate }">
