@@ -63,6 +63,19 @@ export type RankComic = {
   comic: Comic;
 };
 
+export type LightNovel = {
+  path_word: string; // "shenyudeshishenzhemen";
+  name: string; // "神域的弒神者們";
+  cover: string; //"https://hi77-overseas.mangafuna.xyz/book/shenyudeshishenzhemen/cover/1670686728.jpg.328x422.jpg";
+  author: Array<{
+    name: string;
+    path_word: string;
+  }>;
+  status: number;
+  popular: number;
+  datetime_updated: string;
+};
+
 export const getHomeIndexApi = () => {
   return http.Get<
     RespWrapper<{
@@ -613,6 +626,83 @@ export const getComicListApi = (
       ordering: query.ordering,
       offset: query.offset,
       limit: query.limit,
+    },
+  });
+};
+
+export const getLightNovelFilterApi = () => {
+  return http.Get<
+    RespWrapper<{
+      theme: Array<{
+        initials: number;
+        name: string;
+        logo: null;
+        color_h5: null;
+        path_word: string;
+        count: number;
+      }>;
+      ordering: Array<{
+        name: string;
+        path_word: string;
+      }>;
+      top: Array<{
+        name: string;
+        path_word: string;
+      }>;
+    }>
+  >("h5/filter/book/tags");
+};
+
+export const getLightNovelThemeListApi = () => {
+  return http.Get<
+    RespWrapper<
+      ListResultWrapper<{
+        initials: number;
+        name: string;
+        logo: null;
+        color_h5: null;
+        path_word: string;
+        count: number;
+      }>
+    >
+  >("theme/book/count", {
+    params: {
+      limit: 500,
+      offset: 0,
+      free_type: 1,
+    },
+  });
+};
+
+export const getLightNovelListApi = (query: {
+  limit?: number;
+  offset?: number;
+  ordering?: string;
+  theme?: string;
+  freeType?: number;
+}) => {
+  return http.Get<RespWrapper<ListResultWrapper<LightNovel>>>("books", {
+    params: {
+      theme: query.theme,
+      ordering: query.ordering,
+      offset: query.offset,
+      limit: query.limit,
+    },
+  });
+};
+
+export const searchLightNovelListApi = (query: {
+  type: string;
+  text: string;
+  limit: number;
+  offset: number;
+}) => {
+  return http.Get<RespWrapper<ListResultWrapper<LightNovel>>>("search/books", {
+    params: {
+      offset: query.offset,
+      limit: query.limit,
+      q: query.text,
+      q_type: query.type,
     },
   });
 };

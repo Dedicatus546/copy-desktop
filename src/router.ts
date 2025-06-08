@@ -78,7 +78,7 @@ const routes: RouteRecordRaw[] = [
     path: "/light-novel",
     name: "LIGHT_NOVEL",
     redirect: {
-      name: "LIGHT_NOVEL_HOME",
+      name: "LIGHT_NOVEL_FILTER",
     },
     component: () => import("@/views/light-novel/index.vue"),
     children: [
@@ -86,6 +86,25 @@ const routes: RouteRecordRaw[] = [
         path: "home",
         name: "LIGHT_NOVEL_HOME",
         component: () => import("@/views/light-novel/app-light-novel-home.vue"),
+      },
+      {
+        path: "home",
+        name: "LIGHT_NOVEL_FILTER",
+        component: () =>
+          import("@/views/light-novel/app-light-novel-filter.vue"),
+      },
+      {
+        path: "detail/:lightNovelPathWord",
+        name: "LIGHT_NOVEL_DETAIL",
+        props: true,
+        component: () =>
+          import("@/views/light-novel/app-light-novel-detail.vue"),
+      },
+      {
+        path: "search",
+        name: "LIGHT_NOVEL_SEARCH",
+        component: () =>
+          import("@/views/light-novel/app-light-novel-search.vue"),
       },
     ],
   },
