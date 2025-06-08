@@ -680,9 +680,11 @@ export const getLightNovelListApi = (query: {
   ordering?: string;
   theme?: string;
   freeType?: number;
+  author?: string;
 }) => {
   return http.Get<RespWrapper<ListResultWrapper<LightNovel>>>("books", {
     params: {
+      author: query.author,
       theme: query.theme,
       ordering: query.ordering,
       offset: query.offset,
@@ -705,4 +707,100 @@ export const searchLightNovelListApi = (query: {
       q_type: query.type,
     },
   });
+};
+
+export type LightNovelDetail = {
+  uuid: string; // "e3655f4e-e30c-11ef-afcc-3f487b7d9a9a";
+  name: string; // "能夠率直說出喜歡的女生無雙";
+  path_word: string; //"nenggoushuaizhishuochuxihuandenvshengwushuang";
+  close_comment: boolean; // false;
+  close_roast: boolean; // false;
+  region: {
+    value: number;
+    display: string;
+  };
+  status: {
+    value: number;
+    display: string;
+  };
+  author: Array<{
+    name: string;
+    path_word: string;
+  }>;
+  theme: Array<{
+    name: string;
+    path_word: string;
+  }>;
+  parodies: Array<unknown>;
+  brief: string; //"戀愛喜劇的必勝方法只有一個——那就是不停地傳達『喜歡』。\r\n對男高中生·和泉抱持戀心的女生們始終無法踏出那一步，日復一日地生活着。\r\n【校園偶像，只會在兩個人單獨相處的時候撒嬌】天琦雨音。\r\n【明明都被老家斷絕關係了，但是前未婚妻卻不肯放手】白菊白亞。\r\n【校園的小天使……身邊的小惡魔，意外地好搞定】春日波留。\r\n不過，轉到這所學校的是咋看之下很平凡，但生來就是主要女主角的·七緒七瀨。\r\n七緒用刁鑽的直球攻擊朝和泉發起猛攻。\r\n「和泉同學，我喜歡你。請和我交往」「來，啊～♪」「是和泉同學，把我變成這種女生的喔？」\r\n「「「這傢伙……竟然出手了！？」」」驚慌不已的雨音她們也開始展開行動————！？";
+  datetime_updated: string; //"2025-06-06";
+  cover: string; // "https://hi77-overseas.mangafuna.xyz/book/nenggoushuaizhishuochuxihuandenvshengwushuang/cover/1738682996.jpg.328x422.jpg";
+  last_chapter: {
+    id: string;
+    name: string;
+  };
+  popular: number;
+};
+
+export const getLightNovelDetailApi = (lightNovelPathWord: string) => {
+  return http.Get<
+    RespWrapper<{
+      is_lock: boolean;
+      is_login: boolean;
+      is_mobile_bind: boolean;
+      is_vip: boolean;
+      book: LightNovelDetail;
+      popular: number;
+    }>
+  >(`book/${lightNovelPathWord}`);
+};
+
+export const getLightNovelReadDetailApi = (query: {
+  lightNovelPathWord: string;
+}) => {
+  return http.Get<
+    RespWrapper<{
+      browse: {
+        book_id: string; // "e3655f4e-e30c-11ef-afcc-3f487b7d9a9a",
+        path_word: string; //"nenggoushuaizhishuochuxihuandenvshengwushuang",
+        chapter_id: string; //"14448",
+        chapter_name: string; //"第2卷"
+      } | null;
+      collect: number;
+      is_lock: boolean;
+      is_login: boolean;
+      is_mobile_bind: boolean;
+      is_vip: boolean;
+    }>
+  >(`book/${query.lightNovelPathWord}/query`);
+};
+
+export const collectLightNovelApi = (query: {
+  lightNovelId: string;
+  isCollect: number;
+}) => {
+  const body = new FormData();
+  body.set("book_id", query.lightNovelId);
+  body.set("is_collect", query.isCollect + "");
+  return http.Post<RespWrapper<void>>("member/collect/book", body);
+};
+
+export const getLightNovelVolumeListApi = (query: {
+  lightNovelPathWord: string;
+}) => {
+  return http.Get<
+    RespWrapper<
+      ListResultWrapper<{
+        index: number;
+        id: string;
+        count: number; // 2;
+        sort: number; // 10;
+        name: string; // "第1卷";
+        book_id: string; // "e3655f4e-e30c-11ef-afcc-3f487b7d9a9a";
+        book_path_word: string; // "nenggoushuaizhishuochuxihuandenvshengwushuang";
+        prev: string | null;
+        next: string | null; // "14448";
+      }>
+    >
+  >(`book/${query.lightNovelPathWord}/volumes`);
 };
