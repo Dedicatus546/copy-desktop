@@ -347,16 +347,3 @@ const toComicAuthorPage = (pathWord: string, name: string) => {
     </template>
   </v-row>
 </template>
-
-<style scoped lang="scss">
-.skeleton-comic-cover {
-  width: 25%;
-  min-width: 200px;
-  max-width: 300px;
-
-  :deep(.ant-skeleton-image) {
-    width: 100%;
-    height: 100%;
-  }
-}
-</style>
