@@ -999,3 +999,41 @@ export const getAnimeChapterListApi = (query: { animePathWord: string }) => {
     >
   >(`cartoon/${query.animePathWord}/chapters`);
 };
+
+export const getAnimeChapterDetailApi = (query: {
+  animePathWord: string;
+  animeChapterUuid: string;
+  linePathWord: string;
+}) => {
+  return http.Get<
+    RespWrapper<{
+      cartoon: {
+        name: string; //"正能量企鵝";
+        uuid: string; //"230043a7-1e9f-11f0-ae4b-fa163e02432f";
+        path_word: string; //"koupenchan";
+      };
+      chapter: {
+        count: number;
+        name: string;
+        cover: string;
+        vid: unknown | null;
+        video: string;
+        uuid: string;
+        lines: Record<
+          string,
+          {
+            name: string; //"線路一";
+            path_word: string; //"line1";
+            config: boolean;
+          }
+        >;
+        video_list: unknown | null;
+        v_cover: string;
+      };
+    }>
+  >(`cartoon/${query.animePathWord}/chapter/${query.animeChapterUuid}`, {
+    params: {
+      line: query.linePathWord,
+    },
+  });
+};
