@@ -997,5 +997,5 @@ export const getAnimeChapterListApi = (query: { animePathWord: string }) => {
         }>;
       }>
     >
-  >(`book/${query.animePathWord}/volumes`);
+  >(`cartoon/${query.animePathWord}/chapters`);
 };
