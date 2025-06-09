@@ -50,7 +50,7 @@ export default defineConfig([
     },
   },
   {
-    files: ["src/**/*.{ts,vue,css,scss}"],
+    files: ["src/**/*.{ts,vue}"],
     extends: [unocss],
   },
   {
