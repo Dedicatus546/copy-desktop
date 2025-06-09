@@ -31,6 +31,7 @@
     "pinia": "^3.0.3",
     "radash": "^12.1.0",
     "scroll-into-view-if-needed": "^3.1.0",
+    "superjson": "^2.2.2",
     "swiper": "^11.2.8",
     "typeface-roboto": "^1.1.13",
     "vue": "^3.5.16",

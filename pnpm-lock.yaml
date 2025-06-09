@@ -50,6 +50,9 @@ importers:
       scroll-into-view-if-needed:
         specifier: ^3.1.0
         version: 3.1.0
+      superjson:
+        specifier: ^2.2.2
+        version: 2.2.2
       swiper:
         specifier: ^11.2.8
         version: 11.2.8
