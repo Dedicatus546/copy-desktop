@@ -84,7 +84,7 @@ const {
   () =>
     collectComicApi({
       comicId: comicPathWord,
-      isCollect: comicReadInfo.value.results.collect > 0 ? 0 : 1,
+      isCollect: (comicReadInfo.value.results.collect ?? 0) > 0 ? 0 : 1,
     }),
   {
     immediate: false,
@@ -178,10 +178,7 @@ const toComicAuthorPage = (pathWord: string, name: string) => {
                         </div>
                       </div>
                     </v-col>
-                    <v-col
-                      v-if="comicInfo.results.comic.author.length > 0"
-                      :cols="12"
-                    >
+                    <v-col :cols="12">
                       <div class="wind-flex">
                         <div class="wind-text-nowrap">状态：</div>
                         <div class="wind-flex wind-flex-wrap wind-gap-2">
@@ -189,10 +186,7 @@ const toComicAuthorPage = (pathWord: string, name: string) => {
                         </div>
                       </div>
                     </v-col>
-                    <v-col
-                      v-if="comicInfo.results.comic.theme.length > 0"
-                      :cols="12"
-                    >
+                    <v-col :cols="12">
                       <div class="wind-flex wind-gap-1">
                         <div class="wind-text-nowrap">热度：</div>
                         <div class="wind-flex wind-flex-wrap wind-gap-2">
@@ -211,10 +205,7 @@ const toComicAuthorPage = (pathWord: string, name: string) => {
                         </div>
                       </div>
                     </v-col>
-                    <v-col
-                      v-if="comicInfo.results.comic.theme.length > 0"
-                      :cols="12"
-                    >
+                    <v-col v-if="comicInfo.results.comic.brief" :cols="12">
                       <div class="wind-flex wind-gap-1 wind-items-start">
                         <div class="wind-h-[30px] wind-text-nowrap">简介：</div>
                         <div>
@@ -296,7 +287,7 @@ const toComicAuthorPage = (pathWord: string, name: string) => {
                           <v-icon icon="mdi-book-heart"></v-icon>
                         </template>
                         {{
-                          comicReadInfo.results.collect > 0
+                          (comicReadInfo.results.collect ?? 0) > 0
                             ? "移出书架"
                             : "加入书架"
                         }}

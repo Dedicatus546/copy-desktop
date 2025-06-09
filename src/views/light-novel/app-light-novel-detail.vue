@@ -65,7 +65,7 @@ const {
   () =>
     collectLightNovelApi({
       lightNovelId: lightNovelPathWord,
-      isCollect: lightNovelReadInfo.value.results.collect > 0 ? 0 : 1,
+      isCollect: (lightNovelReadInfo.value.results.collect ?? 0) > 0 ? 0 : 1,
     }),
   {
     immediate: false,
@@ -168,10 +168,7 @@ const toLightNovelAuthorPage = (pathWord: string, name: string) => {
                         </div>
                       </div>
                     </v-col>
-                    <v-col
-                      v-if="lightNovelInfo.results.book.author.length > 0"
-                      :cols="12"
-                    >
+                    <v-col :cols="12">
                       <div class="wind-flex">
                         <div class="wind-text-nowrap">状态：</div>
                         <div class="wind-flex wind-flex-wrap wind-gap-2">
@@ -179,10 +176,7 @@ const toLightNovelAuthorPage = (pathWord: string, name: string) => {
                         </div>
                       </div>
                     </v-col>
-                    <v-col
-                      v-if="lightNovelInfo.results.book.theme.length > 0"
-                      :cols="12"
-                    >
+                    <v-col :cols="12">
                       <div class="wind-flex wind-gap-1">
                         <div class="wind-text-nowrap">热度：</div>
                         <div class="wind-flex wind-flex-wrap wind-gap-2">
@@ -201,10 +195,7 @@ const toLightNovelAuthorPage = (pathWord: string, name: string) => {
                         </div>
                       </div>
                     </v-col>
-                    <v-col
-                      v-if="lightNovelInfo.results.book.theme.length > 0"
-                      :cols="12"
-                    >
+                    <v-col v-if="lightNovelInfo.results.book.brief" :cols="12">
                       <div class="wind-flex wind-gap-1 wind-items-start">
                         <div class="wind-h-[30px] wind-text-nowrap">简介：</div>
                         <div>
@@ -290,7 +281,7 @@ const toLightNovelAuthorPage = (pathWord: string, name: string) => {
                           <v-icon icon="mdi-book-heart"></v-icon>
                         </template>
                         {{
-                          lightNovelReadInfo.results.collect > 0
+                          (lightNovelReadInfo.results.collect ?? 0) > 0
                             ? "移出书架"
                             : "加入书架"
                         }}

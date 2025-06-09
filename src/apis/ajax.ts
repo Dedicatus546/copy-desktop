@@ -201,7 +201,7 @@ export const getComicReadDetailApi = (query: { comicPathWord: string }) => {
         chapter_id: string;
         chapter_name: string;
       } | null;
-      collect: number;
+      collect: number | null;
       is_lock: boolean;
       is_login: boolean;
       is_mobile_bind: boolean;
@@ -708,7 +708,7 @@ export const getLightNovelReadDetailApi = (query: {
         chapter_id: string; //"14448",
         chapter_name: string; //"第2卷"
       } | null;
-      collect: number;
+      collect: number | null;
       is_lock: boolean;
       is_login: boolean;
       is_mobile_bind: boolean;
