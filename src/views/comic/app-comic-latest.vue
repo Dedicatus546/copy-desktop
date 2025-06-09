@@ -52,7 +52,7 @@ const { loading, data, page, total } = usePagination(
           <v-row>
             <template v-for="item of items" :key="item.raw.id">
               <v-col cols="6" :sm="4" :md="3" :lg="2">
-                <comic-route-item :comic="item.raw.comic" />
+                <app-comic-list-item :comic="item.raw.comic" />
               </v-col>
             </template>
           </v-row>

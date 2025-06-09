@@ -1,9 +1,15 @@
 <script setup lang="ts">
 import { Comic } from "@/apis";
 
-defineProps<{
-  comic: Comic;
-}>();
+withDefaults(
+  defineProps<{
+    comic: Comic;
+    replace?: boolean;
+  }>(),
+  {
+    replace: false,
+  },
+);
 
 const authorListContainerElRef = useTemplateRef("authorListContainerRef");
 const authorListInnerElRef = useTemplateRef("authorListInnerElRef");
@@ -74,39 +80,47 @@ watch(
 </script>
 
 <template>
-  <v-card color="primary">
-    <v-img
-      :aspect-ratio="0.777251"
-      cover
-      :alt="`${comic.name}的封面`"
-      :src="comic.cover"
-    />
-    <v-card-item>
-      <v-card-title>{{ comic.name }}</v-card-title>
-      <v-card-subtitle class="wind-cursor-default">
-        <div class="wind-max-w-full" ref="authorListContainerRef">
-          <div
-            ref="authorListInnerElRef"
-            class="wind-inline-flex wind-gap-2 wind-truncate"
-          >
-            <router-link
-              v-for="author of comic.author"
-              :key="author.path_word"
-              :to="{
-                name: 'COMIC_AUTHOR',
-                params: {
-                  authorPathWord: author.path_word,
-                  authorName: author.name,
-                },
-              }"
+  <router-link
+    :to="{
+      name: 'COMIC_DETAIL',
+      params: { comicPathWord: comic.path_word },
+      replace,
+    }"
+  >
+    <v-card color="primary">
+      <v-img
+        :aspect-ratio="0.777251"
+        cover
+        :alt="`${comic.name}的封面`"
+        :src="comic.cover"
+      />
+      <v-card-item>
+        <v-card-title>{{ comic.name }}</v-card-title>
+        <v-card-subtitle class="wind-cursor-default">
+          <div class="wind-max-w-full" ref="authorListContainerRef">
+            <div
+              ref="authorListInnerElRef"
+              class="wind-inline-flex wind-gap-2 wind-truncate"
             >
-              {{ author.name }}
-            </router-link>
+              <router-link
+                v-for="author of comic.author"
+                :key="author.path_word"
+                :to="{
+                  name: 'COMIC_AUTHOR',
+                  params: {
+                    authorPathWord: author.path_word,
+                    authorName: author.name,
+                  },
+                }"
+              >
+                {{ author.name }}
+              </router-link>
+            </div>
           </div>
-        </div>
-      </v-card-subtitle>
-    </v-card-item>
-  </v-card>
+        </v-card-subtitle>
+      </v-card-item>
+    </v-card>
+  </router-link>
 </template>
 
 <style scoped></style>

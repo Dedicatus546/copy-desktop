@@ -35,7 +35,7 @@ const next = () => {
         @swiper="onSwiper"
       >
         <swiper-slide v-for="item of list" :key="item.path_word">
-          <comic-route-item :comic="item" />
+          <app-comic-list-item :comic="item" />
         </swiper-slide>
       </swiper>
     </v-col>

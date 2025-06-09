@@ -117,7 +117,7 @@ const search = () => {
               :key="item.comic.path_word"
               :cols="4"
             >
-              <comic-route-item :comic="item.comic" />
+              <app-comic-list-item :comic="item.comic" />
             </v-col>
           </v-row>
         </v-card-text>
@@ -140,7 +140,7 @@ const search = () => {
               :md="3"
               :lg="2"
             >
-              <comic-route-item :comic="item.comic" />
+              <app-comic-list-item :comic="item.comic" />
             </v-col>
           </v-row>
           <app-home-swiper
@@ -178,7 +178,7 @@ const search = () => {
               :md="3"
               :lg="2"
             >
-              <comic-route-item :comic="item.comic" />
+              <app-comic-list-item :comic="item.comic" />
             </v-col>
           </v-row>
           <app-home-swiper
@@ -216,7 +216,7 @@ const search = () => {
               :md="3"
               :lg="2"
             >
-              <comic-route-item :comic="item" />
+              <app-comic-list-item :comic="item" />
             </v-col>
           </v-row>
           <app-home-swiper
@@ -264,7 +264,7 @@ const search = () => {
                     :md="3"
                     :lg="2"
                   >
-                    <comic-route-item :comic="subItem.comic" />
+                    <app-comic-list-item :comic="subItem.comic" />
                   </v-col>
                 </v-row>
               </v-card>
