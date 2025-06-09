@@ -23,58 +23,72 @@ const { loading, data, onSuccess } = useRequest(() =>
   }),
 );
 
-onSuccess(() => {
-  onMounted(() => {
-    if (videoContainerRef.value) {
-      artPlayerInst.value = new Artplayer({
-        container: videoContainerRef.value,
-        url: data.value.results.chapter.video,
-        type: "m3u8",
-        plugins: [
-          artplayerPluginHlsControl({
-            // quality: {
-            //   // Show qualitys in control
-            //   control: true,
-            //   // Show qualitys in setting
-            //   setting: true,
-            //   // Get the quality name from level
-            //   getName: (level) => level.height + "P",
-            //   // I18n
-            //   title: "Quality",
-            //   auto: "Auto",
-            // },
-            // audio: {
-            //   // Show audios in control
-            //   control: true,
-            //   // Show audios in setting
-            //   setting: true,
-            //   // Get the audio name from track
-            //   getName: (track) => track.name,
-            //   // I18n
-            //   title: "Audio",
-            //   auto: "Auto",
-            // },
-          }),
-        ],
-        customType: {
-          m3u8: function playM3u8(video, url, art) {
-            if (Hls.isSupported()) {
-              if (art.hls) art.hls.destroy();
-              const hls = new Hls();
-              hls.loadSource(url);
-              hls.attachMedia(video);
-              art.hls = hls;
-              art.on("destroy", () => hls.destroy());
-            } else if (video.canPlayType("application/vnd.apple.mpegurl")) {
-              video.src = url;
-            } else {
-              art.notice.show = "Unsupported playback format: m3u8";
-            }
-          },
+onSuccess(async () => {
+  await nextTick();
+  if (videoContainerRef.value) {
+    artPlayerInst.value = new Artplayer({
+      container: videoContainerRef.value,
+      url: data.value.results.chapter.video,
+      type: "m3u8",
+      poster: data.value.results.chapter.v_cover,
+      setting: true,
+      flip: true,
+      playbackRate: true,
+      aspectRatio: true,
+      // subtitleOffset: true,
+      fullscreen: true,
+      fullscreenWeb: true,
+      screenshot: true,
+      pip: true,
+      theme: "#1e90ff",
+      plugins: [
+        artplayerPluginHlsControl({
+          // quality: {
+          //   // Show qualitys in control
+          //   control: true,
+          //   // Show qualitys in setting
+          //   setting: true,
+          //   // Get the quality name from level
+          //   getName: (level) => level.height + "P",
+          //   // I18n
+          //   title: "Quality",
+          //   auto: "Auto",
+          // },
+          // audio: {
+          //   // Show audios in control
+          //   control: true,
+          //   // Show audios in setting
+          //   setting: true,
+          //   // Get the audio name from track
+          //   getName: (track) => track.name,
+          //   // I18n
+          //   title: "Audio",
+          //   auto: "Auto",
+          // },
+        }),
+      ],
+      customType: {
+        m3u8: function playM3u8(video, url, art) {
+          if (Hls.isSupported()) {
+            if (art.hls) art.hls.destroy();
+            const hls = new Hls();
+            hls.loadSource(url);
+            hls.attachMedia(video);
+            art.hls = hls;
+            art.on("destroy", () => hls.destroy());
+          } else if (video.canPlayType("application/vnd.apple.mpegurl")) {
+            video.src = url;
+          } else {
+            art.notice.show = "Unsupported playback format: m3u8";
+          }
         },
-      });
-    }
-  });
+      },
+    });
+  }
+});
+
+onBeforeUnmount(() => {
+  artPlayerInst.value?.destroy();
 });
 </script>
 
@@ -85,11 +99,10 @@ onSuccess(() => {
   >
     <v-progress-circular indeterminate></v-progress-circular>
   </div>
-  <v-card>
-    <v-card-item>
-      <div ref="videoContainerRef"></div>
-    </v-card-item>
-  </v-card>
+  <div
+    ref="videoContainerRef"
+    class="wind-flex wind-items-center wind-inset-0 wind-justify-center wind-absolute"
+  ></div>
 </template>
 
 <style scoped lang="scss"></style>

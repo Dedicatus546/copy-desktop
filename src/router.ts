@@ -153,6 +153,12 @@ const routes: RouteRecordRaw[] = [
         name: "ANIME_COMPANY",
         component: () => import("@/views/anime/app-anime-company.vue"),
       },
+      {
+        path: "watch/:animePathWord/:animeChapterUuid/:linePathWord",
+        name: "ANIME_WATCH",
+        props: true,
+        component: () => import("@/views/anime/app-anime-watch.vue"),
+      },
     ],
   },
   // {

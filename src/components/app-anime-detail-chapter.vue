@@ -60,13 +60,25 @@ const { loading, data } = usePagination(
           <v-list-item>
             <v-list-item-title>{{ item.raw.name }}</v-list-item-title>
             <template v-slot:append>
-              <v-btn
-                color="primary"
+              <router-link
                 v-for="line of item.raw.lines"
                 :key="line.path_word"
+                :to="{
+                  name: 'ANIME_WATCH',
+                  params: {
+                    animePathWord,
+                    animeChapterUuid: item.raw.uuid,
+                    linePathWord: line.path_word,
+                  },
+                }"
+                custom
               >
-                {{ line.name }}
-              </v-btn>
+                <template #default="{ navigate }">
+                  <v-btn color="primary" @click="navigate()">
+                    {{ line.name }}
+                  </v-btn>
+                </template>
+              </router-link>
             </template>
           </v-list-item>
         </template>
