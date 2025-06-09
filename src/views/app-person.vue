@@ -6,10 +6,10 @@ const userStore = useUserStore();
 const appStore = useAppStore();
 const userInfo = computed(() => userStore.userInfo!);
 
-const activeTabKey = ref<"bookshelf" | "history">("bookshelf");
+const activeTabKey = ref<"collection" | "history">("collection");
 const tabList = [
   {
-    value: "bookshelf",
+    value: "collection",
     tab: "书架",
   },
   {
@@ -45,8 +45,8 @@ const tabList = [
           </v-tab>
         </v-tabs>
         <v-tabs-window v-model:model-value="activeTabKey">
-          <v-tabs-window-item value="bookshelf">
-            <app-person-bookshelf />
+          <v-tabs-window-item value="collection">
+            <app-person-collection />
           </v-tabs-window-item>
           <!-- <v-tabs-window-item value="history">
               <app-person-history-comic />

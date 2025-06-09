@@ -362,7 +362,7 @@ export const getSystemNetWorkApi = () => {
   return http.Get<RespWrapper<SystemNetwork>>("system/network2");
 };
 
-export const getBookshelfComicListApi = (query: {} & PaginationQuery) => {
+export const getCollectComicListApi = (query: {} & PaginationQuery) => {
   return http.Get<
     RespWrapper<
       ListResultWrapper<{
@@ -397,19 +397,16 @@ export const collectComicApi = (query: {
   return http.Post<RespWrapper<void>>("member/collect/comics", body);
 };
 
-export const getBookshelfBookListApi = (query: {} & PaginationQuery) => {
+export const getCollectLightNovelListApi = (query: {} & PaginationQuery) => {
   return http.Get<
     RespWrapper<
       ListResultWrapper<{
-        comic: Comic;
+        book: LightNovel;
         uuid: number;
-        name: unknown;
-        b_folder: boolean;
-        folder_id: unknown;
         last_browse: {
           last_browse_id: string;
           last_browse_name: string;
-        };
+        } | null;
       }>
     >
   >("member/collect/books", {
@@ -962,6 +959,28 @@ export const collectAnimelApi = (query: {
   body.set("cartoon_id", query.animeId);
   body.set("is_collect", query.isCollect + "");
   return http.Post<RespWrapper<void>>("member/collect/cartoon", body);
+};
+
+export const getCollectAnimeListApi = (query: {} & PaginationQuery) => {
+  return http.Get<
+    RespWrapper<
+      ListResultWrapper<{
+        cartoon: Anime;
+        uuid: number;
+        last_browse: {
+          last_browse_id: string;
+          last_browse_name: string;
+        } | null;
+      }>
+    >
+  >("member/collect/cartoons", {
+    params: {
+      free_type: 1,
+      ordering: "-datetime_modifier",
+      limit: query.limit,
+      offset: query.offset,
+    },
+  });
 };
 
 export const getAnimeChapterListApi = (query: { animePathWord: string }) => {

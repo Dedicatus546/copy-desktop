@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import { usePagination } from "alova/client";
 
-import { getBookshelfBookListApi } from "@/apis";
+import { getCollectComicListApi } from "@/apis";
 import EMPTY_STATE_IMG from "@/assets/empty-state/5.jpg";
 
 const { page, pageCount, pageSize, loading, data } = usePagination(
   (page, pageSize) =>
-    getBookshelfBookListApi({
+    getCollectComicListApi({
       limit: pageSize,
       offset: (page - 1) * pageSize,
     }),

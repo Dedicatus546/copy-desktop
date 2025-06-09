@@ -1,11 +1,21 @@
 <script setup lang="ts">
-import AppPersonBookshelfBook from "./app-person-bookshelf-book.vue";
-import AppPersonBookshelfComic from "./app-person-bookshelf-comic.vue";
+import AppPersonCollectionAnime from "./app-person-collection-anime.vue";
+import AppPersonCollectionComic from "./app-person-collection-comic.vue";
+import AppPersonCollectionLightNovel from "./app-person-collection-light-novel.vue";
 
 const bookshelfTab = ref("comic");
 const bookshelfTabList = [
-  { label: "漫画", value: "comic", component: AppPersonBookshelfComic },
-  { label: "轻小说", value: "book", component: AppPersonBookshelfBook },
+  { label: "漫画", value: "comic", component: AppPersonCollectionComic },
+  {
+    label: "轻小说",
+    value: "light-novel",
+    component: AppPersonCollectionLightNovel,
+  },
+  {
+    label: "动画",
+    value: "anime",
+    component: AppPersonCollectionAnime,
+  },
 ] as const;
 </script>
 
