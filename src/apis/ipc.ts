@@ -1,7 +1,12 @@
 import { Router } from "@electron/trpc/router";
 import { createTRPCClient } from "@trpc/client";
+import superjson from "superjson";
 import { ipcLink } from "trpc-electron/renderer";
 
 export const trpcClient = createTRPCClient({
-  links: [ipcLink<Router>()],
+  links: [
+    ipcLink<Router>({
+      transformer: superjson,
+    }),
+  ],
 });
