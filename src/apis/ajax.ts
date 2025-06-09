@@ -746,3 +746,237 @@ export const getLightNovelVolumeListApi = (query: {
     >
   >(`book/${query.lightNovelPathWord}/volumes`);
 };
+
+export const getAnimeIndexApi = () => {
+  return http.Get<
+    RespWrapper<{
+      topics: ListResultWrapper<{
+        title: string;
+        series: unknown | null;
+        journal: string;
+        cover: string;
+        period: unknown | null;
+        type: number;
+        brief: string;
+        path_word: string;
+        datetime_created: string;
+      }>;
+      recCartoons: ListResultWrapper<{
+        type: number;
+        comic: {
+          path_word: string;
+          name: string;
+          cover: string;
+          theme: Array<{
+            name: string;
+            path_word: string;
+          }>;
+          females: Array<unknown>;
+          males: Array<unknown>;
+          company: {
+            name: string;
+            path_word: string;
+          };
+          years: string;
+          count: number;
+          popular: number;
+        };
+      }>;
+      tags: Array<{
+        initials: number;
+        name: string;
+        logo: unknown | null;
+        color_h5: unknown | null;
+        path_word: string;
+        count: number;
+      }>;
+      ordering: Array<{
+        name: string;
+        path_word: string;
+      }>;
+      banners: Array<{
+        type: number;
+        cover: string;
+        brief: string;
+        out_uuid: string;
+        comic: {
+          name: string;
+          path_word: string;
+        };
+      }>;
+    }>
+  >("h5/cartoonIndex");
+};
+
+export type Anime = {
+  path_word: string; // "gorillanokamikarakagosaretareijouwaouritsukishidandekawaigarareru";
+  name: string; // "受到猩猩之神庇護的大小姐在皇家騎士團受到寵愛";
+  cover: string; //"https://sg.mangafuna.xyz/g/gorillanokamikarakagosaretareijouwaouritsukishidandekawaigarareru/cover/1742753144.jpg.328x422.jpg";
+  count: number;
+  years: string;
+  theme: Array<{
+    name: string;
+    path_word: string;
+  }>;
+  females: Array<unknown>;
+  males: Array<unknown>;
+  datetime_updated: string;
+  b_subtitle: boolean;
+  popular: number;
+};
+
+export const getAnimeListApi = (query: {
+  limit?: number;
+  offset?: number;
+  ordering?: string;
+  theme?: string;
+  freeType?: number;
+  company?: string;
+}) => {
+  return http.Get<RespWrapper<ListResultWrapper<Anime>>>("cartoons", {
+    params: {
+      free_type: query.freeType ?? 1,
+      theme: query.theme,
+      ordering: query.ordering,
+      offset: query.offset ?? 0,
+      limit: query.limit ?? 18,
+      company: query.company,
+    },
+  });
+};
+
+export const searchAnimeListApi = (query: {
+  text: string;
+  limit: number;
+  offset: number;
+}) => {
+  return http.Get<RespWrapper<ListResultWrapper<Anime>>>("search/cartoons", {
+    params: {
+      offset: query.offset,
+      limit: query.limit,
+      q: query.text,
+    },
+  });
+};
+
+export const getAnimeThemeListApi = () => {
+  return http.Get<
+    RespWrapper<
+      ListResultWrapper<{
+        initials: number;
+        name: string;
+        logo: null;
+        color_h5: null;
+        path_word: string;
+        count: number;
+      }>
+    >
+  >("theme/cartoon/count", {
+    params: {
+      limit: 500,
+      offset: 0,
+      free_type: 1,
+    },
+  });
+};
+
+export const getAnimeRecommendListApi = (query: {
+  limit: number;
+  offset: number;
+}) => {
+  return http.Get<
+    RespWrapper<
+      ListResultWrapper<{
+        type: number;
+        comic: Anime;
+      }>
+    >
+  >("recs", {
+    params: {
+      // TODO 不确定该参数为固定还是？
+      pos: 3200301,
+      offset: query.offset,
+      limit: query.limit,
+    },
+  });
+};
+
+export type AnimeDetail = {
+  uuid: string; // "a4150105-0810-11f0-b69f-fa163e02432f";
+  path_word: string; //"kanchigainoateliermeister";
+  free_type: {
+    value: number;
+    display: string;
+  };
+  grade: {
+    value: number;
+    display: string;
+  };
+  cartoon_type: {
+    value: number;
+    display: string;
+  };
+  category: {
+    value: number;
+    display: string;
+  };
+  name: string; //"干雜活我乃最強";
+  cover: string; //"https://sk.mangafuna.xyz/k/kanchigainoateliermeister/cover/1742752801.jpg.328x422.jpg";
+  theme: Array<{
+    name: string; // "冒險";
+    path_word: string; // "maoxian";
+  }>;
+  females: Array<unknown>;
+  males: Array<unknown>;
+  parodies: unknown | null;
+  company: {
+    name: string;
+    path_word: string;
+  };
+  years: string;
+  datetime_updated: string;
+  last_chapter: {
+    uuid: string; // "082808bd-4499-11f0-8a38-fa163e02432f";
+    name: string; // "第11集";
+  };
+  popular: number;
+  b_subtitle: boolean;
+  brief: string; //"庫爾特是一個善良的男孩，在英雄的聚會上做雜務，突然被趕出了聚會，因為他「無用」。\r\n而且，事實證明，所有與戰鬥有關的天賦都是最低等的。\r\n庫爾特決定幫忙做各種工作來謀生。\r\n然後，無論他走到哪裡，他都會展現出令人難以置信的驚人才華！\r\n事實上，庫爾特在戰鬥以外的所有領域的能力都擁有最高的SSS等級……！\r\n然而，當事人卻完全不知道這一點，並誤以為這是「家常便飯」。\r\n他最終用無意識的行動拯救了人們，拯救了小鎮，甚至拯救了國家！ ？\r\n一個男孩被英雄的隊伍開除了，他茫然地旅行。";
+};
+
+export const getAnimeDetailApi = (animePathWord: string) => {
+  return http.Get<
+    RespWrapper<{
+      collect: number | null;
+      popular: number;
+      cartoon: AnimeDetail;
+    }>
+  >(`cartoon/${animePathWord}`);
+};
+
+export const collectAnimelApi = (query: {
+  animeId: string;
+  isCollect: number;
+}) => {
+  const body = new FormData();
+  body.set("cartoon_id", query.animeId);
+  body.set("is_collect", query.isCollect + "");
+  return http.Post<RespWrapper<void>>("member/collect/cartoon", body);
+};
+
+export const getAnimeChapterListApi = (query: { animePathWord: string }) => {
+  return http.Get<
+    RespWrapper<
+      ListResultWrapper<{
+        name: string; // "第01集";
+        uuid: string; // "33b722c7-0d8d-11f0-97a2-fa163e02432f";
+        v_cover: string; // "https://sk.mangafuna.xyz/k/kanchigainoateliermeister/vcover/1743356046.jpg";
+        lines: Array<{
+          name: string; // "線路三";
+          path_word: string; // "line3";
+          config: boolean;
+        }>;
+      }>
+    >
+  >(`book/${query.animePathWord}/volumes`);
+};

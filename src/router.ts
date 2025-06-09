@@ -127,6 +127,32 @@ const routes: RouteRecordRaw[] = [
         name: "ANIME_HOME",
         component: () => import("@/views/anime/app-anime-home.vue"),
       },
+      {
+        path: "recommend",
+        name: "ANIME_RECOMMEND",
+        component: () => import("@/views/anime/app-anime-recommend.vue"),
+      },
+      {
+        path: "detail/:animePathWord",
+        name: "ANIME_DETAIL",
+        props: true,
+        component: () => import("@/views/anime/app-anime-detail.vue"),
+      },
+      {
+        path: "search",
+        name: "ANIME_SEARCH",
+        component: () => import("@/views/anime/app-anime-search.vue"),
+      },
+      {
+        path: "theme/:themePathWord/:themeName",
+        name: "ANIME_THEME",
+        component: () => import("@/views/anime/app-anime-theme.vue"),
+      },
+      {
+        path: "company/:companyPathWord/:companyName",
+        name: "ANIME_COMPANY",
+        component: () => import("@/views/anime/app-anime-company.vue"),
+      },
     ],
   },
   // {
