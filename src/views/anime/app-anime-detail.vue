@@ -287,7 +287,7 @@ const toAnimeCompanyPage = (pathWord: string, name: string) => {
           <v-card-text>
             <v-tabs-window v-model:model-value="activeTabKey">
               <v-tabs-window-item value="chapter">
-                <!-- TODO -->
+                <app-anime-detail-chapter :anime-path-word="animePathWord" />
               </v-tabs-window-item>
               <v-tabs-window-item value="comment"></v-tabs-window-item>
             </v-tabs-window>
