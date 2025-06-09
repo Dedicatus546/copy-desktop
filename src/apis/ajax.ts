@@ -506,23 +506,6 @@ export const getComicRecommendListApi = (query: {
   });
 };
 
-export const getComicCompleteListApi = (query: {
-  ordering: string;
-  limit: number;
-  offset: number;
-}) => {
-  return http.Get<RespWrapper<ListResultWrapper<Comic>>>("comics", {
-    params: {
-      top: "finish",
-      // TODO 未知参数
-      free_type: 1,
-      ordering: query.ordering,
-      offset: query.offset,
-      limit: query.limit,
-    },
-  });
-};
-
 export const searchComicListApi = (query: {
   type: string;
   text: string;
@@ -535,42 +518,6 @@ export const searchComicListApi = (query: {
       limit: query.limit,
       q: query.text,
       q_type: query.type,
-    },
-  });
-};
-
-export const getComicListByThemeApi = (query: {
-  limit: number;
-  offset: number;
-  theme: string;
-  ordering: string;
-}) => {
-  return http.Get<RespWrapper<ListResultWrapper<Comic>>>("comics", {
-    params: {
-      // TODO 未知参数
-      free_type: 1,
-      theme: query.theme,
-      ordering: query.ordering,
-      offset: query.offset,
-      limit: query.limit,
-    },
-  });
-};
-
-export const getComicListByAuthorApi = (query: {
-  limit: number;
-  offset: number;
-  author: string;
-  ordering: string;
-}) => {
-  return http.Get<RespWrapper<ListResultWrapper<Comic>>>("comics", {
-    params: {
-      // TODO 未知参数
-      free_type: 1,
-      author: query.author,
-      ordering: query.ordering,
-      offset: query.offset,
-      limit: query.limit,
     },
   });
 };
@@ -602,30 +549,25 @@ export const getComicFilterApi = () => {
   });
 };
 
-// TODO 接口压缩
-export const getComicListApi = (
-  query: {
-    limit?: number;
-    offset?: number;
-    ordering?: string;
-    theme?: string;
-    top?: string;
-    freeType?: number;
-  } = {
-    freeType: 1,
-    limit: 18,
-    offset: 0,
-  },
-) => {
+export const getComicListApi = (query: {
+  limit?: number;
+  offset?: number;
+  ordering?: string;
+  theme?: string;
+  top?: string;
+  freeType?: number;
+  author?: string;
+}) => {
   return http.Get<RespWrapper<ListResultWrapper<Comic>>>("comics", {
     params: {
       // TODO free_type 未知参数
-      free_type: query.freeType,
+      free_type: query.freeType ?? 1,
+      author: query.author,
       theme: query.theme,
       top: query.top,
       ordering: query.ordering,
-      offset: query.offset,
-      limit: query.limit,
+      offset: query.offset ?? 0,
+      limit: query.limit ?? 18,
     },
   });
 };

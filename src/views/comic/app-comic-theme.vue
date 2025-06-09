@@ -2,7 +2,7 @@
 import { useRouteParams } from "@vueuse/router";
 import { usePagination } from "alova/client";
 
-import { getComicListByThemeApi } from "@/apis";
+import { getComicListApi } from "@/apis";
 import EMPTY_STATE_IMG from "@/assets/empty-state/5.jpg";
 
 const createComputed = <T,>(r: Ref<T>, fn: () => void) => {
@@ -25,7 +25,7 @@ const ordering = createComputed(
 );
 const { loading, data, page, total } = usePagination(
   (page, pageSize) =>
-    getComicListByThemeApi({
+    getComicListApi({
       theme: themePathWord.value,
       ordering: ordering.value,
       limit: pageSize,

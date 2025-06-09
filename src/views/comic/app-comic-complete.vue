@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { usePagination } from "alova/client";
 
-import { getComicCompleteListApi } from "@/apis";
+import { getComicListApi } from "@/apis";
 import EMPTY_STATE_IMG from "@/assets/empty-state/4.jpg";
 
 const _ordering = ref<string>("-datetime_updated");
@@ -17,7 +17,7 @@ const ordering = computed({
 
 const { loading, data, page, total } = usePagination(
   (page, pageSize) =>
-    getComicCompleteListApi({
+    getComicListApi({
       ordering: ordering.value,
       limit: pageSize,
       offset: (page - 1) * pageSize,
