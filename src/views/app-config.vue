@@ -117,7 +117,9 @@ onMounted(() => {
             ></v-select>
           </v-col>
           <v-col :cols="12">
-            <select-folder-input v-model:model-value="formState.downloadDir" />
+            <app-select-folder-input
+              v-model:model-value="formState.downloadDir"
+            />
           </v-col>
           <v-col :cols="12">
             <v-slider

@@ -157,7 +157,11 @@ onSuccess(() => {
               <v-divider />
             </v-col>
             <v-col :cols="12">
-              <comment-item is-reply :comic-id="comicId" :comment="subItem" />
+              <app-comment-item
+                is-reply
+                :comic-id="comicId"
+                :comment="subItem"
+              />
             </v-col>
           </template>
           <v-col :cols="12">
