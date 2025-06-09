@@ -38,9 +38,6 @@ importers:
       express:
         specifier: ^5.1.0
         version: 5.1.0
-      hls:
-        specifier: ^0.0.1
-        version: 0.0.1
       http-proxy-middleware:
         specifier: ^3.0.5
         version: 3.0.5
@@ -2279,9 +2276,6 @@ packages:
   he@1.2.0:
     resolution: {integrity: sha512-F/1DnUGPopORZi0ni+CvrCgHQ5FyEAHRLSApuYWMmrbSwoN2Mn/7k+Gl38gJnR7yyDZk6WLXwiGod1JOWNDKGw==}
     hasBin: true
-
-  hls@0.0.1:
-    resolution: {integrity: sha512-ov6aIzckaDCdFFAeJbrmZYhAR0O7w+nDXh3fz9XEcf8P6EercldLht/23JHRFXmAMtvKw8dzuOCafzktdV1AZw==}
 
   hookable@5.5.3:
     resolution: {integrity: sha512-Yc+BQe8SvoXH1643Qez1zqLRmbA5rCL+sSmk6TVos0LWVfNIB7PGncdlId77WzLGSIB5KaWgTaNTs2lNVEI6VQ==}
@@ -6304,8 +6298,6 @@ snapshots:
       function-bind: 1.1.2
 
   he@1.2.0: {}
-
-  hls@0.0.1: {}
 
   hookable@5.5.3: {}
 

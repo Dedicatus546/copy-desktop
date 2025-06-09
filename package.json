@@ -27,7 +27,6 @@
     "crypto-js": "^4.2.0",
     "date-fns": "^4.1.0",
     "express": "^5.1.0",
-    "hls": "^0.0.1",
     "http-proxy-middleware": "^3.0.5",
     "https-proxy-agent": "^7.0.6",
     "mitt": "^3.0.1",
