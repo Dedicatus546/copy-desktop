@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { invalidateCache } from "alova";
 import { usePagination, useRequest } from "alova/client";
 
 import {
@@ -27,6 +28,11 @@ const props = defineProps<{
     | ReturnType<typeof commentLightNovelApi>;
 }>();
 
+let listMethod:
+  | ReturnType<typeof getComicCommentListApi>
+  | ReturnType<typeof getLightNovelCommentListApi>
+  | undefined = undefined;
+
 const {
   loading,
   page,
@@ -36,10 +42,10 @@ const {
   send: refresh,
 } = usePagination(
   (page, pageSize) =>
-    props.getCommentListApi({
+    (listMethod = props.getCommentListApi({
       limit: pageSize,
       offset: (page - 1) * pageSize,
-    }),
+    })),
   {
     initialPage: 1,
     initialPageSize: 10,
@@ -69,17 +75,13 @@ const snackbar = useSnackbar();
 
 onSuccess(() => {
   snackbar.success("评论成功");
+  invalidateCache(listMethod);
   refresh(1);
 });
 </script>
 
 <template>
-  <!-- TODO submit -->
-  <v-form
-    :model="formState"
-    class="wind-mb-4"
-    @submit.prevent="false && send()"
-  >
+  <v-form :model="formState" class="wind-mb-4" @submit.prevent="send()">
     <v-row>
       <v-col :cols="12">
         <v-textarea
