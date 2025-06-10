@@ -140,6 +140,45 @@ export const getLightNovelVolumeListApi = (query: {
   >(`book/${query.lightNovelPathWord}/volumes`);
 };
 
+export const getLightNovelVolumeApi = (query: {
+  lightNovelPathWord: string;
+  chapterId: string;
+}) => {
+  return http.Get<
+    RespWrapper<{
+      is_lock: boolean;
+      is_login: boolean;
+      is_mobile_bind: boolean;
+      is_vip: boolean;
+      book: {
+        name: string; //"能夠率直說出喜歡的女生無雙";
+        uuid: string; //"e3655f4e-e30c-11ef-afcc-3f487b7d9a9a";
+        path_word: string; //"nenggoushuaizhishuochuxihuandenvshengwushuang";
+      };
+      volume: {
+        index: number;
+        id: string; //"14156";
+        count: number; //2;
+        sort: number; //10;
+        name: string; //"第1卷";
+        txt_addr: string; //"https://hi77-overseas.mangafuna.xyz/book/nenggoushuaizhishuochuxihuandenvshengwushuang/17386831229039563.txt";
+        txt_encoding: string; //"GBK";
+        book_id: string; //"e3655f4e-e30c-11ef-afcc-3f487b7d9a9a";
+        book_path_word: string; //"nenggoushuaizhishuochuxihuandenvshengwushuang";
+        contents: Array<{
+          name: string; //第一卷 I 女主角竞赛的必胜方法;
+          content_type: number; //1;
+          content: string | null;
+          start_lines: number;
+          end_lines: number;
+        }>;
+        prev: string | null;
+        next: string | null;
+      };
+    }>
+  >(`book/${query.lightNovelPathWord}/volume/${query.chapterId}`);
+};
+
 export const getLightNovelCommentListApi = (
   query: {
     lightNovelId: string;
