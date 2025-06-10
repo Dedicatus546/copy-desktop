@@ -68,7 +68,7 @@ onSuccess(async () => {
         }),
       ],
       customType: {
-        m3u8: function playM3u8(video, url, art) {
+        m3u8(video, url, art) {
           if (Hls.isSupported()) {
             if (art.hls) art.hls.destroy();
             const hls = new Hls();
@@ -79,7 +79,7 @@ onSuccess(async () => {
           } else if (video.canPlayType("application/vnd.apple.mpegurl")) {
             video.src = url;
           } else {
-            art.notice.show = "Unsupported playback format: m3u8";
+            art.notice.show = "该设备不支持播放 m3u8 文件";
           }
         },
       },
