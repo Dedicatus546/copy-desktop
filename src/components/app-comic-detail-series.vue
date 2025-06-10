@@ -83,35 +83,40 @@ const seriesTabList = computed(() => {
             </v-tab>
           </v-tabs>
         </v-col>
-        <template v-for="item of items" :key="item.raw.id">
-          <v-col :cols="6" :sm="4" :md="3" :lg="2">
-            <router-link
-              :to="{
-                name: 'COMIC_READ',
-                params: {
-                  comicPathWord: item.raw.comic_path_word,
-                  seriesId: item.raw.uuid,
-                },
-              }"
-              custom
-            >
-              <template #default="{ navigate }">
-                <v-btn
-                  size="large"
-                  :color="
-                    lastChapterModel?.chapterUuid === item.raw.uuid
-                      ? 'primary'
-                      : undefined
-                  "
-                  block
-                  @click="() => (updateLastReadChapter(item.raw), navigate())"
-                >
-                  {{ item.raw.name }}
-                </v-btn>
-              </template>
-            </router-link>
-          </v-col>
-        </template>
+        <v-col
+          v-for="item of items"
+          :key="item.raw.uuid"
+          :cols="6"
+          :sm="4"
+          :md="3"
+          :lg="2"
+        >
+          <router-link
+            :to="{
+              name: 'COMIC_READ',
+              params: {
+                comicPathWord: item.raw.comic_path_word,
+                seriesId: item.raw.uuid,
+              },
+            }"
+            custom
+          >
+            <template #default="{ navigate }">
+              <v-btn
+                size="large"
+                :color="
+                  lastChapterModel?.chapterUuid === item.raw.uuid
+                    ? 'primary'
+                    : undefined
+                "
+                block
+                @click="() => (updateLastReadChapter(item.raw), navigate())"
+              >
+                {{ item.raw.name }}
+              </v-btn>
+            </template>
+          </router-link>
+        </v-col>
       </v-row>
     </template>
   </v-data-iterator>
