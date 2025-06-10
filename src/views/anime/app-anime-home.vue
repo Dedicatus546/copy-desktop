@@ -7,18 +7,7 @@ import {
   getAnimeThemeListApi,
 } from "@/apis";
 import EMPTY_STATE_IMG from "@/assets/empty-state/5.jpg";
-
-const createComputed = <T,>(r: Ref<T>, fn: () => void) => {
-  return computed<T>({
-    get() {
-      return r.value;
-    },
-    set(val) {
-      r.value = val;
-      fn();
-    },
-  });
-};
+import { createComputed } from "@/utils";
 
 const router = useRouter();
 const searchText = ref("");

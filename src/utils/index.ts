@@ -31,3 +31,30 @@ export const delay = async (ts: number) => {
     }, ts);
   });
 };
+
+/**
+ * @description 根据 ref 创建一个 computed ，在 set 中执行 fn
+ */
+export const createComputed = <T>(
+  r: Ref<T>,
+  fn: () => void,
+  options?: {
+    timing: "before" | "after";
+  },
+) => {
+  const { timing = "after" } = options ?? {};
+  return computed<T>({
+    get() {
+      return r.value;
+    },
+    set(val) {
+      if (timing === "before") {
+        fn();
+      }
+      r.value = val;
+      if (timing === "after") {
+        fn();
+      }
+    },
+  });
+};

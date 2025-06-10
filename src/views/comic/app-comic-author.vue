@@ -4,18 +4,7 @@ import { usePagination } from "alova/client";
 
 import { getComicListApi } from "@/apis";
 import EMPTY_STATE_IMG from "@/assets/empty-state/5.jpg";
-
-const createComputed = <T,>(r: Ref<T>, fn: () => void) => {
-  return computed<T>({
-    get() {
-      return r.value;
-    },
-    set(val) {
-      r.value = val;
-      fn();
-    },
-  });
-};
+import { createComputed } from "@/utils";
 
 const authorName = useRouteParams("authorName") as Ref<string>;
 const authorPathWord = useRouteParams("authorPathWord") as Ref<string>;

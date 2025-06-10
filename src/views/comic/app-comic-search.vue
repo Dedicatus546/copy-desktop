@@ -4,21 +4,10 @@ import { usePagination } from "alova/client";
 
 import { searchComicListApi } from "@/apis";
 import EMPTY_STATE_IMG from "@/assets/empty-state/2.jpg";
+import { createComputed } from "@/utils";
 
 const query = useRouteQuery("q");
 const searchText = ref("");
-
-const createComputed = <T,>(r: Ref<T>, fn: () => void) => {
-  return computed<T>({
-    get() {
-      return r.value;
-    },
-    set(val) {
-      r.value = val;
-      fn();
-    },
-  });
-};
 
 const type = createComputed(ref(""), () => {
   data.value = [];
