@@ -4,7 +4,7 @@ import vueHook from "alova/vue";
 
 import useUserStore from "@/stores/use-user-store";
 
-import { trpcClient } from "./ipc";
+import { trpcClient } from "../ipc";
 
 const port = await trpcClient.getProxyServerPort.query();
 const baseURL = `http://localhost:${port}/api`;

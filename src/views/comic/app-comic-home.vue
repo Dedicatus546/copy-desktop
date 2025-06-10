@@ -2,9 +2,9 @@
 import { breakpointsVuetifyV3 } from "@vueuse/core";
 import { useRequest } from "alova/client";
 
-import { getHomeIndexApi } from "@/apis";
+import { getComicIndexApi } from "@/apis";
 
-const { loading, data } = useRequest(() => getHomeIndexApi());
+const { loading, data } = useRequest(() => getComicIndexApi());
 
 const router = useRouter();
 const breakpoints = useBreakpoints(breakpointsVuetifyV3);
