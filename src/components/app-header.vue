@@ -40,7 +40,7 @@ const logout = () => {
     },
     true,
   );
-  router.replace({ name: "LOGIN" });
+  router.push({ name: "LOGIN" });
 };
 
 const minimizeWin = () => {
