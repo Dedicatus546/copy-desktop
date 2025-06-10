@@ -23,7 +23,7 @@ const http = createAlova({
     // method.config.headers.region = 1;
     // method.config.headers.device = "V417IR";
     method.config.params.platform = 3;
-    // method.config.params.in_mainland = true;
+    method.config.params.in_mainland = true;
   },
   responded: {
     async onSuccess(response, method) {
