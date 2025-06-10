@@ -3,6 +3,7 @@ import { useRequest } from "alova/client";
 import Artplayer from "artplayer";
 import artplayerPluginHlsControl from "artplayer-plugin-hls-control";
 import Hls from "hls.js";
+import { useTheme } from "vuetify";
 
 import { getAnimeChapterDetailApi } from "@/apis";
 
@@ -12,6 +13,7 @@ const { animeChapterUuid, animePathWord, linePathWord } = defineProps<{
   linePathWord: string;
 }>();
 
+const gTheme = useTheme();
 const artPlayerInst = ref<Artplayer | null>(null);
 const videoContainerRef = useTemplateRef("videoContainerRef");
 
@@ -40,7 +42,6 @@ onSuccess(async () => {
       fullscreenWeb: true,
       screenshot: true,
       pip: true,
-      theme: "#1e90ff",
       plugins: [
         artplayerPluginHlsControl({
           // quality: {
@@ -84,11 +85,24 @@ onSuccess(async () => {
         },
       },
     });
+    setArtPlayerTheme();
   }
 });
 
+const setArtPlayerTheme = () => {
+  const color = gTheme.themes.value[gTheme.name.value].colors.primary;
+  if (artPlayerInst.value) {
+    artPlayerInst.value.theme = color;
+  }
+};
+
 onBeforeUnmount(() => {
   artPlayerInst.value?.destroy();
+});
+
+// 同步主题颜色
+watch(gTheme.name, () => {
+  setArtPlayerTheme();
 });
 </script>
 
