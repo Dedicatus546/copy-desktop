@@ -131,125 +131,120 @@ const commentLightNovelApiWrapper = (query: {
 </script>
 
 <template>
-  <v-row>
-    <v-col
-      v-if="
-        loading ||
-        lightNovelReadInfoLoading ||
-        !lightNovelInfo ||
-        !lightNovelReadInfo
-      "
-      :cols="12"
-    >
-      <div
-        class="wind-flex wind-h-[30vh] wind-items-center wind-justify-center"
-      >
-        <v-progress-circular indeterminate></v-progress-circular>
-      </div>
-    </v-col>
-    <template v-else>
-      <v-col :cols="12">
-        <v-card>
-          <v-card-text>
-            <div class="wind-flex wind-gap-4">
-              <div
-                class="wind-flex-shrink-0 wind-max-w-[300px] wind-min-w-[200px] wind-w-1/4"
-              >
-                <v-card variant="text">
-                  <v-img
-                    :aspect-ratio="3 / 4"
-                    cover
-                    :alt="`${lightNovelInfo.results.book.name}的封面`"
-                    :src="cover"
-                  />
-                </v-card>
+  <div
+    v-if="
+      loading ||
+      lightNovelReadInfoLoading ||
+      !lightNovelInfo ||
+      !lightNovelReadInfo
+    "
+    class="wind-flex wind-h-full wind-items-center wind-justify-center"
+  >
+    <v-progress-circular indeterminate></v-progress-circular>
+  </div>
+  <v-row v-else>
+    <v-col :cols="12">
+      <v-card>
+        <v-card-text>
+          <div class="wind-flex wind-gap-4">
+            <div
+              class="wind-flex-shrink-0 wind-max-w-[300px] wind-min-w-[200px] wind-w-1/4"
+            >
+              <v-card variant="text">
+                <v-img
+                  :aspect-ratio="3 / 4"
+                  cover
+                  :alt="`${lightNovelInfo.results.book.name}的封面`"
+                  :src="cover"
+                />
+              </v-card>
+            </div>
+            <div class="wind-flex wind-flex-grow wind-flex-col wind-gap-4">
+              <div class="wind-flex wind-gap-2">
+                <div class="text-h5">
+                  {{ lightNovelInfo.results.book.name }}
+                </div>
+                <template v-if="lightNovelInfo.results.book.theme.length > 0">
+                  <router-link
+                    v-for="item of lightNovelInfo.results.book.theme"
+                    :key="item.path_word"
+                    :to="toLightNovelThemePage(item.path_word, item.name)"
+                  >
+                    <v-chip color="primary">{{ item.name }}</v-chip>
+                  </router-link>
+                </template>
               </div>
-              <div class="wind-flex wind-flex-grow wind-flex-col wind-gap-4">
-                <div class="wind-flex wind-gap-2">
-                  <div class="text-h5">
-                    {{ lightNovelInfo.results.book.name }}
-                  </div>
-                  <template v-if="lightNovelInfo.results.book.theme.length > 0">
-                    <router-link
-                      v-for="item of lightNovelInfo.results.book.theme"
-                      :key="item.path_word"
-                      :to="toLightNovelThemePage(item.path_word, item.name)"
-                    >
-                      <v-chip color="primary">{{ item.name }}</v-chip>
-                    </router-link>
-                  </template>
-                </div>
-                <div>
-                  <v-row no-gutters class="wind-gap-3">
-                    <v-col
-                      v-if="lightNovelInfo.results.book.author.length > 0"
-                      :cols="12"
-                    >
-                      <div class="wind-flex">
-                        <div class="wind-text-nowrap">作者：</div>
-                        <div class="wind-flex wind-flex-wrap wind-gap-2">
-                          <router-link
-                            v-for="item of lightNovelInfo.results.book.author"
-                            :key="item.path_word"
-                            :to="
-                              toLightNovelAuthorPage(item.path_word, item.name)
-                            "
-                          >
-                            <span class="wind-font-bold">
-                              {{ item.name }}
-                            </span>
-                          </router-link>
-                        </div>
+              <div>
+                <v-row no-gutters class="wind-gap-3">
+                  <v-col
+                    v-if="lightNovelInfo.results.book.author.length > 0"
+                    :cols="12"
+                  >
+                    <div class="wind-flex">
+                      <div class="wind-text-nowrap">作者：</div>
+                      <div class="wind-flex wind-flex-wrap wind-gap-2">
+                        <router-link
+                          v-for="item of lightNovelInfo.results.book.author"
+                          :key="item.path_word"
+                          :to="
+                            toLightNovelAuthorPage(item.path_word, item.name)
+                          "
+                        >
+                          <span class="wind-font-bold">
+                            {{ item.name }}
+                          </span>
+                        </router-link>
                       </div>
-                    </v-col>
-                    <v-col :cols="12">
-                      <div class="wind-flex">
-                        <div class="wind-text-nowrap">状态：</div>
-                        <div class="wind-flex wind-flex-wrap wind-gap-2">
-                          {{ lightNovelInfo.results.book.status.display }}
-                        </div>
+                    </div>
+                  </v-col>
+                  <v-col :cols="12">
+                    <div class="wind-flex">
+                      <div class="wind-text-nowrap">状态：</div>
+                      <div class="wind-flex wind-flex-wrap wind-gap-2">
+                        {{ lightNovelInfo.results.book.status.display }}
                       </div>
-                    </v-col>
-                    <v-col :cols="12">
-                      <div class="wind-flex wind-gap-1">
-                        <div class="wind-text-nowrap">热度：</div>
-                        <div class="wind-flex wind-flex-wrap wind-gap-2">
-                          {{ lightNovelInfo.results.book.popular }}
-                        </div>
+                    </div>
+                  </v-col>
+                  <v-col :cols="12">
+                    <div class="wind-flex wind-gap-1">
+                      <div class="wind-text-nowrap">热度：</div>
+                      <div class="wind-flex wind-flex-wrap wind-gap-2">
+                        {{ lightNovelInfo.results.book.popular }}
                       </div>
-                    </v-col>
-                    <v-col
-                      v-if="lightNovelInfo.results.book.datetime_updated"
-                      :cols="12"
-                    >
-                      <div class="wind-flex wind-gap-1">
-                        <div class="wind-text-nowrap">更新时间：</div>
-                        <div class="wind-flex wind-flex-wrap wind-gap-2">
-                          {{ lightNovelInfo.results.book.datetime_updated }}
-                        </div>
+                    </div>
+                  </v-col>
+                  <v-col
+                    v-if="lightNovelInfo.results.book.datetime_updated"
+                    :cols="12"
+                  >
+                    <div class="wind-flex wind-gap-1">
+                      <div class="wind-text-nowrap">更新时间：</div>
+                      <div class="wind-flex wind-flex-wrap wind-gap-2">
+                        {{ lightNovelInfo.results.book.datetime_updated }}
                       </div>
-                    </v-col>
-                    <v-col v-if="lightNovelInfo.results.book.brief" :cols="12">
-                      <div class="wind-flex wind-gap-1 wind-items-start">
-                        <div class="wind-h-[30px] wind-text-nowrap">简介：</div>
-                        <div>
-                          {{ lightNovelInfo.results.book.brief }}
-                        </div>
+                    </div>
+                  </v-col>
+                  <v-col v-if="lightNovelInfo.results.book.brief" :cols="12">
+                    <div class="wind-flex wind-gap-1 wind-items-start">
+                      <div class="wind-h-[30px] wind-text-nowrap">简介：</div>
+                      <div>
+                        {{ lightNovelInfo.results.book.brief }}
                       </div>
-                    </v-col>
-                  </v-row>
-                </div>
-                <div class="wind-mt-auto">
-                  <v-row>
-                    <!-- <v-col
+                    </div>
+                  </v-col>
+                </v-row>
+              </div>
+              <div class="wind-mt-auto">
+                <v-row>
+                  <!-- <v-col
                       v-if="
                         lightNovelReadInfo.results.browse ||
                         localLastReadChapter
                       "
                       :cols="6"
                     > -->
-                    <!-- TODO fix route -->
-                    <!-- <router-link
+                  <!-- TODO fix route -->
+                  <!-- <router-link
                         v-if="lightNovelReadInfo.results.browse"
                         v-slot="{ navigate }"
                         :to="{
@@ -275,8 +270,8 @@ const commentLightNovelApiWrapper = (query: {
                           {{ lightNovelReadInfo.results.browse.chapter_name }}
                         </v-btn>
                       </router-link> -->
-                    <!-- TODO fix route -->
-                    <!-- <router-link
+                  <!-- TODO fix route -->
+                  <!-- <router-link
                         v-else-if="localLastReadChapter"
                         v-slot="{ navigate }"
                         :to="{
@@ -301,52 +296,51 @@ const commentLightNovelApiWrapper = (query: {
                           {{ localLastReadChapter.chapterName }}
                         </v-btn>
                       </router-link> -->
-                    <!-- </v-col> -->
-                    <v-col v-if="userStore.isLogin" :cols="6">
-                      <v-btn
-                        :loading="collectLightNovelLoading"
-                        color="warning"
-                        variant="flat"
-                        size="large"
-                        block
-                        @click="collectLightNovel"
-                      >
-                        <template #prepend>
-                          <v-icon icon="mdi-book-heart"></v-icon>
-                        </template>
-                        {{
-                          (lightNovelReadInfo.results.collect ?? 0) > 0
-                            ? "移出收藏"
-                            : "加入收藏"
-                        }}
-                      </v-btn>
-                    </v-col>
-                  </v-row>
-                </div>
+                  <!-- </v-col> -->
+                  <v-col v-if="userStore.isLogin" :cols="6">
+                    <v-btn
+                      :loading="collectLightNovelLoading"
+                      color="warning"
+                      variant="flat"
+                      size="large"
+                      block
+                      @click="collectLightNovel"
+                    >
+                      <template #prepend>
+                        <v-icon icon="mdi-book-heart"></v-icon>
+                      </template>
+                      {{
+                        (lightNovelReadInfo.results.collect ?? 0) > 0
+                          ? "移出收藏"
+                          : "加入收藏"
+                      }}
+                    </v-btn>
+                  </v-col>
+                </v-row>
               </div>
             </div>
-          </v-card-text>
-        </v-card>
-      </v-col>
-      <v-col :cols="12">
-        <v-card>
-          <v-tabs v-model:model-value="activeTabKey" bg-color="primary">
-            <v-tab value="volume">章节</v-tab>
-            <v-tab value="comment">评论</v-tab>
-          </v-tabs>
-          <v-card-text>
-            <v-tabs-window v-model:model-value="activeTabKey">
-              <v-tabs-window-item value="volume"></v-tabs-window-item>
-              <v-tabs-window-item value="comment">
-                <app-comment
-                  :get-comment-list-api="getLightNovelCommentListApiWrapper"
-                  :comment-api="commentLightNovelApiWrapper"
-                />
-              </v-tabs-window-item>
-            </v-tabs-window>
-          </v-card-text>
-        </v-card>
-      </v-col>
-    </template>
+          </div>
+        </v-card-text>
+      </v-card>
+    </v-col>
+    <v-col :cols="12">
+      <v-card>
+        <v-tabs v-model:model-value="activeTabKey" bg-color="primary">
+          <v-tab value="volume">章节</v-tab>
+          <v-tab value="comment">评论</v-tab>
+        </v-tabs>
+        <v-card-text>
+          <v-tabs-window v-model:model-value="activeTabKey">
+            <v-tabs-window-item value="volume"></v-tabs-window-item>
+            <v-tabs-window-item value="comment">
+              <app-comment
+                :get-comment-list-api="getLightNovelCommentListApiWrapper"
+                :comment-api="commentLightNovelApiWrapper"
+              />
+            </v-tabs-window-item>
+          </v-tabs-window>
+        </v-card-text>
+      </v-card>
+    </v-col>
   </v-row>
 </template>

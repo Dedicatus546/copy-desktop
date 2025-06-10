@@ -147,226 +147,218 @@ const commentComicApiWrapper = (query: {
 </script>
 
 <template>
-  <v-row>
-    <v-col
-      v-if="loading || comicReadInfoLoading || !comicInfo || !comicReadInfo"
-      :cols="12"
-    >
-      <div
-        class="wind-flex wind-h-[30vh] wind-items-center wind-justify-center"
-      >
-        <v-progress-circular indeterminate></v-progress-circular>
-      </div>
-    </v-col>
-    <template v-else>
-      <v-col :cols="12">
-        <v-card>
-          <v-card-text>
-            <div class="wind-flex wind-gap-4">
-              <div
-                class="wind-flex-shrink-0 wind-max-w-[300px] wind-min-w-[200px] wind-w-1/4"
-              >
-                <v-card variant="text">
-                  <v-img
-                    :aspect-ratio="3 / 4"
-                    cover
-                    :alt="`${comicInfo.results.comic.name}的封面`"
-                    :src="cover"
-                  />
-                </v-card>
+  <div
+    v-if="loading || comicReadInfoLoading || !comicInfo || !comicReadInfo"
+    class="wind-flex wind-h-full wind-items-center wind-justify-center"
+  >
+    <v-progress-circular indeterminate></v-progress-circular>
+  </div>
+  <v-row v-else>
+    <v-col :cols="12">
+      <v-card>
+        <v-card-text>
+          <div class="wind-flex wind-gap-4">
+            <div
+              class="wind-flex-shrink-0 wind-max-w-[300px] wind-min-w-[200px] wind-w-1/4"
+            >
+              <v-card variant="text">
+                <v-img
+                  :aspect-ratio="3 / 4"
+                  cover
+                  :alt="`${comicInfo.results.comic.name}的封面`"
+                  :src="cover"
+                />
+              </v-card>
+            </div>
+            <div class="wind-flex wind-flex-grow wind-flex-col wind-gap-4">
+              <div class="wind-flex wind-gap-2">
+                <div class="text-h5">{{ comicInfo.results.comic.name }}</div>
+                <template v-if="comicInfo.results.comic.theme.length > 0">
+                  <router-link
+                    v-for="item of comicInfo.results.comic.theme"
+                    :key="item.path_word"
+                    :to="toComicThemePage(item.path_word, item.name)"
+                  >
+                    <v-chip color="primary">{{ item.name }}</v-chip>
+                  </router-link>
+                </template>
               </div>
-              <div class="wind-flex wind-flex-grow wind-flex-col wind-gap-4">
-                <div class="wind-flex wind-gap-2">
-                  <div class="text-h5">{{ comicInfo.results.comic.name }}</div>
-                  <template v-if="comicInfo.results.comic.theme.length > 0">
+              <div>
+                <v-row no-gutters class="wind-gap-3">
+                  <v-col
+                    v-if="comicInfo.results.comic.author.length > 0"
+                    :cols="12"
+                  >
+                    <div class="wind-flex">
+                      <div class="wind-text-nowrap">作者：</div>
+                      <div class="wind-flex wind-flex-wrap wind-gap-2">
+                        <router-link
+                          v-for="item of comicInfo.results.comic.author"
+                          :key="item.path_word"
+                          :to="toComicAuthorPage(item.path_word, item.name)"
+                        >
+                          <span class="wind-font-bold">
+                            {{ item.name }}
+                          </span>
+                        </router-link>
+                      </div>
+                    </div>
+                  </v-col>
+                  <v-col :cols="12">
+                    <div class="wind-flex">
+                      <div class="wind-text-nowrap">状态：</div>
+                      <div class="wind-flex wind-flex-wrap wind-gap-2">
+                        {{ comicInfo.results.comic.status.display }}
+                      </div>
+                    </div>
+                  </v-col>
+                  <v-col :cols="12">
+                    <div class="wind-flex wind-gap-1">
+                      <div class="wind-text-nowrap">热度：</div>
+                      <div class="wind-flex wind-flex-wrap wind-gap-2">
+                        {{ comicInfo.results.comic.popular }}
+                      </div>
+                    </div>
+                  </v-col>
+                  <v-col
+                    v-if="comicInfo.results.comic.datetime_updated"
+                    :cols="12"
+                  >
+                    <div class="wind-flex wind-gap-1">
+                      <div class="wind-text-nowrap">更新时间：</div>
+                      <div class="wind-flex wind-flex-wrap wind-gap-2">
+                        {{ comicInfo.results.comic.datetime_updated }}
+                      </div>
+                    </div>
+                  </v-col>
+                  <v-col v-if="comicInfo.results.comic.brief" :cols="12">
+                    <div class="wind-flex wind-gap-1 wind-items-start">
+                      <div class="wind-h-[30px] wind-text-nowrap">简介：</div>
+                      <div>
+                        {{ comicInfo.results.comic.brief }}
+                      </div>
+                    </div>
+                  </v-col>
+                </v-row>
+              </div>
+              <div class="wind-mt-auto">
+                <v-row>
+                  <v-col
+                    v-if="comicReadInfo.results.browse || localLastReadChapter"
+                    :cols="6"
+                  >
                     <router-link
-                      v-for="item of comicInfo.results.comic.theme"
-                      :key="item.path_word"
-                      :to="toComicThemePage(item.path_word, item.name)"
+                      v-if="comicReadInfo.results.browse"
+                      v-slot="{ navigate }"
+                      :to="{
+                        name: 'COMIC_READ',
+                        params: {
+                          comicPathWord,
+                          seriesId: comicReadInfo.results.browse.chapter_uuid,
+                        },
+                      }"
+                      custom
                     >
-                      <v-chip color="primary">{{ item.name }}</v-chip>
-                    </router-link>
-                  </template>
-                </div>
-                <div>
-                  <v-row no-gutters class="wind-gap-3">
-                    <v-col
-                      v-if="comicInfo.results.comic.author.length > 0"
-                      :cols="12"
-                    >
-                      <div class="wind-flex">
-                        <div class="wind-text-nowrap">作者：</div>
-                        <div class="wind-flex wind-flex-wrap wind-gap-2">
-                          <router-link
-                            v-for="item of comicInfo.results.comic.author"
-                            :key="item.path_word"
-                            :to="toComicAuthorPage(item.path_word, item.name)"
-                          >
-                            <span class="wind-font-bold">
-                              {{ item.name }}
-                            </span>
-                          </router-link>
-                        </div>
-                      </div>
-                    </v-col>
-                    <v-col :cols="12">
-                      <div class="wind-flex">
-                        <div class="wind-text-nowrap">状态：</div>
-                        <div class="wind-flex wind-flex-wrap wind-gap-2">
-                          {{ comicInfo.results.comic.status.display }}
-                        </div>
-                      </div>
-                    </v-col>
-                    <v-col :cols="12">
-                      <div class="wind-flex wind-gap-1">
-                        <div class="wind-text-nowrap">热度：</div>
-                        <div class="wind-flex wind-flex-wrap wind-gap-2">
-                          {{ comicInfo.results.comic.popular }}
-                        </div>
-                      </div>
-                    </v-col>
-                    <v-col
-                      v-if="comicInfo.results.comic.datetime_updated"
-                      :cols="12"
-                    >
-                      <div class="wind-flex wind-gap-1">
-                        <div class="wind-text-nowrap">更新时间：</div>
-                        <div class="wind-flex wind-flex-wrap wind-gap-2">
-                          {{ comicInfo.results.comic.datetime_updated }}
-                        </div>
-                      </div>
-                    </v-col>
-                    <v-col v-if="comicInfo.results.comic.brief" :cols="12">
-                      <div class="wind-flex wind-gap-1 wind-items-start">
-                        <div class="wind-h-[30px] wind-text-nowrap">简介：</div>
-                        <div>
-                          {{ comicInfo.results.comic.brief }}
-                        </div>
-                      </div>
-                    </v-col>
-                  </v-row>
-                </div>
-                <div class="wind-mt-auto">
-                  <v-row>
-                    <v-col
-                      v-if="
-                        comicReadInfo.results.browse || localLastReadChapter
-                      "
-                      :cols="6"
-                    >
-                      <router-link
-                        v-if="comicReadInfo.results.browse"
-                        v-slot="{ navigate }"
-                        :to="{
-                          name: 'COMIC_READ',
-                          params: {
-                            comicPathWord,
-                            seriesId: comicReadInfo.results.browse.chapter_uuid,
-                          },
-                        }"
-                        custom
-                      >
-                        <v-btn
-                          color="primary"
-                          variant="flat"
-                          size="large"
-                          block
-                          @click="navigate()"
-                        >
-                          <template #prepend>
-                            <v-icon icon="mdi-book-open"></v-icon>
-                          </template>
-                          {{ comicReadInfo.results.browse.chapter_name }}
-                        </v-btn>
-                      </router-link>
-                      <router-link
-                        v-else-if="localLastReadChapter"
-                        v-slot="{ navigate }"
-                        :to="{
-                          name: 'COMIC_READ',
-                          params: {
-                            comicPathWord,
-                            seriesId: localLastReadChapter.chapterUuid,
-                          },
-                        }"
-                        custom
-                      >
-                        <v-btn
-                          color="primary"
-                          variant="flat"
-                          size="large"
-                          block
-                          @click="navigate()"
-                        >
-                          <template #prepend>
-                            <v-icon icon="mdi-book-open"></v-icon>
-                          </template>
-                          {{ localLastReadChapter.chapterName }}
-                        </v-btn>
-                      </router-link>
-                    </v-col>
-                    <v-col v-if="userStore.isLogin" :cols="6">
                       <v-btn
-                        :loading="collectComicLoading"
-                        color="warning"
+                        color="primary"
                         variant="flat"
                         size="large"
                         block
-                        @click="collectComic"
+                        @click="navigate()"
                       >
                         <template #prepend>
-                          <v-icon icon="mdi-book-heart"></v-icon>
+                          <v-icon icon="mdi-book-open"></v-icon>
                         </template>
-                        {{
-                          (comicReadInfo.results.collect ?? 0) > 0
-                            ? "移出收藏"
-                            : "加入收藏"
-                        }}
+                        {{ comicReadInfo.results.browse.chapter_name }}
                       </v-btn>
-                    </v-col>
-                  </v-row>
-                </div>
+                    </router-link>
+                    <router-link
+                      v-else-if="localLastReadChapter"
+                      v-slot="{ navigate }"
+                      :to="{
+                        name: 'COMIC_READ',
+                        params: {
+                          comicPathWord,
+                          seriesId: localLastReadChapter.chapterUuid,
+                        },
+                      }"
+                      custom
+                    >
+                      <v-btn
+                        color="primary"
+                        variant="flat"
+                        size="large"
+                        block
+                        @click="navigate()"
+                      >
+                        <template #prepend>
+                          <v-icon icon="mdi-book-open"></v-icon>
+                        </template>
+                        {{ localLastReadChapter.chapterName }}
+                      </v-btn>
+                    </router-link>
+                  </v-col>
+                  <v-col v-if="userStore.isLogin" :cols="6">
+                    <v-btn
+                      :loading="collectComicLoading"
+                      color="warning"
+                      variant="flat"
+                      size="large"
+                      block
+                      @click="collectComic"
+                    >
+                      <template #prepend>
+                        <v-icon icon="mdi-book-heart"></v-icon>
+                      </template>
+                      {{
+                        (comicReadInfo.results.collect ?? 0) > 0
+                          ? "移出收藏"
+                          : "加入收藏"
+                      }}
+                    </v-btn>
+                  </v-col>
+                </v-row>
               </div>
             </div>
-          </v-card-text>
-        </v-card>
-      </v-col>
-      <v-col :cols="12">
-        <v-card>
-          <v-tabs v-model:model-value="activeTabKey" bg-color="primary">
-            <v-tab
+          </div>
+        </v-card-text>
+      </v-card>
+    </v-col>
+    <v-col :cols="12">
+      <v-card>
+        <v-tabs v-model:model-value="activeTabKey" bg-color="primary">
+          <v-tab
+            v-for="item of seriesTabList"
+            :key="item.value"
+            :value="item.value"
+          >
+            {{ item.label }}
+          </v-tab>
+          <v-tab value="comment">评论</v-tab>
+        </v-tabs>
+        <v-card-text>
+          <v-tabs-window v-model:model-value="activeTabKey">
+            <v-tabs-window-item
               v-for="item of seriesTabList"
               :key="item.value"
               :value="item.value"
             >
-              {{ item.label }}
-            </v-tab>
-            <v-tab value="comment">评论</v-tab>
-          </v-tabs>
-          <v-card-text>
-            <v-tabs-window v-model:model-value="activeTabKey">
-              <v-tabs-window-item
-                v-for="item of seriesTabList"
-                :key="item.value"
-                :value="item.value"
-              >
-                <app-comic-detail-series
-                  v-model:last-read-chapter="lastReadChapter"
-                  :comic-path-word="comicInfo.results.comic.path_word"
-                  :series-path-word="item.value"
-                  :total="item.total"
-                />
-              </v-tabs-window-item>
-              <v-tabs-window-item value="comment">
-                <app-comment
-                  :get-comment-list-api="getComicCommentListApiWrapper"
-                  :comment-api="commentComicApiWrapper"
-                />
-              </v-tabs-window-item>
-            </v-tabs-window>
-          </v-card-text>
-        </v-card>
-      </v-col>
-    </template>
+              <app-comic-detail-series
+                v-model:last-read-chapter="lastReadChapter"
+                :comic-path-word="comicInfo.results.comic.path_word"
+                :series-path-word="item.value"
+                :total="item.total"
+              />
+            </v-tabs-window-item>
+            <v-tabs-window-item value="comment">
+              <app-comment
+                :get-comment-list-api="getComicCommentListApiWrapper"
+                :comment-api="commentComicApiWrapper"
+              />
+            </v-tabs-window-item>
+          </v-tabs-window>
+        </v-card-text>
+      </v-card>
+    </v-col>
   </v-row>
 </template>
