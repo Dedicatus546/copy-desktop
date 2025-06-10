@@ -53,6 +53,9 @@ const {
 } = useRequest((pathWord: string) => getComicDetailApi(pathWord), {
   immediate: false,
 });
+const cover = computed(() =>
+  import.meta.env.DEV ? "/360x640.svg" : comicInfo.value.results.comic.cover,
+);
 
 const { loading: comicReadInfoLoading, data: comicReadInfo } = useRequest(() =>
   getComicReadDetailApi({
@@ -166,8 +169,9 @@ const commentComicApiWrapper = (query: {
                 <v-card variant="text">
                   <v-img
                     :aspect-ratio="3 / 4"
+                    cover
                     :alt="`${comicInfo.results.comic.name}的封面`"
-                    :src="comicInfo.results.comic.cover"
+                    :src="cover"
                   />
                 </v-card>
               </div>

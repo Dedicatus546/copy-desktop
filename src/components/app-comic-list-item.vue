@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { Comic } from "@/apis";
 
-withDefaults(
+const props = withDefaults(
   defineProps<{
     comic: Comic;
     replace?: boolean;
@@ -9,6 +9,10 @@ withDefaults(
   {
     replace: false,
   },
+);
+
+const cover = computed(() =>
+  import.meta.env.DEV ? "/360x640.svg" : props.comic.cover,
 );
 
 const authorListContainerElRef = useTemplateRef("authorListContainerRef");
@@ -89,10 +93,10 @@ watch(
   >
     <v-card color="primary">
       <v-img
-        :aspect-ratio="0.777251"
+        :aspect-ratio="3 / 4"
         cover
         :alt="`${comic.name}的封面`"
-        :src="comic.cover"
+        :src="cover"
       />
       <v-card-item>
         <v-card-title>{{ comic.name }}</v-card-title>

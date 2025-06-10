@@ -48,6 +48,11 @@ const snackBar = useSnackbar();
 const { loading, data: lightNovelInfo } = useRequest(() =>
   getLightNovelDetailApi(lightNovelPathWord),
 );
+const cover = computed(() =>
+  import.meta.env.DEV
+    ? "/360x640.svg"
+    : lightNovelInfo.value.results.book.cover,
+);
 
 const { loading: lightNovelReadInfoLoading, data: lightNovelReadInfo } =
   useRequest(() =>
@@ -153,8 +158,9 @@ const commentLightNovelApiWrapper = (query: {
                 <v-card variant="text">
                   <v-img
                     :aspect-ratio="3 / 4"
+                    cover
                     :alt="`${lightNovelInfo.results.book.name}的封面`"
-                    :src="lightNovelInfo.results.book.cover"
+                    :src="cover"
                   />
                 </v-card>
               </div>

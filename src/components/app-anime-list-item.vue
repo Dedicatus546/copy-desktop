@@ -1,5 +1,5 @@
 <script setup lang="ts">
-withDefaults(
+const props = withDefaults(
   defineProps<{
     anime: {
       name: string;
@@ -11,6 +11,10 @@ withDefaults(
   {
     replace: false,
   },
+);
+
+const cover = computed(() =>
+  import.meta.env.DEV ? "/360x640.svg" : props.anime.cover,
 );
 </script>
 
@@ -24,10 +28,10 @@ withDefaults(
   >
     <v-card color="primary">
       <v-img
-        :aspect-ratio="0.777251"
+        :aspect-ratio="3 / 4"
         cover
         :alt="`${anime.name}的封面`"
-        :src="anime.cover"
+        :src="cover"
       />
       <v-card-item>
         <v-card-title>{{ anime.name }}</v-card-title>

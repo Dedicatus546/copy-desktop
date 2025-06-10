@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { LightNovel } from "@/apis";
 
-withDefaults(
+const props = withDefaults(
   defineProps<{
     lightNovel: LightNovel;
     replace?: boolean;
@@ -9,6 +9,10 @@ withDefaults(
   {
     replace: false,
   },
+);
+
+const cover = computed(() =>
+  import.meta.env.DEV ? "/360x640.svg" : props.lightNovel.cover,
 );
 
 const authorListContainerElRef = useTemplateRef("authorListContainerRef");
@@ -89,10 +93,10 @@ watch(
   >
     <v-card color="primary">
       <v-img
-        :aspect-ratio="0.777251"
+        :aspect-ratio="3 / 4"
         cover
         :alt="`${lightNovel.name}的封面`"
-        :src="lightNovel.cover"
+        :src="cover"
       />
       <v-card-item>
         <v-card-title>{{ lightNovel.name }}</v-card-title>

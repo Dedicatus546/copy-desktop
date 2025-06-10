@@ -46,6 +46,9 @@ const snackBar = useSnackbar();
 const { loading, data: animeInfo } = useRequest(() =>
   getAnimeDetailApi(animePathWord),
 );
+const cover = computed(() =>
+  import.meta.env.DEV ? "/360x640.svg" : animeInfo.value.results.cartoon.cover,
+);
 
 const { loading: animeChapterLoading, data: animeChapterData } = useRequest(
   () =>
@@ -124,8 +127,9 @@ const toAnimeCompanyPage = (pathWord: string, name: string) => {
                 <v-card variant="text">
                   <v-img
                     :aspect-ratio="3 / 4"
+                    cover
                     :alt="`${animeInfo.results.cartoon.name}的封面`"
-                    :src="animeInfo.results.cartoon.cover"
+                    :src="cover"
                   />
                 </v-card>
               </div>
