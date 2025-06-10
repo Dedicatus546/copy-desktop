@@ -33,10 +33,13 @@ const changeMode = (theme: "dark" | "light") => {
 
 const logout = () => {
   userStore.logoutAction();
-  appStore.updateConfigAction({
-    autoLogin: false,
-    loginUserInfo: "",
-  });
+  appStore.updateConfigAction(
+    {
+      autoLogin: false,
+      loginUserInfo: "",
+    },
+    true,
+  );
   router.replace({ name: "LOGIN" });
 };
 
