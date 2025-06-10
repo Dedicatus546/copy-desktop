@@ -68,6 +68,26 @@ export const getAnimeIndexApi = () => {
   >("h5/cartoonIndex");
 };
 
+export const getAnimeListApi = (query: {
+  limit?: number;
+  offset?: number;
+  ordering?: string;
+  theme?: string;
+  freeType?: number;
+  company?: string;
+}) => {
+  return http.Get<RespWrapper<ListResultWrapper<Anime>>>("cartoons", {
+    params: {
+      free_type: query.freeType ?? 1,
+      theme: query.theme,
+      ordering: query.ordering,
+      offset: query.offset ?? 0,
+      limit: query.limit ?? 18,
+      company: query.company,
+    },
+  });
+};
+
 export const searchAnimeListApi = (query: {
   text: string;
   limit: number;

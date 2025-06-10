@@ -2,6 +2,7 @@ import http from "./http";
 import {
   Comic,
   ComicDetail,
+  Comment,
   ListResultWrapper,
   PaginationQuery,
   RankComic,

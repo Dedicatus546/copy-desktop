@@ -1,5 +1,6 @@
 import http from "./http";
 import {
+  Comment,
   LightNovel,
   LightNovelDetail,
   ListResultWrapper,

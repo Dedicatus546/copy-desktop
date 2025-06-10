@@ -1,7 +1,12 @@
 <script setup lang="ts">
 import { usePagination, useRequest } from "alova/client";
 
-import { commentComicApi, getComicCommentListApi } from "@/apis";
+import {
+  commentComicApi,
+  commentLightNovelApi,
+  getComicCommentListApi,
+  getLightNovelCommentListApi,
+} from "@/apis";
 import EMPTY_STATE_IMG from "@/assets/empty-state/1.jpg";
 import useSnackbar from "@/compositions/use-snack-bar";
 import useUserStore from "@/stores/use-user-store";
@@ -11,11 +16,15 @@ const props = defineProps<{
     offset: number;
     limit: number;
     replyId?: number;
-  }) => ReturnType<typeof getComicCommentListApi>;
+  }) =>
+    | ReturnType<typeof getComicCommentListApi>
+    | ReturnType<typeof getLightNovelCommentListApi>;
   commentApi: (query: {
     comment: string;
     replyId?: number;
-  }) => ReturnType<typeof commentComicApi>;
+  }) =>
+    | ReturnType<typeof commentComicApi>
+    | ReturnType<typeof commentLightNovelApi>;
 }>();
 
 const {

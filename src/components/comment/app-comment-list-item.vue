@@ -1,7 +1,13 @@
 <script setup lang="ts">
 import { usePagination, useRequest } from "alova/client";
 
-import { Comment, commentComicApi, getComicCommentListApi } from "@/apis";
+import {
+  Comment,
+  commentComicApi,
+  commentLightNovelApi,
+  getComicCommentListApi,
+  getLightNovelCommentListApi,
+} from "@/apis";
 import useSnackbar from "@/compositions/use-snack-bar";
 import useUserStore from "@/stores/use-user-store";
 
@@ -11,11 +17,15 @@ const props = withDefaults(
       offset: number;
       limit: number;
       replyId?: number;
-    }) => ReturnType<typeof getComicCommentListApi>;
+    }) =>
+      | ReturnType<typeof getComicCommentListApi>
+      | ReturnType<typeof getLightNovelCommentListApi>;
     commentApi: (query: {
       comment: string;
       replyId?: number;
-    }) => ReturnType<typeof commentComicApi>;
+    }) =>
+      | ReturnType<typeof commentComicApi>
+      | ReturnType<typeof commentLightNovelApi>;
     comment: Comment;
     isReply?: boolean;
   }>(),
