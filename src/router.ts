@@ -116,7 +116,7 @@ const routes: RouteRecordRaw[] = [
         path: "read/:lightNovelPathWord/:chapterId",
         name: "LIGHT_NOVEL_READ",
         props: true,
-        component: () => import("@/views/comic/app-comic-read.vue"),
+        component: () => import("@/views/light-novel/app-light-novel-read.vue"),
       },
     ],
   },

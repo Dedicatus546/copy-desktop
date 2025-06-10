@@ -1,7 +1,13 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+defineProps<{
+  lightNovelPathWord: string;
+  chapterId: string;
+}>();
+</script>
 
 <template>
-  <div>light-novel-read</div>
+  <!-- TODO -->
+  <div>light-novel-read {{ lightNovelPathWord }} {{ chapterId }}</div>
 </template>
 
 <style scoped lang="scss"></style>
