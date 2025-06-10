@@ -8,17 +8,23 @@ const { animePathWord } = defineProps<{
   animePathWord: string;
 }>();
 
-// const lastChapterModel = defineModel<{
-//   chapterName: string;
-//   chapterUuid: string;
-// }>("lastReadChapter");
+const lastReadChapterModel = defineModel<{
+  chapterName: string;
+  chapterUuid: string;
+  linePathWord: string;
+}>("lastReadChapter");
 
-// const updateLastReadChapter = (series: Series) => {
-//   lastChapterModel.value = {
-//     chapterUuid: series.uuid,
-//     chapterName: series.name,
-//   };
-// };
+const updateLastReadChapter = (chapter: {
+  uuid: string;
+  name: string;
+  linePathWord: string;
+}) => {
+  lastReadChapterModel.value = {
+    chapterUuid: chapter.uuid,
+    chapterName: chapter.name,
+    linePathWord: chapter.linePathWord,
+  };
+};
 
 const { loading, data } = usePagination(
   () =>
@@ -74,7 +80,17 @@ const { loading, data } = usePagination(
                 custom
               >
                 <template #default="{ navigate }">
-                  <v-btn color="primary" @click="navigate()">
+                  <v-btn
+                    color="primary"
+                    @click="
+                      (updateLastReadChapter({
+                        uuid: item.raw.uuid,
+                        name: item.raw.name,
+                        linePathWord: line.path_word,
+                      }),
+                      navigate())
+                    "
+                  >
                     {{ line.name }}
                   </v-btn>
                 </template>

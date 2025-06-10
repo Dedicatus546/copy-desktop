@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { StorageSerializers } from "@vueuse/core";
 import { useRequest } from "alova/client";
 
 import {
@@ -17,34 +18,50 @@ const { lightNovelPathWord } = defineProps<{
 }>();
 const userStore = useUserStore();
 const snackBar = useSnackbar();
-// const localLastReadChapter = useLocalComicLastReadChapter(lightNovelPathWord);
-// const lastReadChapter = computed({
-//   get() {
-//     if (lightNovelReadInfo.value.results.browse) {
-//       return {
-//         chapterName: lightNovelReadInfo.value.results.browse.chapter_name,
-//         chapterUuid: lightNovelReadInfo.value.results.browse.chapter_uuid,
-//       };
-//     }
-//     if (localLastReadChapter.value) {
-//       return {
-//         chapterName: localLastReadChapter.value.chapterName,
-//         chapterUuid: localLastReadChapter.value.chapterUuid,
-//       };
-//     }
-//     return undefined;
-//   },
-//   set(val) {
-//     if (lightNovelReadInfo.value.results.browse) {
-//       lightNovelReadInfo.value.results.browse.chapter_name = val!.chapterName;
-//       lightNovelReadInfo.value.results.browse.chapter_uuid = val!.chapterUuid;
-//     }
-//     localLastReadChapter.value = {
-//       chapterName: val!.chapterName,
-//       chapterUuid: val!.chapterUuid,
-//     };
-//   },
-// });
+const localLastReadChapter = useStorage<{
+  chapterName: string;
+  chapterUuid: string;
+}>(
+  computed(() => `lightNovel:lastReadChapter:${lightNovelPathWord}`),
+  null,
+  localStorage,
+  // 这里默认值为 null ，必须手动指定序列器
+  // 不然 vueuse 无法识别对象类型，导致写入的时候序列化错误
+  { serializer: StorageSerializers.object },
+);
+
+const lastReadChapter = computed({
+  get() {
+    if (lightNovelReadInfo.value.results.browse) {
+      return {
+        chapterName: lightNovelReadInfo.value.results.browse.chapter_name,
+        chapterUuid: lightNovelReadInfo.value.results.browse.chapter_id,
+      };
+    }
+    if (localLastReadChapter.value) {
+      return {
+        chapterName: localLastReadChapter.value.chapterName,
+        chapterUuid: localLastReadChapter.value.chapterUuid,
+      };
+    }
+    return undefined;
+  },
+  set(val) {
+    if (userStore.isLogin) {
+      lightNovelReadInfo.value.results.browse = {
+        book_id: lightNovelInfo.value.results.book.uuid,
+        path_word: lightNovelPathWord,
+        chapter_name: val!.chapterName,
+        chapter_id: val!.chapterUuid,
+      };
+    } else {
+      localLastReadChapter.value = {
+        chapterName: val!.chapterName,
+        chapterUuid: val!.chapterUuid,
+      };
+    }
+  },
+});
 
 const { loading, data: lightNovelInfo } = useRequest(() =>
   getLightNovelDetailApi(lightNovelPathWord),
@@ -235,67 +252,32 @@ const commentLightNovelApiWrapper = (query: {
               </div>
               <div class="wind-mt-auto">
                 <v-row>
-                  <!-- <v-col
-                      v-if="
-                        lightNovelReadInfo.results.browse ||
-                        localLastReadChapter
-                      "
-                      :cols="6"
-                    > -->
-                  <!-- TODO fix route -->
-                  <!-- <router-link
-                        v-if="lightNovelReadInfo.results.browse"
-                        v-slot="{ navigate }"
-                        :to="{
-                          name: 'COMIC_READ',
-                          params: {
-                            lightNovelPathWord,
-                            seriesId:
-                              lightNovelReadInfo.results.browse.chapter_uuid,
-                          },
-                        }"
-                        custom
+                  <v-col :cols="6" v-if="lastReadChapter">
+                    <router-link
+                      v-slot="{ navigate }"
+                      :to="{
+                        name: 'LIGHT_NOVEL_READ',
+                        params: {
+                          lightNovelPathWord,
+                          chapterId: lastReadChapter.chapterUuid,
+                        },
+                      }"
+                      custom
+                    >
+                      <v-btn
+                        color="primary"
+                        variant="flat"
+                        size="large"
+                        block
+                        @click="navigate()"
                       >
-                        <v-btn
-                          color="primary"
-                          variant="flat"
-                          size="large"
-                          block
-                          @click="navigate()"
-                        >
-                          <template #prepend>
-                            <v-icon icon="mdi-book-open"></v-icon>
-                          </template>
-                          {{ lightNovelReadInfo.results.browse.chapter_name }}
-                        </v-btn>
-                      </router-link> -->
-                  <!-- TODO fix route -->
-                  <!-- <router-link
-                        v-else-if="localLastReadChapter"
-                        v-slot="{ navigate }"
-                        :to="{
-                          name: 'COMIC_READ',
-                          params: {
-                            lightNovelPathWord,
-                            seriesId: localLastReadChapter.chapterUuid,
-                          },
-                        }"
-                        custom
-                      >
-                        <v-btn
-                          color="primary"
-                          variant="flat"
-                          size="large"
-                          block
-                          @click="navigate()"
-                        >
-                          <template #prepend>
-                            <v-icon icon="mdi-book-open"></v-icon>
-                          </template>
-                          {{ localLastReadChapter.chapterName }}
-                        </v-btn>
-                      </router-link> -->
-                  <!-- </v-col> -->
+                        <template #prepend>
+                          <v-icon icon="mdi-book-open"></v-icon>
+                        </template>
+                        {{ lastReadChapter.chapterName }}
+                      </v-btn>
+                    </router-link>
+                  </v-col>
                   <v-col v-if="userStore.isLogin" :cols="6">
                     <v-btn
                       :loading="collectLightNovelLoading"
@@ -330,7 +312,9 @@ const commentLightNovelApiWrapper = (query: {
         </v-tabs>
         <v-card-text>
           <v-tabs-window v-model:model-value="activeTabKey">
-            <v-tabs-window-item value="volume"></v-tabs-window-item>
+            <v-tabs-window-item value="volume">
+              <!-- TODO -->
+            </v-tabs-window-item>
             <v-tabs-window-item value="comment">
               <app-comment
                 :get-comment-list-api="getLightNovelCommentListApiWrapper"

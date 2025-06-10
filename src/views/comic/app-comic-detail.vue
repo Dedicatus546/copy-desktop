@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { StorageSerializers } from "@vueuse/core";
 import { useRequest } from "alova/client";
 
 import {
@@ -8,7 +9,6 @@ import {
   getComicDetailApi,
   getComicReadDetailApi,
 } from "@/apis";
-import useLocalComicLastReadChapter from "@/compositions/use-local-comic-last-read-chapter";
 import useSnackbar from "@/compositions/use-snack-bar";
 import useUserStore from "@/stores/use-user-store";
 import { resolveCover } from "@/utils";
@@ -18,7 +18,18 @@ const { comicPathWord } = defineProps<{
 }>();
 const userStore = useUserStore();
 const snackBar = useSnackbar();
-const localLastReadChapter = useLocalComicLastReadChapter(comicPathWord);
+const localLastReadChapter = useStorage<{
+  chapterName: string;
+  chapterUuid: string;
+}>(
+  computed(() => `comic:lastReadChapter:${comicPathWord}`),
+  null,
+  localStorage,
+  // 这里默认值为 null ，必须手动指定序列器
+  // 不然 vueuse 无法识别对象类型，导致写入的时候序列化错误
+  { serializer: StorageSerializers.object },
+);
+
 const lastReadChapter = computed({
   get() {
     if (comicReadInfo.value.results.browse) {
@@ -36,14 +47,21 @@ const lastReadChapter = computed({
     return undefined;
   },
   set(val) {
-    if (comicReadInfo.value.results.browse) {
-      comicReadInfo.value.results.browse.chapter_name = val!.chapterName;
-      comicReadInfo.value.results.browse.chapter_uuid = val!.chapterUuid;
+    if (userStore.isLogin) {
+      comicReadInfo.value.results.browse = {
+        comic_uuid: comicInfo.value.results.comic.uuid,
+        comic_id: comicInfo.value.results.comic.uuid,
+        path_word: comicPathWord,
+        chapter_id: val!.chapterUuid,
+        chapter_name: val!.chapterName,
+        chapter_uuid: val!.chapterUuid,
+      };
+    } else {
+      localLastReadChapter.value = {
+        chapterName: val!.chapterName,
+        chapterUuid: val!.chapterUuid,
+      };
     }
-    localLastReadChapter.value = {
-      chapterName: val!.chapterName,
-      chapterUuid: val!.chapterUuid,
-    };
   },
 });
 
@@ -242,18 +260,14 @@ const commentComicApiWrapper = (query: {
               </div>
               <div class="wind-mt-auto">
                 <v-row>
-                  <v-col
-                    v-if="comicReadInfo.results.browse || localLastReadChapter"
-                    :cols="6"
-                  >
+                  <v-col v-if="lastReadChapter" :cols="6">
                     <router-link
-                      v-if="comicReadInfo.results.browse"
                       v-slot="{ navigate }"
                       :to="{
                         name: 'COMIC_READ',
                         params: {
                           comicPathWord,
-                          seriesId: comicReadInfo.results.browse.chapter_uuid,
+                          seriesId: lastReadChapter.chapterUuid,
                         },
                       }"
                       custom
@@ -268,32 +282,7 @@ const commentComicApiWrapper = (query: {
                         <template #prepend>
                           <v-icon icon="mdi-book-open"></v-icon>
                         </template>
-                        {{ comicReadInfo.results.browse.chapter_name }}
-                      </v-btn>
-                    </router-link>
-                    <router-link
-                      v-else-if="localLastReadChapter"
-                      v-slot="{ navigate }"
-                      :to="{
-                        name: 'COMIC_READ',
-                        params: {
-                          comicPathWord,
-                          seriesId: localLastReadChapter.chapterUuid,
-                        },
-                      }"
-                      custom
-                    >
-                      <v-btn
-                        color="primary"
-                        variant="flat"
-                        size="large"
-                        block
-                        @click="navigate()"
-                      >
-                        <template #prepend>
-                          <v-icon icon="mdi-book-open"></v-icon>
-                        </template>
-                        {{ localLastReadChapter.chapterName }}
+                        {{ lastReadChapter.chapterName }}
                       </v-btn>
                     </router-link>
                   </v-col>

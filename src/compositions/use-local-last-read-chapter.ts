@@ -3,14 +3,15 @@ import { StorageSerializers } from "@vueuse/core";
 /**
  * @description 非登录下保存在本地下
  */
-const useLocalComicLastReadChapter = (
-  comicPathWord: MaybeRefOrGetter<string>,
+const useLocalLastReadChapter = (
+  pathWord: MaybeRefOrGetter<string>,
+  prefix = "",
 ) => {
   return useStorage<{
     chapterName: string;
     chapterUuid: string;
   }>(
-    computed(() => `comic:lastReadChapter:${toValue(comicPathWord)}`),
+    computed(() => `comic:lastReadChapter:${prefix}:${toValue(pathWord)}`),
     null,
     localStorage,
     // 这里默认值为 null ，必须手动指定序列器
@@ -19,4 +20,4 @@ const useLocalComicLastReadChapter = (
   );
 };
 
-export default useLocalComicLastReadChapter;
+export default useLocalLastReadChapter;
