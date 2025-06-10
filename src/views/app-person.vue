@@ -10,7 +10,7 @@ const activeTabKey = ref<"collection" | "history">("collection");
 const tabList = [
   {
     value: "collection",
-    tab: "书架",
+    tab: "收藏",
   },
   {
     value: "history",

@@ -120,16 +120,6 @@ export const getLightNovelReadDetailApi = (query: {
   >(`book/${query.lightNovelPathWord}/query`);
 };
 
-export const collectLightNovelApi = (query: {
-  lightNovelId: string;
-  isCollect: number;
-}) => {
-  const body = new FormData();
-  body.set("book_id", query.lightNovelId);
-  body.set("is_collect", query.isCollect + "");
-  return http.Post<RespWrapper<void>>("member/collect/book", body);
-};
-
 export const getLightNovelVolumeListApi = (query: {
   lightNovelPathWord: string;
 }) => {

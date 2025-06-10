@@ -66,7 +66,7 @@ const {
 } = useRequest(
   () =>
     collectLightNovelApi({
-      lightNovelId: lightNovelPathWord,
+      lightNovelId: lightNovelInfo.value.results.book.uuid,
       isCollect: (lightNovelReadInfo.value.results.collect ?? 0) > 0 ? 0 : 1,
     }),
   {
@@ -75,6 +75,11 @@ const {
 );
 
 onCollectLightNovelSuccess(() => {
+  if (lightNovelReadInfo.value.results.collect) {
+    lightNovelReadInfo.value.results.collect = 0;
+  } else {
+    lightNovelReadInfo.value.results.collect = 1;
+  }
   snackBar.success(collectLightNovelData.value.message ?? "操作成功");
 });
 
@@ -305,8 +310,8 @@ const commentLightNovelApiWrapper = (query: {
                         </template>
                         {{
                           (lightNovelReadInfo.results.collect ?? 0) > 0
-                            ? "移出书架"
-                            : "加入书架"
+                            ? "移出收藏"
+                            : "加入收藏"
                         }}
                       </v-btn>
                     </v-col>

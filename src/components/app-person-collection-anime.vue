@@ -31,7 +31,7 @@ const { page, pageCount, pageSize, loading, data } = usePagination(
     </template>
     <template #no-data>
       <app-empty-state
-        title="书架空空如也。"
+        title="收藏空空如也。"
         :image="EMPTY_STATE_IMG"
       ></app-empty-state>
     </template>

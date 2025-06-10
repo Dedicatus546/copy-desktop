@@ -1,5 +1,6 @@
 import http from "./http";
 import {
+  Anime,
   Comic,
   LightNovel,
   ListResultWrapper,
@@ -65,10 +66,14 @@ export const collectComicApi = (query: {
   comicId: string;
   isCollect: number;
 }) => {
-  const body = new FormData();
-  body.set("comic_id", query.comicId);
-  body.set("is_collect", query.isCollect + "");
-  return http.Post<RespWrapper<void>>("member/collect/comics", body);
+  const sp = new URLSearchParams();
+  sp.append("comic_id", query.comicId);
+  sp.append("is_collect", query.isCollect + "");
+  return http.Post<RespWrapper<void>>("member/collect/comic", sp.toString(), {
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded; charset=utf-8",
+    },
+  });
 };
 
 export const getCollectLightNovelListApi = (query: {} & PaginationQuery) => {
@@ -84,6 +89,56 @@ export const getCollectLightNovelListApi = (query: {} & PaginationQuery) => {
       }>
     >
   >("member/collect/books", {
+    params: {
+      free_type: 1,
+      ordering: "-datetime_modifier",
+      limit: query.limit,
+      offset: query.offset,
+    },
+  });
+};
+
+export const collectLightNovelApi = (query: {
+  lightNovelId: string;
+  isCollect: number;
+}) => {
+  const sp = new URLSearchParams();
+  sp.append("book_id", query.lightNovelId);
+  sp.append("is_collect", query.isCollect + "");
+  return http.Post<RespWrapper<void>>("member/collect/book", sp, {
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded; charset=utf-8",
+    },
+  });
+};
+
+export const collectAnimelApi = (query: {
+  animeId: string;
+  isCollect: number;
+}) => {
+  const sp = new URLSearchParams();
+  sp.append("cartoon_id", query.animeId);
+  sp.append("is_collect", query.isCollect + "");
+  return http.Post<RespWrapper<void>>("member/collect/cartoon", sp, {
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded; charset=utf-8",
+    },
+  });
+};
+
+export const getCollectAnimeListApi = (query: {} & PaginationQuery) => {
+  return http.Get<
+    RespWrapper<
+      ListResultWrapper<{
+        cartoon: Anime;
+        uuid: number;
+        last_browse: {
+          last_browse_id: string;
+          last_browse_name: string;
+        } | null;
+      }>
+    >
+  >("member/collect/cartoons", {
     params: {
       free_type: 1,
       ordering: "-datetime_modifier",

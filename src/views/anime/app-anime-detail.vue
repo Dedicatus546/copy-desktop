@@ -63,7 +63,7 @@ const {
 } = useRequest(
   () =>
     collectAnimelApi({
-      animeId: animePathWord,
+      animeId: animeInfo.value.results.cartoon.uuid,
       isCollect: (animeInfo.value.results.collect ?? 0) > 0 ? 0 : 1,
     }),
   {
@@ -72,6 +72,11 @@ const {
 );
 
 onCollectLightNovelSuccess(() => {
+  if (animeInfo.value.results.collect) {
+    animeInfo.value.results.collect = 0;
+  } else {
+    animeInfo.value.results.collect = 1;
+  }
   snackBar.success(collectLightNovelData.value.message ?? "操作成功");
 });
 
@@ -266,8 +271,8 @@ const toAnimeCompanyPage = (pathWord: string, name: string) => {
                         </template>
                         {{
                           (animeInfo.results.collect ?? 0) > 0
-                            ? "移出书架"
-                            : "加入书架"
+                            ? "移出收藏"
+                            : "加入收藏"
                         }}
                       </v-btn>
                     </v-col>

@@ -1,11 +1,5 @@
 import http from "./http";
-import {
-  Anime,
-  AnimeDetail,
-  ListResultWrapper,
-  PaginationQuery,
-  RespWrapper,
-} from "./type";
+import { Anime, AnimeDetail, ListResultWrapper, RespWrapper } from "./type";
 
 export const getAnimeIndexApi = () => {
   return http.Get<
@@ -152,38 +146,6 @@ export const getAnimeDetailApi = (animePathWord: string) => {
       cartoon: AnimeDetail;
     }>
   >(`cartoon/${animePathWord}`);
-};
-
-export const collectAnimelApi = (query: {
-  animeId: string;
-  isCollect: number;
-}) => {
-  const body = new FormData();
-  body.set("cartoon_id", query.animeId);
-  body.set("is_collect", query.isCollect + "");
-  return http.Post<RespWrapper<void>>("member/collect/cartoon", body);
-};
-
-export const getCollectAnimeListApi = (query: {} & PaginationQuery) => {
-  return http.Get<
-    RespWrapper<
-      ListResultWrapper<{
-        cartoon: Anime;
-        uuid: number;
-        last_browse: {
-          last_browse_id: string;
-          last_browse_name: string;
-        } | null;
-      }>
-    >
-  >("member/collect/cartoons", {
-    params: {
-      free_type: 1,
-      ordering: "-datetime_modifier",
-      limit: query.limit,
-      offset: query.offset,
-    },
-  });
 };
 
 export const getAnimeChapterListApi = (query: { animePathWord: string }) => {

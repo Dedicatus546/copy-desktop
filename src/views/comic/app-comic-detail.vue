@@ -85,7 +85,7 @@ const {
 } = useRequest(
   () =>
     collectComicApi({
-      comicId: comicPathWord,
+      comicId: comicInfo.value.results.comic.uuid,
       isCollect: (comicReadInfo.value.results.collect ?? 0) > 0 ? 0 : 1,
     }),
   {
@@ -94,6 +94,11 @@ const {
 );
 
 onCollectComicSuccess(() => {
+  if (comicReadInfo.value.results.collect) {
+    comicReadInfo.value.results.collect = 0;
+  } else {
+    comicReadInfo.value.results.collect = 1;
+  }
   snackBar.success(collectComicData.value.message ?? "操作成功");
 });
 
@@ -311,8 +316,8 @@ const commentComicApiWrapper = (query: {
                         </template>
                         {{
                           (comicReadInfo.results.collect ?? 0) > 0
-                            ? "移出书架"
-                            : "加入书架"
+                            ? "移出收藏"
+                            : "加入收藏"
                         }}
                       </v-btn>
                     </v-col>
