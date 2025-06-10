@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { resolveCover } from "@/utils";
+
 const props = withDefaults(
   defineProps<{
     anime: {
@@ -13,9 +15,7 @@ const props = withDefaults(
   },
 );
 
-const cover = computed(() =>
-  import.meta.env.DEV ? "/360x640.svg" : props.anime.cover,
-);
+const cover = computed(() => resolveCover(props.anime.cover));
 </script>
 
 <template>

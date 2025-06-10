@@ -11,6 +11,7 @@ import {
 import useLocalComicLastReadChapter from "@/compositions/use-local-comic-last-read-chapter";
 import useSnackbar from "@/compositions/use-snack-bar";
 import useUserStore from "@/stores/use-user-store";
+import { resolveCover } from "@/utils";
 
 const { comicPathWord } = defineProps<{
   comicPathWord: string;
@@ -53,9 +54,7 @@ const {
 } = useRequest((pathWord: string) => getComicDetailApi(pathWord), {
   immediate: false,
 });
-const cover = computed(() =>
-  import.meta.env.DEV ? "/360x640.svg" : comicInfo.value.results.comic.cover,
-);
+const cover = computed(() => resolveCover(comicInfo.value.results.comic.cover));
 
 const { loading: comicReadInfoLoading, data: comicReadInfo } = useRequest(() =>
   getComicReadDetailApi({

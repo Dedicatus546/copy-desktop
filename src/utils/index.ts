@@ -58,3 +58,10 @@ export const createComputed = <T>(
     },
   });
 };
+
+export const resolveCover = (cover: string) => {
+  if (import.meta.env.VITE_NSFW === "on") {
+    return "/360x640.svg";
+  }
+  return cover;
+};

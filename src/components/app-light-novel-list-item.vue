@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { LightNovel } from "@/apis";
+import { resolveCover } from "@/utils";
 
 const props = withDefaults(
   defineProps<{
@@ -11,9 +12,7 @@ const props = withDefaults(
   },
 );
 
-const cover = computed(() =>
-  import.meta.env.DEV ? "/360x640.svg" : props.lightNovel.cover,
-);
+const cover = computed(() => resolveCover(props.lightNovel.cover));
 </script>
 
 <template>

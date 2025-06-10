@@ -10,6 +10,7 @@ import {
 } from "@/apis";
 import useSnackbar from "@/compositions/use-snack-bar";
 import useUserStore from "@/stores/use-user-store";
+import { resolveCover } from "@/utils";
 
 const { lightNovelPathWord } = defineProps<{
   lightNovelPathWord: string;
@@ -49,9 +50,7 @@ const { loading, data: lightNovelInfo } = useRequest(() =>
   getLightNovelDetailApi(lightNovelPathWord),
 );
 const cover = computed(() =>
-  import.meta.env.DEV
-    ? "/360x640.svg"
-    : lightNovelInfo.value.results.book.cover,
+  resolveCover(lightNovelInfo.value.results.book.cover),
 );
 
 const { loading: lightNovelReadInfoLoading, data: lightNovelReadInfo } =

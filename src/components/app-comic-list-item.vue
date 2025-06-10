@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { Comic } from "@/apis";
+import { resolveCover } from "@/utils";
 
 const props = withDefaults(
   defineProps<{
@@ -11,9 +12,7 @@ const props = withDefaults(
   },
 );
 
-const cover = computed(() =>
-  import.meta.env.DEV ? "/360x640.svg" : props.comic.cover,
-);
+const cover = computed(() => resolveCover(props.comic.cover));
 </script>
 
 <template>

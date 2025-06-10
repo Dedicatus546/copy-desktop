@@ -8,6 +8,7 @@ import {
 } from "@/apis";
 import useSnackbar from "@/compositions/use-snack-bar";
 import useUserStore from "@/stores/use-user-store";
+import { resolveCover } from "@/utils";
 
 const { animePathWord } = defineProps<{
   animePathWord: string;
@@ -47,7 +48,7 @@ const { loading, data: animeInfo } = useRequest(() =>
   getAnimeDetailApi(animePathWord),
 );
 const cover = computed(() =>
-  import.meta.env.DEV ? "/360x640.svg" : animeInfo.value.results.cartoon.cover,
+  resolveCover(animeInfo.value.results.cartoon.cover),
 );
 
 const { loading: animeChapterLoading, data: animeChapterData } = useRequest(
