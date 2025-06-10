@@ -286,7 +286,7 @@ export const commentComicApi = (query: {
   if (query.replyId) {
     body.set("reply_id", query.replyId + "");
   }
-  return http.Post("member/comment", body);
+  return http.Post<RespWrapper<void>>("member/comment", body);
 };
 
 export type User = {
@@ -742,6 +742,36 @@ export const getLightNovelVolumeListApi = (query: {
       }>
     >
   >(`book/${query.lightNovelPathWord}/volumes`);
+};
+
+export const getLightNovelCommentListApi = (
+  query: {
+    lightNovelId: string;
+    replyId?: number;
+  } & PaginationQuery,
+) => {
+  return http.Get<RespWrapper<ListResultWrapper<Comment>>>("bookcomments", {
+    params: {
+      book_id: query.lightNovelId,
+      reply_id: query.replyId,
+      limit: query.limit,
+      offset: query.offset,
+    },
+  });
+};
+
+export const commentLightNovelApi = (query: {
+  lightNovelId: string;
+  comment: string;
+  replyId?: number;
+}) => {
+  const body = new FormData();
+  body.set("book_id", query.lightNovelId);
+  body.set("comment", query.comment);
+  if (query.replyId) {
+    body.set("reply_id", query.replyId + "");
+  }
+  return http.Post<RespWrapper<void>>("member/comment", body);
 };
 
 export const getAnimeIndexApi = () => {

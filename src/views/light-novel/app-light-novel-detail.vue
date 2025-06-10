@@ -3,6 +3,8 @@ import { useRequest } from "alova/client";
 
 import {
   collectLightNovelApi,
+  commentLightNovelApi,
+  getLightNovelCommentListApi,
   getLightNovelDetailApi,
   getLightNovelReadDetailApi,
 } from "@/apis";
@@ -94,6 +96,27 @@ const toLightNovelAuthorPage = (pathWord: string, name: string) => {
       authorName: name,
     },
   };
+};
+
+const getLightNovelCommentListApiWrapper = (query: {
+  offset: number;
+  limit: number;
+  replyId?: number;
+}) => {
+  return getLightNovelCommentListApi({
+    lightNovelId: lightNovelInfo.value.results.book.uuid,
+    ...query,
+  });
+};
+
+const commentLightNovelApiWrapper = (query: {
+  comment: string;
+  replyId?: number;
+}) => {
+  return commentLightNovelApi({
+    lightNovelId: lightNovelInfo.value.results.book.uuid,
+    ...query,
+  });
 };
 </script>
 
@@ -303,7 +326,12 @@ const toLightNovelAuthorPage = (pathWord: string, name: string) => {
           <v-card-text>
             <v-tabs-window v-model:model-value="activeTabKey">
               <v-tabs-window-item value="volume"></v-tabs-window-item>
-              <v-tabs-window-item value="comment"></v-tabs-window-item>
+              <v-tabs-window-item value="comment">
+                <app-comment
+                  :get-comment-list-api="getLightNovelCommentListApiWrapper"
+                  :comment-api="commentLightNovelApiWrapper"
+                />
+              </v-tabs-window-item>
             </v-tabs-window>
           </v-card-text>
         </v-card>

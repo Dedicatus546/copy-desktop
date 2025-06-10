@@ -3,6 +3,8 @@ import { useRequest } from "alova/client";
 
 import {
   collectComicApi,
+  commentComicApi,
+  getComicCommentListApi,
   getComicDetailApi,
   getComicReadDetailApi,
 } from "@/apis";
@@ -113,6 +115,27 @@ const toComicAuthorPage = (pathWord: string, name: string) => {
       authorName: name,
     },
   };
+};
+
+const getComicCommentListApiWrapper = (query: {
+  offset: number;
+  limit: number;
+  replyId?: number;
+}) => {
+  return getComicCommentListApi({
+    comicId: comicInfo.value.results.comic.uuid,
+    ...query,
+  });
+};
+
+const commentComicApiWrapper = (query: {
+  comment: string;
+  replyId?: number;
+}) => {
+  return commentComicApi({
+    comicId: comicInfo.value.results.comic.uuid,
+    ...query,
+  });
 };
 </script>
 
@@ -327,8 +350,9 @@ const toComicAuthorPage = (pathWord: string, name: string) => {
                 />
               </v-tabs-window-item>
               <v-tabs-window-item value="comment">
-                <app-comic-detail-comment
-                  :comic-id="comicInfo.results.comic.uuid"
+                <app-comment
+                  :get-comment-list-api="getComicCommentListApiWrapper"
+                  :comment-api="commentComicApiWrapper"
                 />
               </v-tabs-window-item>
             </v-tabs-window>

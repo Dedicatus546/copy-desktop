@@ -7,7 +7,15 @@ import useSnackbar from "@/compositions/use-snack-bar";
 import useUserStore from "@/stores/use-user-store";
 
 const props = defineProps<{
-  comicId: string;
+  getCommentListApi: (query: {
+    offset: number;
+    limit: number;
+    replyId?: number;
+  }) => ReturnType<typeof getComicCommentListApi>;
+  commentApi: (query: {
+    comment: string;
+    replyId?: number;
+  }) => ReturnType<typeof commentComicApi>;
 }>();
 
 const {
@@ -19,8 +27,7 @@ const {
   send: refresh,
 } = usePagination(
   (page, pageSize) =>
-    getComicCommentListApi({
-      comicId: props.comicId,
+    props.getCommentListApi({
       limit: pageSize,
       offset: (page - 1) * pageSize,
     }),
@@ -42,8 +49,7 @@ const {
   onSuccess,
 } = useRequest(
   () =>
-    commentComicApi({
-      comicId: props.comicId,
+    props.commentApi({
       comment: formState.content,
     }),
   {
@@ -108,7 +114,11 @@ onSuccess(() => {
       <v-row>
         <template v-for="item of items" :key="item.raw.id">
           <v-col cols="12">
-            <app-comment-item :comic-id="comicId" :comment="item.raw" />
+            <app-comment-list-item
+              :getCommentListApi="getCommentListApi"
+              :comment-api="commentApi"
+              :comment="item.raw"
+            />
           </v-col>
           <v-col>
             <v-divider />

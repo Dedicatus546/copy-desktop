@@ -7,7 +7,15 @@ import useUserStore from "@/stores/use-user-store";
 
 const props = withDefaults(
   defineProps<{
-    comicId: string;
+    getCommentListApi: (query: {
+      offset: number;
+      limit: number;
+      replyId?: number;
+    }) => ReturnType<typeof getComicCommentListApi>;
+    commentApi: (query: {
+      comment: string;
+      replyId?: number;
+    }) => ReturnType<typeof commentComicApi>;
     comment: Comment;
     isReply?: boolean;
   }>(),
@@ -32,11 +40,10 @@ const {
   send: refresh,
 } = usePagination(
   (page, pageSize) =>
-    getComicCommentListApi({
-      comicId: props.comicId,
-      replyId: props.comment.id,
+    props.getCommentListApi({
       limit: pageSize,
       offset: (page - 1) * pageSize,
+      replyId: props.comment.id,
     }),
   {
     immediate: false,
@@ -60,8 +67,7 @@ const {
   onSuccess,
 } = useRequest(
   () =>
-    commentComicApi({
-      comicId: props.comicId,
+    props.commentApi({
       replyId: props.comment.id,
       comment: formState.content,
     }),
@@ -157,9 +163,10 @@ onSuccess(() => {
               <v-divider />
             </v-col>
             <v-col :cols="12">
-              <app-comment-item
+              <app-comment-list-item
+                :getCommentListApi="getCommentListApi"
+                :commentApi="commentApi"
                 is-reply
-                :comic-id="comicId"
                 :comment="subItem"
               />
             </v-col>

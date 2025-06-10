@@ -282,14 +282,12 @@ const toAnimeCompanyPage = (pathWord: string, name: string) => {
         <v-card>
           <v-tabs v-model:model-value="activeTabKey" bg-color="primary">
             <v-tab value="chapter">集数</v-tab>
-            <v-tab value="comment">评论</v-tab>
           </v-tabs>
           <v-card-text>
             <v-tabs-window v-model:model-value="activeTabKey">
               <v-tabs-window-item value="chapter">
                 <app-anime-detail-chapter :anime-path-word="animePathWord" />
               </v-tabs-window-item>
-              <v-tabs-window-item value="comment"></v-tabs-window-item>
             </v-tabs-window>
           </v-card-text>
         </v-card>
