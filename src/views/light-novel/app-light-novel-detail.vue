@@ -57,7 +57,7 @@ const { loading: lightNovelReadInfoLoading, data: lightNovelReadInfo } =
   );
 
 const activeTabKey = ref("");
-// TODO
+
 const {
   loading: collectLightNovelLoading,
   send: collectLightNovel,

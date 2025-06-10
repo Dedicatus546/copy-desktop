@@ -41,15 +41,10 @@ const selectFolderRpc = trpc.procedure.query(async ({ ctx }) => {
   return result.filePaths[0];
 });
 
-const relaunchAppRpc = trpc.procedure.query(async () => {
-  // TODO
-});
-
 export const router = {
   minimizeWin: minimizeWinRpc,
   closeWin: closeWinRpc,
   openLink: openLinkRpc,
   showItemInFolder: showItemInFolderRpc,
   selectFolder: selectFolderRpc,
-  relaunchApp: relaunchAppRpc,
 };

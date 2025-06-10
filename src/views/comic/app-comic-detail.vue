@@ -76,7 +76,6 @@ const seriesTabList = computed(() => {
   }));
 });
 
-// TODO
 const {
   loading: collectComicLoading,
   send: collectComic,

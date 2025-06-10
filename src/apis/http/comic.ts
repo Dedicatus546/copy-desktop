@@ -215,7 +215,7 @@ export const getComicRecommendListApi = (query: {
     >
   >("recs", {
     params: {
-      // TODO 不确定该参数为固定还是？
+      // TODO pos 不确定该参数为固定还是？
       pos: 3200102,
       offset: query.offset,
       limit: query.limit,
