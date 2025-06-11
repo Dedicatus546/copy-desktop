@@ -1,8 +1,10 @@
+import { createHash } from "node:crypto";
+import { existsSync, mkdirSync } from "node:fs";
 import { Agent, Server } from "node:http";
 import { AddressInfo } from "node:net";
-import { join } from "node:path";
+import { join, resolve } from "node:path";
 
-import { distElectron, distRenderer } from "@electron/shared/path";
+import { dataDir, distElectron, distRenderer } from "@electron/shared/path";
 import { resolveProxyUrl } from "@electron/shared/utils";
 import cors from "cors";
 import { format } from "date-fns";
@@ -60,6 +62,57 @@ const getExpressInstance = async () => {
   express.use(cors());
   info("设置 distRenderer：%s 为静态目录", distRenderer);
   express.use("/", Express.static(distRenderer));
+
+  const txtCacheDir = resolve(dataDir, "txt-cache");
+  if (!existsSync(txtCacheDir)) {
+    mkdirSync(txtCacheDir, {
+      recursive: true,
+    });
+  }
+
+  express.get("/api/getLightNovelTxtContent", async (req, res) => {
+    const q = req.query.q as string;
+    const forceGet = req.query.forceGet as string;
+    // TODO 这里很奇怪，设置 304 还是返回 200
+    // 但是确实走了缓存
+    try {
+      if (!forceGet && req.headers["if-none-match"]) {
+        res.set({
+          "Cache-Control": "no-cache",
+          ETag: `"${req.headers["if-none-match"]}"`,
+          "Last-Modified": req.headers["if-modified-since"],
+          "return-cache": "true",
+        });
+        res.status(304).end();
+        return;
+      }
+      const buffer = await fetch(q, {
+        method: "GET",
+      }).then((res) => res.arrayBuffer());
+      const td = new TextDecoder("gbk");
+      const resStr = td.decode(buffer);
+      const md5 = createHash("md5")
+        .update(resStr)
+        .digest()
+        .toString("hex")
+        .toLowerCase();
+      res.set({
+        "Cache-Control": "no-cache",
+        ETag: `"${md5}"`,
+        "Last-Modified": new Date().toUTCString(),
+      });
+      res.type("application/json");
+      res.end(
+        JSON.stringify({
+          code: 200,
+          message: "",
+          results: resStr,
+        }),
+      );
+    } catch (e) {
+      res.send(e);
+    }
+  });
 
   info("设置 api 转发");
   express.use(

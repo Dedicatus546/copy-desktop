@@ -208,3 +208,12 @@ export const commentLightNovelApi = (query: {
   }
   return http.Post<RespWrapper<void>>("member/comment", body);
 };
+
+export const getLightNovelTxtContentApi = (txtUrl: string) => {
+  return http.Get<RespWrapper<string>>(
+    `getLightNovelTxtContent?q=${encodeURIComponent(txtUrl)}`,
+    {
+      cacheFor: null,
+    },
+  );
+};

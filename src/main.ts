@@ -24,6 +24,8 @@ const vuetify = createVuetify({
         colors: {
           primary: "#1e90ff",
           "on-primary": "#ffffff",
+          "read-bg": "#F8F4E8",
+          "read-text": "#121212",
         },
       },
       dark: {
@@ -31,6 +33,8 @@ const vuetify = createVuetify({
         colors: {
           primary: "#15599c",
           "on-primary": "#ffffff",
+          "read-bg": "#363636",
+          "read-text": "#b5b5b5",
         },
       },
     },
