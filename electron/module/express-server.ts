@@ -73,12 +73,13 @@ const getExpressInstance = async () => {
   express.get("/api/getLightNovelTxtContent", async (req, res) => {
     const q = req.query.q as string;
     const forceGet = req.query.forceGet as string;
+    // 在 chrome 下正常，但是 electron 下就不正常，离谱。。
     // TODO 这里很奇怪，设置 304 还是返回 200
     // 但是确实走了缓存
     try {
       if (!forceGet && req.headers["if-none-match"]) {
         res.set({
-          "Cache-Control": "no-cache",
+          "Cache-Control": "max-age=2592000, no-cache",
           ETag: `"${req.headers["if-none-match"]}"`,
           "Last-Modified": req.headers["if-modified-since"],
           "return-cache": "true",
@@ -97,7 +98,7 @@ const getExpressInstance = async () => {
         .toString("hex")
         .toLowerCase();
       res.set({
-        "Cache-Control": "no-cache",
+        "Cache-Control": "max-age=2592000, no-cache",
         ETag: `"${md5}"`,
         "Last-Modified": new Date().toUTCString(),
       });
