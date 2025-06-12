@@ -68,7 +68,7 @@ const { loading, data, page, total } = usePagination(
 
 <template>
   <div
-    v-if="animeIndexLoading || themeFilterLoading || loading"
+    v-if="animeIndexLoading"
     class="wind-flex wind-items-center wind-inset-0 wind-justify-center wind-absolute"
   >
     <v-progress-circular indeterminate></v-progress-circular>
