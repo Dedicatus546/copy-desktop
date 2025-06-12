@@ -1,5 +1,5 @@
 import { xhrRequestAdapter } from "@alova/adapter-xhr";
-import { createAlova } from "alova";
+import { Arg, createAlova } from "alova";
 import vueHook from "alova/vue";
 
 import useUserStore from "@/stores/use-user-store";
@@ -22,8 +22,8 @@ const http = createAlova({
     // method.config.headers.version = "2.3.0";
     // method.config.headers.region = 1;
     // method.config.headers.device = "V417IR";
-    method.config.params.platform = 3;
-    method.config.params.in_mainland = true;
+    (method.config.params as Arg).platform = 3;
+    (method.config.params as Arg).in_mainland = true;
   },
   responded: {
     async onSuccess(response, method) {
