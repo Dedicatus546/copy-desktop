@@ -18,6 +18,7 @@
   },
   "dependencies": {
     "@alova/adapter-xhr": "^2.2.0",
+    "@fancyapps/ui": "^5.0.36",
     "@vueuse/core": "^13.3.0",
     "@vueuse/router": "^13.3.0",
     "alova": "^3.3.1",
