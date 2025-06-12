@@ -73,6 +73,8 @@ const lastPage = () => {
   }
   currentIndex.value--;
   sliderValue.value = currentIndex.value + 1;
+  const scrollY = positionMap[currentIndex.value] ?? 0;
+  y.value = scrollY;
 };
 
 const hasNextPage = computed(
@@ -84,20 +86,14 @@ const nextPage = () => {
   }
   currentIndex.value++;
   sliderValue.value = currentIndex.value + 1;
+  const scrollY = positionMap[currentIndex.value] ?? 0;
+  y.value = scrollY;
 };
 
 onKeyStroke("ArrowRight", () => nextPage(), {
   dedupe: true,
 });
 onKeyStroke("ArrowLeft", () => lastPage(), {
-  dedupe: true,
-});
-
-// TODO 监听上下然后翻一页
-onKeyStroke("ArrowUp", () => {}, {
-  dedupe: true,
-});
-onKeyStroke("ArrowDown", () => {}, {
   dedupe: true,
 });
 
@@ -113,6 +109,38 @@ const showFancyBox = () => {
     });
   }
 };
+const positionMap = reactive<Record<number, number | undefined>>({});
+const contentRef = useTemplateRef("contentRef");
+const scrollRef = useTemplateRef("scrollRef");
+const { height } = useElementBounding(contentRef);
+const { height: scrollElHeight } = useElementBounding(scrollRef);
+const { y } = useScroll(contentRef, {
+  behavior: "smooth",
+});
+
+onKeyStroke(
+  "ArrowUp",
+  () => {
+    y.value = Math.max(0, y.value - height.value);
+    positionMap[currentIndex.value] = y.value;
+  },
+  {
+    dedupe: true,
+  },
+);
+onKeyStroke(
+  "ArrowDown",
+  () => {
+    y.value = Math.min(
+      scrollElHeight.value - height.value,
+      y.value + height.value,
+    );
+    positionMap[currentIndex.value] = y.value;
+  },
+  {
+    dedupe: true,
+  },
+);
 </script>
 
 <template>
@@ -129,8 +157,11 @@ const showFancyBox = () => {
     <h3 class="text-h5 wind-p8 wind-text-center">
       {{ currentItem.name }}
     </h3>
-    <div class="wind-p-8 wind-flex-grow wind-h-0 wind-overflow-y-auto">
-      <div v-html="currentItem.content"></div>
+    <div
+      ref="contentRef"
+      class="wind-p-8 wind-flex-grow wind-h-0 wind-overflow-y-auto"
+    >
+      <div ref="scrollRef" v-html="currentItem.content"></div>
     </div>
     <div>
       <v-divider />
