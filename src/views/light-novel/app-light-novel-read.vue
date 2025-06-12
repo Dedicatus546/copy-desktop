@@ -1,4 +1,8 @@
 <script setup lang="ts">
+import "@fancyapps/ui/dist/fancybox/fancybox.css";
+
+import { Fancybox } from "@fancyapps/ui";
+import { zh_CN } from "@fancyapps/ui/l10n/Fancybox/zh_CN";
 import { useRequest } from "alova/client";
 
 import { getLightNovelTxtContentApi, getLightNovelVolumeApi } from "@/apis";
@@ -49,11 +53,10 @@ const txtlist = computed(() => {
     });
 });
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const imageList = computed(() => {
-  return data.value.results.volume.contents.filter(
-    (item) => item.content_type === 2,
-  );
+  return data.value.results.volume.contents
+    .filter((item) => item.content_type === 2 && item.content !== null)
+    .map((item) => item.content!);
 });
 
 const currentItem = computed(() => {
@@ -101,6 +104,15 @@ onKeyStroke("ArrowDown", () => {}, {
 const onSliderEnd = (value: [number, number] | number) => {
   currentIndex.value = (value as number) - 1;
 };
+
+const imageNodeListRef = useTemplateRef("imageNodeListRef");
+const showFancyBox = () => {
+  if (imageNodeListRef.value) {
+    Fancybox.fromNodes(imageNodeListRef.value, {
+      l10n: zh_CN,
+    });
+  }
+};
 </script>
 
 <template>
@@ -144,7 +156,12 @@ const onSliderEnd = (value: [number, number] | number) => {
             <template #append>
               <div class="wind-flex wind-gap-2 wind-items-center">
                 <div>第 {{ currentIndex + 1 }} / {{ txtlist.length }} 章</div>
-                <v-btn variant="text" icon="mdi-image" size="large"></v-btn>
+                <v-btn
+                  variant="text"
+                  icon="mdi-image"
+                  size="large"
+                  @click="showFancyBox"
+                ></v-btn>
                 <v-btn
                   variant="text"
                   icon="mdi-arrow-right"
@@ -158,6 +175,17 @@ const onSliderEnd = (value: [number, number] | number) => {
           </v-slider>
         </v-card-text>
       </v-card>
+    </div>
+    <div class="wind-hidden">
+      <a
+        data-fancybox="pic-list"
+        :href="image"
+        v-for="image of imageList"
+        :key="image"
+        ref="imageNodeListRef"
+      >
+        <v-img cover :src="image"></v-img>
+      </a>
     </div>
   </div>
 </template>
