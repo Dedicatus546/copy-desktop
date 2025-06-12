@@ -58,16 +58,19 @@ const logger = {
   },
 };
 
-export const createLogger = (name: string) => {
+export type LoggerLevel = keyof typeof logger;
+
+export const createLogger = (...nameList: string[]) => {
+  const prefix = nameList.map((item) => `[${item}]`).join(" ");
   return {
     info(message?: any, ...optionalParams: any[]) {
-      logger.info(`[${name}] ` + message, ...optionalParams);
+      logger.info(`${prefix} ` + message, ...optionalParams);
     },
     error(message?: any, ...optionalParams: any[]) {
-      logger.error(`[${name}] ` + message, ...optionalParams);
+      logger.error(`${prefix} ` + message, ...optionalParams);
     },
     warn(message?: any, ...optionalParams: any[]) {
-      logger.warn(`[${name}] ` + message, ...optionalParams);
+      logger.warn(`${prefix} ` + message, ...optionalParams);
     },
   };
 };

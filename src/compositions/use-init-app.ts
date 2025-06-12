@@ -3,7 +3,7 @@ import { isString } from "radash";
 
 import { getSystemNetWorkApi, loginApi } from "@/apis";
 import { trpcClient } from "@/apis/ipc";
-import logger from "@/logger";
+import { error, info, warn } from "@/logger";
 import useAppStore from "@/stores/use-app-store";
 import useUserStore from "@/stores/use-user-store";
 import { delay } from "@/utils";
@@ -20,10 +20,16 @@ const useInitNetwork = () => {
 
   return {
     init: async () => {
-      return send().catch((e) => {
-        console.error(e);
-        throw new Error("读取网络配置失败");
-      });
+      info("开始读取网络配置");
+      return send().then(
+        () => {
+          info("读取网络配置成功");
+        },
+        (e) => {
+          error("读取网络配置失败，原因：", e);
+          throw new Error("读取网络配置失败");
+        },
+      );
     },
   };
 };
@@ -33,8 +39,15 @@ const useInitConfig = () => {
 
   return {
     init: async () => {
-      const config = await trpcClient.getConfig.query();
-      appStore.updateConfigAction(config);
+      info("开始读取本地配置文件");
+      try {
+        const config = await trpcClient.getConfig.query();
+        appStore.updateConfigAction(config);
+        info("读取本地配置文件成功");
+      } catch (e) {
+        error("读取本地配置文件失败，原因", e);
+        throw new Error("读取本地配置文件失败");
+      }
     },
   };
 };
@@ -58,26 +71,34 @@ const useAutoLogin = () => {
   return {
     init: async () => {
       // 开发环境下读 env 直接登录，该 env 为 .local ，不上传仓库
+      info("开始处理自动登录");
       if (
         import.meta.env.DEV &&
         import.meta.env.VITE_AUTO_LOGIN_DEV === "1" &&
         import.meta.env.VITE_LOGIN_USERNAME &&
         import.meta.env.VITE_LOGIN_PASSWORD
       ) {
+        info("检测到开发环境且配置了自动登录开关以及用户信息，使用该信息登录");
         username = import.meta.env.VITE_LOGIN_USERNAME;
         password = import.meta.env.VITE_LOGIN_PASSWORD;
       } else if (appStore.config.loginUserInfo) {
+        info("检测到本地配置中开启了自动登录，使用本地配置中的用户信息");
         const loginInfo = decryptLoginUser(appStore.config.loginUserInfo);
         username = loginInfo.username;
         password = loginInfo.password;
       } else {
         return Promise.resolve().then(() => {
-          logger.error("未能读取登录信息，跳过");
+          warn("未读取到相应的用户信息，跳过自动登录");
         });
       }
-      return send(username, password).catch(() => {
-        logger.error("自动登录失败，跳过");
-      });
+      return send(username, password).then(
+        () => {
+          info("自动登录成功");
+        },
+        (e) => {
+          error("自动登录失败，跳过自动登录，原因：", e);
+        },
+      );
     },
   };
 };

@@ -1,7 +1,7 @@
 import { useRequest } from "alova/client";
 
 import { loginApi } from "@/apis";
-import logger from "@/logger";
+import { info } from "@/logger";
 import useUserStore from "@/stores/use-user-store";
 
 export default function useRefreshUser() {
@@ -24,7 +24,7 @@ export default function useRefreshUser() {
   });
   const { resume, pause } = useIntervalFn(
     () => {
-      logger.info("刷新用户信息中...");
+      info("刷新用户信息中...");
       const { username, password } = userStore.loginInfo!;
       send(username, password);
     },
@@ -35,10 +35,10 @@ export default function useRefreshUser() {
   );
   watchEffect(() => {
     if (userStore.userInfo && userStore.loginInfo) {
-      logger.info("检测到已登录，开始定时刷新用户，防止登录信息失效。");
+      info("检测到已登录，开始定时刷新用户，防止登录信息失效。");
       resume();
     } else {
-      logger.info("检测到退出登录，关闭定时刷新用户。");
+      info("检测到退出登录，关闭定时刷新用户。");
       pause();
     }
   });
