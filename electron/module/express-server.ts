@@ -59,7 +59,15 @@ const getExpressInstance = async () => {
   }
 
   const express = Express();
-  express.use(cors());
+  express.use(
+    cors({
+      // https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Reference/Headers/Access-Control-Max-Age
+      // 结果可被缓存的最大秒数，以无符号非负整数表示。Firefox 上限为 24 小时（86400 秒）。Chromium（76 版本之前）上限为 10 分钟（600 秒）
+      // Chromium（从 76 版本开始）上限为 2 小时（7200 秒）。默认值为 5 秒。
+      // 缓存 2 小时，防止频繁发送预检请求
+      maxAge: 60 * 60 * 2,
+    }),
+  );
   info("设置 distRenderer：%s 为静态目录", distRenderer);
   express.use("/", Express.static(distRenderer));
 
