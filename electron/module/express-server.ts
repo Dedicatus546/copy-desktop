@@ -1,10 +1,9 @@
 import { createHash } from "node:crypto";
-import { existsSync, mkdirSync } from "node:fs";
 import { Agent, Server } from "node:http";
 import { AddressInfo } from "node:net";
-import { join, resolve } from "node:path";
+import { join } from "node:path";
 
-import { dataDir, distElectron, distRenderer } from "@electron/shared/path";
+import { distElectron, distRenderer } from "@electron/shared/path";
 import { resolveProxyUrl } from "@electron/shared/utils";
 import cors from "cors";
 import { format } from "date-fns";
@@ -70,13 +69,6 @@ const getExpressInstance = async () => {
   );
   info("设置 distRenderer：%s 为静态目录", distRenderer);
   express.use("/", Express.static(distRenderer));
-
-  const txtCacheDir = resolve(dataDir, "txt-cache");
-  if (!existsSync(txtCacheDir)) {
-    mkdirSync(txtCacheDir, {
-      recursive: true,
-    });
-  }
 
   express.get("/api/getLightNovelTxtContent", async (req, res) => {
     const q = req.query.q as string;
