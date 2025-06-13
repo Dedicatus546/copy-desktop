@@ -48,9 +48,9 @@ const tabList = [
           <v-tabs-window-item value="collection">
             <app-person-collection />
           </v-tabs-window-item>
-          <!-- <v-tabs-window-item value="history">
-              <app-person-history-comic />
-            </v-tabs-window-item> -->
+          <v-tabs-window-item value="history">
+            <app-person-history />
+          </v-tabs-window-item>
         </v-tabs-window>
       </v-card>
     </v-col>

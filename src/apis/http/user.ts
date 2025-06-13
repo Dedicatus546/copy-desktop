@@ -147,3 +147,65 @@ export const getCollectAnimeListApi = (query: {} & PaginationQuery) => {
     },
   });
 };
+
+export const getHistoryComicListApi = (query: {} & PaginationQuery) => {
+  return http.Get<
+    RespWrapper<
+      ListResultWrapper<{
+        comic: Comic;
+        uuid: number;
+        name: unknown;
+        b_folder: boolean;
+        folder_id: unknown;
+        last_browse: {
+          last_browse_id: string;
+          last_browse_name: string;
+        };
+      }>
+    >
+  >("member/browse/comics", {
+    params: {
+      offset: query.offset,
+      limit: query.limit,
+    },
+  });
+};
+
+export const getHistoryLightNovelListApi = (query: {} & PaginationQuery) => {
+  return http.Get<
+    RespWrapper<
+      ListResultWrapper<{
+        book: LightNovel;
+        uuid: number;
+        last_browse: {
+          last_browse_id: string;
+          last_browse_name: string;
+        } | null;
+      }>
+    >
+  >("member/browse/books", {
+    params: {
+      offset: query.offset,
+      limit: query.limit,
+    },
+  });
+};
+export const getHistoryAnimeListApi = (query: {} & PaginationQuery) => {
+  return http.Get<
+    RespWrapper<
+      ListResultWrapper<{
+        cartoon: Anime;
+        uuid: number;
+        last_browse: {
+          last_browse_id: string;
+          last_browse_name: string;
+        } | null;
+      }>
+    >
+  >("member/browse/cartoons", {
+    params: {
+      offset: query.offset,
+      limit: query.limit,
+    },
+  });
+};
