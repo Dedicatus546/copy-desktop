@@ -141,6 +141,10 @@ onKeyStroke(
     dedupe: true,
   },
 );
+
+useEventListener(contentRef, "scroll", () => {
+  positionMap[currentIndex.value] = y.value;
+});
 </script>
 
 <template>
