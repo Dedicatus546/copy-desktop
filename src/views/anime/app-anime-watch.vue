@@ -39,7 +39,7 @@ onSuccess(async () => {
       aspectRatio: true,
       // subtitleOffset: true,
       fullscreen: true,
-      fullscreenWeb: true,
+      // fullscreenWeb: true,
       screenshot: true,
       pip: true,
       plugins: [
