@@ -28,7 +28,11 @@ const {
   data: txtContentData,
   send,
 } = useRequest(
-  () => getLightNovelTxtContentApi(data.value.results.volume.txt_addr),
+  () =>
+    getLightNovelTxtContentApi({
+      txtUrl: data.value.results.volume.txt_addr,
+      encoding: data.value.results.volume.txt_encoding,
+    }),
   {
     immediate: false,
     initialData: {

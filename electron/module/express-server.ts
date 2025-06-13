@@ -81,6 +81,7 @@ const getExpressInstance = async () => {
   express.get("/api/getLightNovelTxtContent", async (req, res) => {
     const q = req.query.q as string;
     const forceGet = req.query.forceGet as string;
+    const encoding = (req.query.encoding as string) ?? "utf-8";
     // 在 chrome 下正常，但是 electron 下就不正常，离谱。。
     // TODO 这里很奇怪，设置 304 还是返回 200
     // 但是确实走了缓存
@@ -98,7 +99,7 @@ const getExpressInstance = async () => {
       const buffer = await fetch(q, {
         method: "GET",
       }).then((res) => res.arrayBuffer());
-      const td = new TextDecoder("gbk");
+      const td = new TextDecoder(encoding);
       const resStr = td.decode(buffer);
       const md5 = createHash("md5")
         .update(resStr)
