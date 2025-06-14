@@ -3,7 +3,7 @@ import { fileURLToPath } from "node:url";
 
 import { app, BrowserWindow, session } from "electron";
 import { debounce } from "radash";
-import { createIPCHandler } from "trpc-electron/main";
+import { createIPCHandler } from "trpc-electron-fork/main";
 
 import { getConfig, saveConfig } from "./module/config";
 import { getExpressServerPort } from "./module/express-server";

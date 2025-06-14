@@ -1,5 +1,4 @@
-// import { contextBridge, ipcRenderer } from "electron";
-import { exposeElectronTRPC } from "trpc-electron/main";
+import { exposeElectronTRPC } from "trpc-electron-fork/main";
 
 process.once("loaded", () => {
   exposeElectronTRPC();
