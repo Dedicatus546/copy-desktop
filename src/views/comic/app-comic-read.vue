@@ -4,16 +4,16 @@ import { useRequest } from "alova/client";
 import { getComicPicListApi } from "@/apis";
 import useAppStore from "@/stores/use-app-store";
 
-const { comicPathWord, seriesId } = defineProps<{
+const { comicPathWord, chapterId } = defineProps<{
   comicPathWord: string;
-  seriesId: string;
+  chapterId: string;
 }>();
 const appStore = useAppStore();
 
 const { loading, data } = useRequest(() =>
   getComicPicListApi({
     comicPathWord,
-    seriesId,
+    chapterId,
   }),
 );
 

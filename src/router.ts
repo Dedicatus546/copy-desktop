@@ -27,7 +27,7 @@ const routes: RouteRecordRaw[] = [
         component: () => import("@/views/comic/app-comic-detail.vue"),
       },
       {
-        path: "read/:comicPathWord/:seriesId",
+        path: "read/:comicPathWord/:chapterId",
         name: "COMIC_READ",
         props: true,
         component: () => import("@/views/comic/app-comic-read.vue"),

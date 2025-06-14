@@ -1,6 +1,7 @@
 import http from "./http";
 import {
   Comic,
+  ComicChapter,
   ComicDetail,
   Comment,
   ListResultWrapper,
@@ -8,7 +9,6 @@ import {
   RankComic,
   RecComic,
   RespWrapper,
-  Series,
   Topic,
 } from "./type";
 
@@ -92,14 +92,14 @@ export const getComicReadDetailApi = (query: { comicPathWord: string }) => {
   >(`comic2/${query.comicPathWord}/query`);
 };
 
-export const getComicSeriesListApi = (
+export const getComicChapterListApi = (
   query: {
     comicPathWord: string;
-    seriesPathWord: string;
+    groupPathWord: string;
   } & PaginationQuery,
 ) => {
-  return http.Get<RespWrapper<ListResultWrapper<Series>>>(
-    `comic/${query.comicPathWord}/group/${query.seriesPathWord}/chapters`,
+  return http.Get<RespWrapper<ListResultWrapper<ComicChapter>>>(
+    `comic/${query.comicPathWord}/group/${query.groupPathWord}/chapters`,
     {
       params: {
         limit: query.limit,
@@ -141,7 +141,7 @@ export const commentComicApi = (query: {
 
 export const getComicPicListApi = (query: {
   comicPathWord: string;
-  seriesId: string;
+  chapterId: string;
 }) => {
   return http.Get<
     RespWrapper<{
@@ -151,7 +151,7 @@ export const getComicPicListApi = (query: {
       is_mobile_bind: boolean;
       is_vip: boolean;
       comic: Pick<ComicDetail, "name" | "path_word" | "uuid" | "restrict">;
-      chapter: Series & {
+      chapter: ComicChapter & {
         contents: Array<{
           url: string;
         }>;
@@ -160,7 +160,7 @@ export const getComicPicListApi = (query: {
       };
       is_banned: boolean;
     }>
-  >(`comic/${query.comicPathWord}/chapter2/${query.seriesId}`);
+  >(`comic/${query.comicPathWord}/chapter2/${query.chapterId}`);
 };
 
 export const getLatestComicListApi = (

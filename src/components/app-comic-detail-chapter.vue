@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import { usePagination } from "alova/client";
 
-import { getComicSeriesListApi, Series } from "@/apis";
+import { ComicChapter, getComicChapterListApi } from "@/apis";
 import EMPTY_STATE_IMG from "@/assets/empty-state/1.jpg";
 
-const { comicPathWord, seriesPathWord } = defineProps<{
+const { comicPathWord, groupPathWord } = defineProps<{
   comicPathWord: string;
-  seriesPathWord: string;
+  groupPathWord: string;
 }>();
 
 const lastChapterModel = defineModel<{
@@ -14,18 +14,18 @@ const lastChapterModel = defineModel<{
   chapterUuid: string;
 }>("lastReadChapter");
 
-const updateLastReadChapter = (series: Series) => {
+const updateLastReadChapter = (chapter: ComicChapter) => {
   lastChapterModel.value = {
-    chapterUuid: series.uuid,
-    chapterName: series.name,
+    chapterUuid: chapter.uuid,
+    chapterName: chapter.name,
   };
 };
 
 const { loading, data, page, pageSize, total } = usePagination(
   (page, pageSize) =>
-    getComicSeriesListApi({
+    getComicChapterListApi({
       comicPathWord,
-      seriesPathWord,
+      groupPathWord,
       limit: pageSize,
       offset: (page - 1) * pageSize,
     }),
@@ -36,18 +36,9 @@ const { loading, data, page, pageSize, total } = usePagination(
     total: (res) => res.results.total,
   },
 );
-const seriesTabList = computed(() => {
+const pageCount = computed(() => {
   const count = Math.ceil((total.value ?? 0) / pageSize.value);
-  const r = [];
-  for (let i = 0; i < count; i++) {
-    const start = i * pageSize.value + 1;
-    const end = (i + 1) * pageSize.value;
-    r.push({
-      label: `${start} - ${end}`,
-      value: i + 1, // page 索引
-    });
-  }
-  return r;
+  return count;
 });
 </script>
 
@@ -72,14 +63,10 @@ const seriesTabList = computed(() => {
     </template>
     <template #default="{ items }">
       <v-row class="wind-p-1">
-        <v-col v-if="seriesTabList.length > 1" :cols="12">
+        <v-col v-if="pageCount > 1" :cols="12">
           <v-tabs v-model:model-value="page" bg-color="transparent">
-            <v-tab
-              v-for="item of seriesTabList"
-              :key="item.value"
-              :value="item.value"
-            >
-              {{ item.label }}
+            <v-tab v-for="item of pageCount" :key="item" :value="item">
+              {{ (item - 1) * pageSize + 1 }} - {{ item * pageSize }}
             </v-tab>
           </v-tabs>
         </v-col>
@@ -96,7 +83,7 @@ const seriesTabList = computed(() => {
               name: 'COMIC_READ',
               params: {
                 comicPathWord: item.raw.comic_path_word,
-                seriesId: item.raw.uuid,
+                chapterId: item.raw.uuid,
               },
             }"
             custom

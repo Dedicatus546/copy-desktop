@@ -94,8 +94,8 @@ watchEffect(() => {
   send(comicPathWord);
 });
 
-const activeTabKey = ref("");
-const seriesTabList = computed(() => {
+const activeGroupTabKey = ref("");
+const groupTabList = computed(() => {
   if (!comicInfo.value) {
     return [];
   }
@@ -283,7 +283,7 @@ const commentComicApiWrapper = (query: {
                         name: 'COMIC_READ',
                         params: {
                           comicPathWord,
-                          seriesId: lastReadChapter.chapterUuid,
+                          chapterId: lastReadChapter.chapterUuid,
                         },
                       }"
                       custom
@@ -330,9 +330,9 @@ const commentComicApiWrapper = (query: {
     </v-col>
     <v-col :cols="12">
       <v-card>
-        <v-tabs v-model:model-value="activeTabKey" bg-color="primary">
+        <v-tabs v-model:model-value="activeGroupTabKey" bg-color="primary">
           <v-tab
-            v-for="item of seriesTabList"
+            v-for="item of groupTabList"
             :key="item.value"
             :value="item.value"
           >
@@ -341,16 +341,16 @@ const commentComicApiWrapper = (query: {
           <v-tab value="comment">评论</v-tab>
         </v-tabs>
         <v-card-text>
-          <v-tabs-window v-model:model-value="activeTabKey">
+          <v-tabs-window v-model:model-value="activeGroupTabKey">
             <v-tabs-window-item
-              v-for="item of seriesTabList"
+              v-for="item of groupTabList"
               :key="item.value"
               :value="item.value"
             >
-              <app-comic-detail-series
+              <app-comic-detail-chapter
                 v-model:last-read-chapter="lastReadChapter"
                 :comic-path-word="comicInfo.results.comic.path_word"
-                :series-path-word="item.value"
+                :group-path-word="item.value"
                 :total="item.total"
               />
             </v-tabs-window-item>

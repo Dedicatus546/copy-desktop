@@ -128,7 +128,7 @@ export type ComicDetail = {
   popular: number;
 };
 
-export type Series = {
+export type ComicChapter = {
   index: number;
   uuid: string;
   count: number;
