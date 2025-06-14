@@ -69,6 +69,16 @@ const { loading, data: lightNovelInfo } = useRequest(() =>
 const cover = computed(() =>
   resolveCover(lightNovelInfo.value.results.book.cover),
 );
+const brief = computed(() => {
+  if (!lightNovelInfo.value) {
+    return "";
+  }
+  return lightNovelInfo.value.results.book.brief
+    .split(/\r?\n/)
+    .filter((item) => item.trim())
+    .map((item) => `<p>${item}</p>`)
+    .join("");
+});
 
 const { loading: lightNovelReadInfoLoading, data: lightNovelReadInfo } =
   useRequest(() =>
@@ -175,7 +185,9 @@ const commentLightNovelApiWrapper = (query: {
                 />
               </v-card>
             </div>
-            <div class="wind-flex wind-flex-grow wind-flex-col wind-gap-4">
+            <div
+              class="wind-leading-6 wind-flex wind-flex-grow wind-flex-col wind-gap-4"
+            >
               <div class="wind-flex wind-gap-2">
                 <div class="text-h5">
                   {{ lightNovelInfo.results.book.name }}
@@ -191,7 +203,7 @@ const commentLightNovelApiWrapper = (query: {
                 </template>
               </div>
               <div>
-                <v-row no-gutters class="wind-gap-3">
+                <v-row no-gutters class="wind-gap-2">
                   <v-col
                     v-if="lightNovelInfo.results.book.author.length > 0"
                     :cols="12"
@@ -243,14 +255,15 @@ const commentLightNovelApiWrapper = (query: {
                   <v-col v-if="lightNovelInfo.results.book.brief" :cols="12">
                     <div class="wind-flex wind-gap-1 wind-items-start">
                       <div class="wind-h-[30px] wind-text-nowrap">简介：</div>
-                      <div>
-                        {{ lightNovelInfo.results.book.brief }}
-                      </div>
+                      <div v-html="brief"></div>
                     </div>
                   </v-col>
                 </v-row>
               </div>
-              <div class="wind-mt-auto">
+              <div
+                class="wind-mt-auto"
+                v-if="lastReadChapter || userStore.isLogin"
+              >
                 <v-row>
                   <v-col :cols="6" v-if="lastReadChapter">
                     <router-link
