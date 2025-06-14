@@ -87,7 +87,7 @@ onSuccess(() => {
         <v-textarea
           v-model:model-value="formState.content"
           size="large"
-          placeholder="回复功能建设中"
+          placeholder="请理性讨论~"
           hide-details
           :disabled="!userStore.isLogin"
         >
