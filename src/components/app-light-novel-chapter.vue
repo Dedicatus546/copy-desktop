@@ -82,6 +82,7 @@ const { loading, data } = usePagination(
                     : undefined
                 "
                 block
+                class="chapter-btn"
                 @click="
                   () => (
                     updateLastReadChapter({
@@ -92,7 +93,7 @@ const { loading, data } = usePagination(
                   )
                 "
               >
-                {{ item.raw.name }}
+                <app-scroll-wrapper>{{ item.raw.name }}</app-scroll-wrapper>
               </v-btn>
             </template>
           </router-link>
@@ -101,3 +102,11 @@ const { loading, data } = usePagination(
     </template>
   </v-data-iterator>
 </template>
+
+<style scoped lang="scss">
+.chapter-btn {
+  ::v-deep(.v-btn__content) {
+    min-width: 0;
+  }
+}
+</style>

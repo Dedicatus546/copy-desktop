@@ -104,6 +104,7 @@ const seriesTabList = computed(() => {
             <template #default="{ navigate }">
               <v-btn
                 size="large"
+                class="chapter-btn"
                 :color="
                   lastChapterModel?.chapterUuid === item.raw.uuid
                     ? 'primary'
@@ -112,7 +113,9 @@ const seriesTabList = computed(() => {
                 block
                 @click="() => (updateLastReadChapter(item.raw), navigate())"
               >
-                {{ item.raw.name }}
+                <app-scroll-wrapper>
+                  {{ item.raw.name }}
+                </app-scroll-wrapper>
               </v-btn>
             </template>
           </router-link>
@@ -121,3 +124,11 @@ const seriesTabList = computed(() => {
     </template>
   </v-data-iterator>
 </template>
+
+<style scoped lang="scss">
+.chapter-btn {
+  ::v-deep(.v-btn__content) {
+    min-width: 0;
+  }
+}
+</style>

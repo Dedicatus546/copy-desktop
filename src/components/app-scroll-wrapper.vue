@@ -69,7 +69,7 @@ watch(
 </script>
 
 <template>
-  <div class="wind-max-w-full" ref="containerRef">
+  <div class="wind-max-w-full wind-overflow-hidden" ref="containerRef">
     <div ref="innerElRef" class="wind-inline-flex wind-gap-2 wind-truncate">
       <slot></slot>
     </div>
