@@ -351,6 +351,8 @@ const commentComicApiWrapper = (query: {
                 v-model:last-read-chapter="lastReadChapter"
                 :comic-path-word="comicInfo.results.comic.path_word"
                 :group-path-word="item.value"
+                :comic-name="comicInfo.results.comic.name"
+                :group-name="item.label"
                 :total="item.total"
               />
             </v-tabs-window-item>
