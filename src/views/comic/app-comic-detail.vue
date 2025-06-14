@@ -200,9 +200,12 @@ const commentComicApiWrapper = (query: {
             <div
               class="wind-leading-6 wind-flex wind-flex-grow wind-flex-col wind-gap-4"
             >
-              <div class="wind-flex wind-gap-2">
+              <div class="wind-flex wind-flex-wrap wind-gap-2">
                 <div class="text-h5">{{ comicInfo.results.comic.name }}</div>
-                <template v-if="comicInfo.results.comic.theme.length > 0">
+                <div
+                  class="wind-flex wind-flex-wrap wind-gap-2"
+                  v-if="comicInfo.results.comic.theme.length > 0"
+                >
                   <router-link
                     v-for="item of comicInfo.results.comic.theme"
                     :key="item.path_word"
@@ -210,7 +213,7 @@ const commentComicApiWrapper = (query: {
                   >
                     <v-chip color="primary">{{ item.name }}</v-chip>
                   </router-link>
-                </template>
+                </div>
               </div>
               <div>
                 <v-row no-gutters class="wind-gap-2">
