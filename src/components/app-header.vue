@@ -27,7 +27,7 @@ onKeyStroke(
 );
 
 const changeMode = (theme: "dark" | "light") => {
-  appStore.updateConfigAction({ theme });
+  appStore.updateConfigAction({ theme }, true);
   gTheme.global.name.value = theme;
 };
 
