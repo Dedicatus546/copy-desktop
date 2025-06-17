@@ -89,13 +89,13 @@ onMounted(() => {
             <v-btn-toggle
               class="wind-w-full"
               color="primary"
-              variant="outlined"
               v-model="formState.theme"
               mandatory
+              border
             >
-              <v-btn value="auto">自动</v-btn>
-              <v-btn value="light">日间模式</v-btn>
-              <v-btn value="dark">夜间模式</v-btn>
+              <v-btn class="wind-flex-grow" value="auto">自动</v-btn>
+              <v-btn class="wind-flex-grow" value="light">日间模式</v-btn>
+              <v-btn class="wind-flex-grow" value="dark">夜间模式</v-btn>
             </v-btn-toggle>
           </v-col>
           <v-col :cols="12">
@@ -138,6 +138,7 @@ onMounted(() => {
           </v-col>
           <v-col :cols="12">
             <v-slider
+              hide-details
               color="primary"
               v-model:model-value="formState.zoomFactor"
               thumb-label="always"
