@@ -15,6 +15,7 @@ import router from "./router";
 import pinia from "./store";
 // import { normalizeError } from "./utils";
 
+// TODO fix 这里默认主题可能得获取配置文件确定，不然会闪屏。
 const vuetify = createVuetify({
   theme: {
     defaultTheme: "light",

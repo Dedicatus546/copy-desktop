@@ -4,7 +4,7 @@ import { resolve } from "node:path";
 
 import { dataDir } from "@electron/shared/path";
 
-export type Theme = "light" | "dark";
+export type Theme = "light" | "dark" | "auto";
 export type ReadMode = "scroll" | "click";
 export type WindowInfo = {
   x: number;

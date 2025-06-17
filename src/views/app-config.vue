@@ -86,6 +86,19 @@ onMounted(() => {
         </div>
         <v-row>
           <v-col :cols="12">
+            <v-btn-toggle
+              class="wind-w-full"
+              color="primary"
+              variant="outlined"
+              v-model="formState.theme"
+              mandatory
+            >
+              <v-btn value="auto">自动</v-btn>
+              <v-btn value="light">日间模式</v-btn>
+              <v-btn value="dark">夜间模式</v-btn>
+            </v-btn-toggle>
+          </v-col>
+          <v-col :cols="12">
             <v-select
               color="primary"
               v-model:model-value="formState.apiUrl"

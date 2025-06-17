@@ -38,7 +38,7 @@ const getConfigRpc = trpc.procedure.query(async () => {
 const saveConfigRpc = trpc.procedure
   .input(
     z.object({
-      theme: z.enum(["light", "dark"]),
+      theme: z.enum(["light", "dark", "auto"]),
       apiUrl: z.string(),
       apiUrlList: z.array(z.string()),
       downloadDir: z.string(),

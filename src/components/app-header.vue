@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import { useTheme } from "vuetify";
-
 import { trpcClient } from "@/apis/ipc";
 import useAppStore from "@/stores/use-app-store";
 import useUserStore from "@/stores/use-user-store";
@@ -14,7 +12,6 @@ const userStore = useUserStore();
 const userInfo = computed(() => userStore.userInfo);
 const router = useRouter();
 const route = useRoute();
-const gTheme = useTheme();
 
 onKeyStroke(
   "Escape",
@@ -25,11 +22,6 @@ onKeyStroke(
     dedupe: true,
   },
 );
-
-const changeMode = (theme: "dark" | "light") => {
-  appStore.updateConfigAction({ theme }, true);
-  gTheme.global.name.value = theme;
-};
 
 const logout = () => {
   userStore.logoutAction();
@@ -106,13 +98,6 @@ const tab = computed({
             tooltip-text="返回"
             icon="mdi-arrow-u-left-top"
             @click="router.back()"
-          />
-          <app-header-icon-btn
-            :tooltip-text="`切换${appStore.config.theme === 'dark' ? '日间模式' : '夜间模式'}`"
-            icon="mdi-swap-horizontal"
-            @click="
-              changeMode(appStore.config.theme === 'dark' ? 'light' : 'dark')
-            "
           />
           <template v-if="userInfo">
             <app-header-icon-btn
