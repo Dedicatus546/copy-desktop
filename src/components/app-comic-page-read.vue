@@ -43,7 +43,7 @@ const onSliderEnd = (value: [number, number] | number) => {
         v-if="picList.length > 0"
         class="wind-p-4 wind-flex-grow wind-min-h-0"
       >
-        <comic-page-pic :key="picList[page]" :src="picList[page]" />
+        <app-comic-page-pic :key="picList[page]" :src="picList[page]" />
       </div>
       <div class="wind-flex-shrink-0">
         <v-divider />

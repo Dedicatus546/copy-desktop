@@ -15,7 +15,7 @@ const onSliderEnd = (value: number) => {
 <template>
   <div class="wind-flex wind-flex-col wind-inset-0 wind-absolute">
     <div class="wind-p-4 wind-flex-grow wind-min-h-0 wind-overflow-auto">
-      <comic-vertical-pic
+      <app-comic-vertical-pic
         v-for="(item, index) of picList"
         ref="comicVerticalPicListRef"
         :key="item"
