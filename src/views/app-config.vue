@@ -87,6 +87,7 @@ onMounted(() => {
         <v-row>
           <v-col :cols="12">
             <v-select
+              color="primary"
               v-model:model-value="formState.apiUrl"
               hide-details
               label="代理域名"
@@ -99,6 +100,7 @@ onMounted(() => {
           </v-col>
           <v-col :cols="12">
             <v-select
+              color="primary"
               hide-details
               v-model:model-value="formState.readMode"
               label="阅读模式"
@@ -123,6 +125,7 @@ onMounted(() => {
           </v-col>
           <v-col :cols="12">
             <v-slider
+              color="primary"
               v-model:model-value="formState.zoomFactor"
               thumb-label="always"
               :min="1"
@@ -133,6 +136,7 @@ onMounted(() => {
           </v-col>
           <v-col :cols="12">
             <v-select
+              color="primary"
               hide-details
               :model-value="formState.useProxy"
               label="代理设置"
@@ -154,6 +158,7 @@ onMounted(() => {
           <template v-if="formState.useProxy && formState.proxyInfo">
             <v-col :cols="6">
               <v-text-field
+                color="primary"
                 v-model:model-value="formState.proxyInfo.host"
                 label="IP"
                 placeholder="一般为 127.0.0.1"
@@ -162,6 +167,7 @@ onMounted(() => {
             </v-col>
             <v-col :cols="6">
               <v-number-input
+                color="primary"
                 v-model:model-value="formState.proxyInfo.port"
                 label="端口"
                 placeholder="V2rayN 为 10809"
@@ -170,6 +176,7 @@ onMounted(() => {
             </v-col>
             <v-col :cols="6">
               <v-text-field
+                color="primary"
                 v-model:model-value="formState.proxyInfo.username"
                 label="用户名"
                 placeholder="一般为空"
@@ -177,6 +184,7 @@ onMounted(() => {
             </v-col>
             <v-col :cols="6">
               <v-text-field
+                color="primary"
                 v-model:model-value="formState.proxyInfo.password"
                 label="密码"
                 placeholder="一般为空"

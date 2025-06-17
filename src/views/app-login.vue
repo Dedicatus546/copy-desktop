@@ -70,6 +70,7 @@ onError((e) => {
         <v-row>
           <v-col :cols="12">
             <v-text-field
+              color="primary"
               v-model:model-value="formState.username"
               label="用户名"
               placeholder="请输入用户名"
@@ -78,6 +79,7 @@ onError((e) => {
           </v-col>
           <v-col :cols="12">
             <v-text-field
+              color="primary"
               v-model:model-value="formState.password"
               label="密码"
               placeholder="请输入密码"
@@ -87,6 +89,7 @@ onError((e) => {
           </v-col>
           <v-col :cols="12">
             <v-checkbox
+              color="primary"
               v-model:model-value="formState.autoLogin"
               density="compact"
               hide-details

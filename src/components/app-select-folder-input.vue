@@ -12,6 +12,7 @@ const changeDownloadDir = async () => {
 
 <template>
   <v-text-field
+    color="primary"
     hide-details
     label="下载位置"
     :model-value="value"
