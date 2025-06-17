@@ -9,6 +9,10 @@ const query = useRouteQuery("q");
 const searchText = ref("");
 
 const search = () => {
+  if (!searchText.value) {
+    return;
+  }
+  query.value = searchText.value;
   data.value = [];
   page.value = 1;
   send(1, 18);
@@ -67,6 +71,7 @@ onMounted(() => {
             >
               <template #append-inner>
                 <v-btn
+                  :disabled="!searchText"
                   type="submit"
                   variant="text"
                   icon="mdi-magnify"
