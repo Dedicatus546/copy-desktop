@@ -64,6 +64,7 @@ const { loading, data, page, total } = usePagination(
       <v-card>
         <v-form @submit.prevent="search">
           <v-text-field
+            color="primary"
             v-model:model-value="searchText"
             variant="solo"
             placeholder="输入轻小说名称进行搜索"
@@ -71,6 +72,7 @@ const { loading, data, page, total } = usePagination(
           >
             <template #append-inner>
               <v-btn
+                color="primary"
                 type="submit"
                 variant="text"
                 icon="mdi-magnify"
