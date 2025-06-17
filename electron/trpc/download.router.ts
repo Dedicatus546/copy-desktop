@@ -1,52 +1,15 @@
 import { createWriteStream, existsSync, mkdirSync } from "node:fs";
 import { resolve } from "node:path";
 
-import { dataDir } from "@electron/shared/path";
+import { comicDownloadDir } from "@electron/module/download";
 import archiver from "archiver";
 import { net } from "electron";
-// import Database from "better-sqlite3";
 import pLimit from "p-limit";
 import { z } from "zod";
 
 import { trpc } from "./trpc";
 
 const limit = pLimit(3);
-
-const downloadDir = resolve(dataDir, "download");
-// const dbFilepath = resolve(downloadDir, "data.db");
-// const db = new Database(dbFilepath);
-
-// db.exec(
-//   `CREATE TABLE IF NOT EXISTS download_comic (
-//     cover VARCHAR(255),
-//     path_word VARCHAR(255),
-//     name VARCHAR(255),
-//     group_path_word VARCHAR(255),
-//     group_name VARCHAR(255),
-//     chapter_id VARCHAR(255),
-//     PRIMARY KEY(path_word, group_path_word, chapter_id)
-//   );
-//   CREATE TABLE IF NOT EXISTS author (
-//     path_word VARCHAR(255) PRIMARY KEY,
-//     name VARCHAR(255)
-//   );
-//   CREATE TABLE IF NOT EXISTS download_comic_author (
-//     path_word VARCHAR(255),
-//     author_path_word VARCHAR(255)
-//   );`,
-// );
-
-const animeDownloadDir = resolve(downloadDir, "anime");
-const comicDownloadDir = resolve(downloadDir, "comic");
-const lightNovelDownloadDir = resolve(downloadDir, "light-novel");
-
-[animeDownloadDir, comicDownloadDir, lightNovelDownloadDir].forEach((dir) => {
-  if (!existsSync(dir)) {
-    mkdirSync(dir, {
-      recursive: true,
-    });
-  }
-});
 
 const onDownloadComicRpc = trpc.procedure
   .input(

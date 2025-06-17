@@ -127,6 +127,15 @@ const tab = computed({
           />
         </template>
         <app-header-icon-btn
+          tooltip-text="下载"
+          icon="mdi-download"
+          @click="
+            router.push({
+              name: 'DOWNLOAD',
+            })
+          "
+        />
+        <app-header-icon-btn
           tooltip-text="设置"
           icon="mdi-cog"
           @click="
