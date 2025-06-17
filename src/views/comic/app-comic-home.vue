@@ -73,6 +73,7 @@ const search = () => {
             >
               <template #append-inner>
                 <v-btn
+                  :disabled="!searchText"
                   color="primary"
                   type="submit"
                   variant="text"

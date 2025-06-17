@@ -72,6 +72,7 @@ const { loading, data, page, total } = usePagination(
           >
             <template #append-inner>
               <v-btn
+                :disabled="!searchText"
                 color="primary"
                 type="submit"
                 variant="text"
