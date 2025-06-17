@@ -46,7 +46,8 @@ const onSliderEnd = (value: [number, number] | number) => {
         <comic-page-pic :key="picList[page]" :src="picList[page]" />
       </div>
       <div class="wind-flex-shrink-0">
-        <v-card>
+        <v-divider />
+        <v-card color="transparent" :elevation="0">
           <v-card-text>
             <v-slider
               v-model:model-value="sliderValue"
