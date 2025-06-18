@@ -11,3 +11,9 @@ export const resolveProxyUrl = (proxyInfo?: ProxyInfo) => {
   // 去除末尾斜杠
   return url.toString().slice(0, -1);
 };
+
+export const delay = async (timeout = 2000) => {
+  const { promise, resolve } = Promise.withResolvers<void>();
+  setTimeout(resolve, timeout);
+  return promise;
+};

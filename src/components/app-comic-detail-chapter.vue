@@ -8,6 +8,7 @@ import {
 } from "@/apis";
 import { trpcClient } from "@/apis/ipc";
 import EMPTY_STATE_IMG from "@/assets/empty-state/1.jpg";
+import { useDownloadStore } from "@/stores/use-download-store";
 
 const { comicPathWord, groupPathWord, comicName, groupName } = defineProps<{
   comicPathWord: string;
@@ -20,6 +21,8 @@ const lastChapterModel = defineModel<{
   chapterName: string;
   chapterUuid: string;
 }>("lastReadChapter");
+
+const downloadStore = useDownloadStore();
 
 const updateLastReadChapter = (chapter: ComicChapter) => {
   lastChapterModel.value = {
@@ -76,52 +79,21 @@ const { data: picListData, send } = useRequest(
   },
 );
 
-const downloadSnackbarState = reactive({
-  show: false,
-  isDownloadComplete: false,
-  downloadPercent: 0,
-  filepath: "",
-});
 const downloadComic = async () => {
   await send(contextMenuState.targetData!.uuid);
-  trpcClient.onDownloadComic.subscribe(
-    {
-      comicPathWord,
-      groupPathWord,
-      comicName,
-      groupName,
-      chapterName: contextMenuState.targetData!.name,
-      chapterId: contextMenuState.targetData!.uuid,
-      imageUrlList: picListData.value.results.chapter.contents.map(
-        (item) => item.url,
-      ),
-    },
-    {
-      onStarted() {
-        downloadSnackbarState.show = true;
-        downloadSnackbarState.isDownloadComplete = false;
-        downloadSnackbarState.downloadPercent = 0;
-      },
-      onData(value) {
-        console.log(value);
-        if (value.type === "downloading") {
-          downloadSnackbarState.downloadPercent =
-            (value.data.complete! / value.data.total!) * 100;
-        } else if (value.type === "complete") {
-          downloadSnackbarState.isDownloadComplete = true;
-          downloadSnackbarState.filepath = value.data.filepath!;
-          setTimeout(() => {
-            downloadSnackbarState.show = false;
-          }, 2000);
-        }
-      },
-    },
-  );
-};
-
-const openFile = () => {
-  trpcClient.showItemInFolder.query({
-    path: downloadSnackbarState.filepath,
+  await downloadStore.addDownloadTaskAction({
+    uuid: await trpcClient.getUuid.query(),
+    type: "comic",
+    comicPathWord,
+    comicName,
+    groupPathWord,
+    groupName,
+    chapterName: contextMenuState.targetData!.name,
+    chapterId: contextMenuState.targetData!.uuid,
+    picUrlList: picListData.value.results.chapter.contents.map(
+      (item) => item.url,
+    ),
+    filepath: "",
   });
 };
 </script>
@@ -208,36 +180,6 @@ const openFile = () => {
           </v-list-item>
         </v-list>
       </v-menu>
-      <v-snackbar
-        color="primary"
-        location="top end"
-        v-model:model-value="downloadSnackbarState.show"
-        :timeout="-1"
-        max-width="30%"
-      >
-        <div class="wind-mb-2">
-          {{
-            downloadSnackbarState.isDownloadComplete ? "下载完成" : "正在下载"
-          }}
-        </div>
-        <div class="wind-flex wind-flex-col wind-gap-2">
-          <v-progress-linear
-            class="wind-self-center"
-            v-bind:model-value="downloadSnackbarState.downloadPercent"
-            size="large"
-          />
-          <div class="wind-leading-6 wind-vertical-mid">
-            {{ comicName }} - {{ groupName }} -
-            {{ contextMenuState.targetData?.name }}
-          </div>
-          <div
-            class="wind-flex wind-justify-end"
-            v-if="downloadSnackbarState.isDownloadComplete"
-          >
-            <v-btn variant="text" @click="openFile">打开文件</v-btn>
-          </div>
-        </div>
-      </v-snackbar>
     </template>
   </v-data-iterator>
 </template>

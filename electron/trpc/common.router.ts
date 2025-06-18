@@ -1,3 +1,5 @@
+import { randomUUID } from "node:crypto";
+
 import { dialog, shell } from "electron";
 import { z } from "zod";
 
@@ -41,10 +43,16 @@ const selectFolderRpc = trpc.procedure.query(async ({ ctx }) => {
   return result.filePaths[0];
 });
 
+const getUuidRpc = trpc.procedure.query(() => {
+  const uuid = randomUUID();
+  return uuid;
+});
+
 export const router = {
   minimizeWin: minimizeWinRpc,
   closeWin: closeWinRpc,
   openLink: openLinkRpc,
   showItemInFolder: showItemInFolderRpc,
   selectFolder: selectFolderRpc,
+  getUuid: getUuidRpc,
 };
