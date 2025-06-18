@@ -147,6 +147,18 @@ export type ComicChapter = {
   next: string;
 };
 
+export type LightNovelChapter = {
+  index: number;
+  id: string;
+  count: number; // 2;
+  sort: number; // 10;
+  name: string; // "第1卷";
+  book_id: string; // "e3655f4e-e30c-11ef-afcc-3f487b7d9a9a";
+  book_path_word: string; // "nenggoushuaizhishuochuxihuandenvshengwushuang";
+  prev: string | null;
+  next: string | null; // "14448";
+};
+
 export type Comment = {
   id: number;
   create_at: string;

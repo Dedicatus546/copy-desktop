@@ -27,6 +27,7 @@ export interface DownloadLightNovelItem extends DownloadBaseItem {
   chapterName: string;
   chapterId: string;
   txtUrl: string;
+  txtEncoding: string;
   picUrlList: Array<string>;
 }
 

@@ -46,6 +46,9 @@ const openFile = (item: DownloadItem) => {
                       item.chapterName
                     }}
                   </template>
+                  <template v-else-if="item.type === 'light-novel'">
+                    {{ item.lightNovelName }}-{{ item.chapterName }}
+                  </template>
                 </td>
                 <td>
                   {{
@@ -98,6 +101,9 @@ const openFile = (item: DownloadItem) => {
                     {{ item.comicName }}-{{ item.groupName }}-{{
                       item.chapterName
                     }}
+                  </template>
+                  <template v-else-if="item.type === 'light-novel'">
+                    {{ item.lightNovelName }}-{{ item.chapterName }}
                   </template>
                 </td>
                 <td>

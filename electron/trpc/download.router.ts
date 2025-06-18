@@ -5,6 +5,7 @@ import {
   comicDownloadDir,
   getDownloadCompleteList,
   getDownloadDownloadingList,
+  lightNovelDownloadDir,
   saveDownloadCompleteList,
   saveDownloadDownloadingList,
 } from "@electron/module/download";
@@ -89,13 +90,14 @@ const onDownloadLightNovelRpc = trpc.procedure
       chapterId: z.string(),
       chapterName: z.string(),
       txtUrl: z.string(),
+      txtEncoding: z.string(),
       picUrlList: z.array(z.string()),
     }),
   )
   .subscription(async function* (opts) {
     const query = opts.input;
     const filename = query.chapterName + ".zip";
-    const fileDir = resolve(comicDownloadDir, query.lightNovelName);
+    const fileDir = resolve(lightNovelDownloadDir, query.lightNovelName);
     const filepath = resolve(fileDir, filename);
 
     let complete = 0;

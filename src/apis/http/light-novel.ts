@@ -2,6 +2,7 @@ import http from "./http";
 import {
   Comment,
   LightNovel,
+  LightNovelChapter,
   LightNovelDetail,
   ListResultWrapper,
   PaginationQuery,
@@ -123,21 +124,9 @@ export const getLightNovelReadDetailApi = (query: {
 export const getLightNovelVolumeListApi = (query: {
   lightNovelPathWord: string;
 }) => {
-  return http.Get<
-    RespWrapper<
-      ListResultWrapper<{
-        index: number;
-        id: string;
-        count: number; // 2;
-        sort: number; // 10;
-        name: string; // "第1卷";
-        book_id: string; // "e3655f4e-e30c-11ef-afcc-3f487b7d9a9a";
-        book_path_word: string; // "nenggoushuaizhishuochuxihuandenvshengwushuang";
-        prev: string | null;
-        next: string | null; // "14448";
-      }>
-    >
-  >(`book/${query.lightNovelPathWord}/volumes`);
+  return http.Get<RespWrapper<ListResultWrapper<LightNovelChapter>>>(
+    `book/${query.lightNovelPathWord}/volumes`,
+  );
 };
 
 export const getLightNovelVolumeApi = (query: {

@@ -332,6 +332,7 @@ const commentLightNovelApiWrapper = (query: {
               <app-light-novel-chapter
                 v-model:last-read-chapter="lastReadChapter"
                 :light-novel-path-word="lightNovelPathWord"
+                :light-novel-name="lightNovelInfo.results.book.name"
               />
             </v-tabs-window-item>
             <v-tabs-window-item value="comment">
