@@ -6,6 +6,7 @@ import { trpcClient } from "@/apis/ipc";
 import EMPTY_STATE_IMG from "@/assets/empty-state/1.jpg";
 import useSnackbar from "@/compositions/use-snack-bar";
 import { useDownloadStore } from "@/stores/use-download-store";
+import useUserStore from "@/stores/use-user-store";
 
 const { animePathWord, animeName } = defineProps<{
   animePathWord: string;
@@ -20,6 +21,7 @@ const lastReadChapterModel = defineModel<{
 
 const snackbar = useSnackbar();
 const downloadStore = useDownloadStore();
+const userStore = useUserStore();
 
 const updateLastReadChapter = (chapter: {
   uuid: string;
@@ -107,49 +109,55 @@ const downloadAnime = async (
           <v-list-item>
             <v-list-item-title>{{ item.raw.name }}</v-list-item-title>
             <template v-slot:append>
-              <router-link
-                v-for="line of item.raw.lines"
-                :key="line.path_word"
-                :to="{
-                  name: 'ANIME_WATCH',
-                  params: {
-                    animePathWord,
-                    animeChapterUuid: item.raw.uuid,
-                    linePathWord: line.path_word,
-                  },
-                }"
-                custom
-              >
-                <template #default="{ navigate }">
-                  <v-btn
-                    color="primary"
-                    class="chapter-btn"
-                    @click="
-                      (updateLastReadChapter({
-                        uuid: item.raw.uuid,
-                        name: item.raw.name,
-                        linePathWord: line.path_word,
-                      }),
-                      navigate())
-                    "
-                  >
-                    <app-scroll-wrapper>
-                      {{ line.name }}
-                    </app-scroll-wrapper>
-                  </v-btn>
-                  <v-btn
-                    class="wind-ml-2"
-                    @click="
-                      downloadAnime(
-                        item.raw.uuid,
-                        item.raw.name,
-                        line.path_word,
-                      )
-                    "
-                    >下载</v-btn
-                  >
-                </template>
-              </router-link>
+              <template v-if="userStore.isLogin">
+                <router-link
+                  v-for="line of item.raw.lines"
+                  :key="line.path_word"
+                  :to="{
+                    name: 'ANIME_WATCH',
+                    params: {
+                      animePathWord,
+                      animeChapterUuid: item.raw.uuid,
+                      linePathWord: line.path_word,
+                    },
+                  }"
+                  custom
+                >
+                  <template #default="{ navigate }">
+                    <v-btn
+                      color="primary"
+                      class="chapter-btn"
+                      @click="
+                        (updateLastReadChapter({
+                          uuid: item.raw.uuid,
+                          name: item.raw.name,
+                          linePathWord: line.path_word,
+                        }),
+                        navigate())
+                      "
+                    >
+                      <app-scroll-wrapper>
+                        {{ line.name }}
+                      </app-scroll-wrapper>
+                    </v-btn>
+                    <v-btn
+                      class="wind-ml-2"
+                      @click="
+                        downloadAnime(
+                          item.raw.uuid,
+                          item.raw.name,
+                          line.path_word,
+                        )
+                      "
+                    >
+                      下载
+                    </v-btn>
+                  </template>
+                </router-link>
+              </template>
+              <template v-else>
+                <v-btn disabled>登陆后才可观看</v-btn>
+              </template>
             </template>
           </v-list-item>
         </template>

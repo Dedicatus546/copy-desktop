@@ -232,6 +232,7 @@ const toAnimeCompanyPage = (pathWord: string, name: string) => {
                       custom
                     >
                       <v-btn
+                        :disabled="!userStore.isLogin"
                         color="primary"
                         variant="flat"
                         size="large"
@@ -241,7 +242,11 @@ const toAnimeCompanyPage = (pathWord: string, name: string) => {
                         <template #prepend>
                           <v-icon icon="mdi-book-open"></v-icon>
                         </template>
-                        {{ lastReadChapter.chapterName }}
+                        {{
+                          !userStore.isLogin
+                            ? "登陆后才可观看"
+                            : lastReadChapter.chapterName
+                        }}
                       </v-btn>
                     </router-link>
                   </v-col>
