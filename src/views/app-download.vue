@@ -49,6 +49,9 @@ const openFile = (item: DownloadItem) => {
                   <template v-else-if="item.type === 'light-novel'">
                     {{ item.lightNovelName }}-{{ item.chapterName }}
                   </template>
+                  <template v-else-if="item.type === 'anime'">
+                    {{ item.animeName }}-{{ item.chapterName }}
+                  </template>
                 </td>
                 <td>
                   {{
@@ -104,6 +107,9 @@ const openFile = (item: DownloadItem) => {
                   </template>
                   <template v-else-if="item.type === 'light-novel'">
                     {{ item.lightNovelName }}-{{ item.chapterName }}
+                  </template>
+                  <template v-else-if="item.type === 'anime'">
+                    {{ item.animeName }}-{{ item.chapterName }}
                   </template>
                 </td>
                 <td>

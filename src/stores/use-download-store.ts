@@ -54,6 +54,8 @@ export const useDownloadStore = defineStore("download", () => {
         await downloadComicAction(first);
       } else if (first.type === "light-novel") {
         await downloadLightNovelAction(first);
+      } else if (first.type === "anime") {
+        await downloadAnimeAction(first);
       }
     }
   };
@@ -184,34 +186,32 @@ export const useDownloadStore = defineStore("download", () => {
         onStarted() {
           downloadItem.status = "downloading";
         },
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        onData(_value) {
-          resolve();
-          // if (value.type === "downloading") {
-          //   downloadItem.percent = value.data.complete! / value.data.total!;
-          // } else if (value.type === "complete") {
-          //   downloadItem.status = "complete";
-          //   downloadItem.filepath = value.data.filepath!;
-          //   const index = state.downloadingList.findIndex(
-          //     (item) => item.uuid === downloadItem.uuid,
-          //   );
-          //   if (index > -1) {
-          //     const [item] = state.downloadingList.splice(index, 1);
-          //     state.completeList.push(
-          //       omit(item as WithDownloadingInfo<DownloadLightNovelItem>, [
-          //         "status",
-          //         "percent",
-          //       ]),
-          //     );
-          //     resolve();
-          //   } else {
-          //     reject(
-          //       new Error(
-          //         "下载列表内找不到对应项，uuid 为 " + downloadItem.uuid,
-          //       ),
-          //     );
-          //   }
-          // }
+        onData(value) {
+          if (value.type === "downloading") {
+            downloadItem.percent = value.data.complete! / value.data.total!;
+          } else if (value.type === "complete") {
+            downloadItem.status = "complete";
+            downloadItem.filepath = value.data.filepath!;
+            const index = state.downloadingList.findIndex(
+              (item) => item.uuid === downloadItem.uuid,
+            );
+            if (index > -1) {
+              const [item] = state.downloadingList.splice(index, 1);
+              state.completeList.push(
+                omit(item as WithDownloadingInfo<DownloadAnimeItem>, [
+                  "status",
+                  "percent",
+                ]),
+              );
+              resolve();
+            } else {
+              reject(
+                new Error(
+                  "下载列表内找不到对应项，uuid 为 " + downloadItem.uuid,
+                ),
+              );
+            }
+          }
         },
         onError(err) {
           reject(err);

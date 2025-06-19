@@ -1,4 +1,4 @@
-import { spawn } from "node:child_process";
+import { spawn, spawnSync } from "node:child_process";
 import { createWriteStream, existsSync, mkdirSync } from "node:fs";
 import { resolve } from "node:path";
 
@@ -12,7 +12,7 @@ import {
   saveDownloadCompleteList,
   saveDownloadDownloadingList,
 } from "@electron/module/download";
-import { ffmpegPath } from "@electron/shared/ffmpeg";
+import { createLogger } from "@electron/module/logger";
 import { resolveProxyUrl } from "@electron/shared/utils";
 import archiver from "archiver";
 import { net } from "electron";
@@ -22,6 +22,8 @@ import { z } from "zod";
 import { trpc } from "./trpc";
 
 const limit = pLimit(3);
+
+const { info } = createLogger("download.router");
 
 const onDownloadComicRpc = trpc.procedure
   .input(
@@ -195,10 +197,29 @@ const onDownloadAnimeRpc = trpc.procedure
     const config = await getConfig();
     const proxyUrl = resolveProxyUrl(config.proxyInfo);
 
-    // TODO 如何将类似事件的编码形式转为可用 yield 的语法。
-    // emiiter -> generator ？
+    info("开始解析视频长度");
+    const { stdout } = spawnSync(
+      "ffprobe",
+      [
+        proxyUrl ? ["-http_proxy", proxyUrl] : [],
+        ["-v", "error"],
+        ["-show_entries", "format=duration"],
+        ["-of", "default=noprint_wrappers=1:nokey=1"],
+        query.videoM3u8Url,
+      ].flat(),
+    );
+    const duration = Number.parseFloat(stdout.toString("utf-8"));
+    info("视频长度为", duration);
+
+    if (!existsSync(fileDir)) {
+      mkdirSync(fileDir, {
+        recursive: true,
+      });
+    }
+
+    info("开始通过 ffmpeg 下载合并 m3u8 文件");
     const ffmpegSpawn = spawn(
-      ffmpegPath,
+      "ffmpeg",
       [
         proxyUrl ? ["-http_proxy", proxyUrl] : [],
         ["-i", query.videoM3u8Url],
@@ -208,50 +229,33 @@ const onDownloadAnimeRpc = trpc.procedure
       ].flat(),
     );
 
-    let isNotEnd = true;
-    let {
-      promise,
-      resolve: pResolve,
-      reject: pReject,
-    } = Promise.withResolvers<string>();
+    const iterator =
+      ffmpegSpawn.stderr.iterator() as NodeJS.AsyncIterator<Buffer>;
 
-    // TODO 取第一帧可以拿到 Duration 解析 time ，然后转化为秒，取百分比
-    ffmpegSpawn.stderr.on("data", (data: string) => {
-      pResolve(data);
-      const {
-        promise: nextPromise,
-        resolve: nextPResolve,
-        reject: nextPReject,
-      } = Promise.withResolvers<string>();
-      promise = nextPromise;
-      pResolve = nextPResolve;
-      pReject = nextPReject;
-    });
-
-    // TODO 取第一帧可以拿到 Duration 解析 time ，然后转化为秒，取百分比
-    ffmpegSpawn.stderr.on("error", (error: string) => {
-      pReject(error);
-    });
-
-    ffmpegSpawn.stderr.on("end", () => {
-      isNotEnd = false;
-    });
-
-    while (isNotEnd) {
-      const content = await promise;
+    for await (const buffer of iterator) {
+      const content = buffer.toString("utf-8");
+      info("从 ffmpeg 接收输出信息", content);
       const timeMatch = content.match(/time=(\d{2}):(\d{2}):(\d{2})\.(\d{2})/);
       if (timeMatch) {
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        const [_, h, m, s] = timeMatch;
+        const [, h, m, s] = timeMatch;
         yield {
           type: "downloading",
           data: {
-            total: 1000,
+            total: duration,
             complete: +h * 60 * 60 + +m * 60 + +s,
           },
         };
       }
     }
+
+    info("ffmpeg 处理结束");
+
+    yield {
+      type: "complete",
+      data: {
+        filepath,
+      },
+    };
   });
 
 const getDownloadDownloadingListRpc = trpc.procedure.query(() => {

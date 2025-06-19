@@ -4,6 +4,7 @@ import { usePagination, useRequest } from "alova/client";
 import { getAnimeChapterDetailApi, getAnimeChapterListApi } from "@/apis";
 import { trpcClient } from "@/apis/ipc";
 import EMPTY_STATE_IMG from "@/assets/empty-state/1.jpg";
+import useSnackbar from "@/compositions/use-snack-bar";
 import { useDownloadStore } from "@/stores/use-download-store";
 
 const { animePathWord, animeName } = defineProps<{
@@ -17,6 +18,7 @@ const lastReadChapterModel = defineModel<{
   linePathWord: string;
 }>("lastReadChapter");
 
+const snackbar = useSnackbar();
 const downloadStore = useDownloadStore();
 
 const updateLastReadChapter = (chapter: {
@@ -61,6 +63,10 @@ const downloadAnime = async (
   animeChapterName: string,
   linePathWord: string,
 ) => {
+  if (!(await trpcClient.hasFfmpegCommand.query())) {
+    snackbar.warning("未检测到 ffmpeg 命令，请将其添加到 PATH 中");
+    return;
+  }
   await send(animeChapterUuid, linePathWord);
   await downloadStore.addDownloadTaskAction({
     uuid: await trpcClient.getUuid.query(),

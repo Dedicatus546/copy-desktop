@@ -1,9 +1,13 @@
 import { randomUUID } from "node:crypto";
 
+import { createLogger } from "@electron/module/logger";
 import { dialog, shell } from "electron";
+import which from "which";
 import { z } from "zod";
 
 import { trpc } from "./trpc";
+
+const { error, info } = createLogger("common.router");
 
 const minimizeWinRpc = trpc.procedure.query(({ ctx }) => {
   const win = ctx.win;
@@ -48,6 +52,16 @@ const getUuidRpc = trpc.procedure.query(() => {
   return uuid;
 });
 
+const hasFfmpegCommandRpc = trpc.procedure.query(async () => {
+  try {
+    const path = await which("ffmpeg");
+    info("检测到 ffmpeg 命令", path);
+    return true;
+  } catch (e) {
+    error("未检测到 ffmpeg 命令", e);
+  }
+});
+
 export const router = {
   minimizeWin: minimizeWinRpc,
   closeWin: closeWinRpc,
@@ -55,4 +69,5 @@ export const router = {
   showItemInFolder: showItemInFolderRpc,
   selectFolder: selectFolderRpc,
   getUuid: getUuidRpc,
+  hasFfmpegCommand: hasFfmpegCommandRpc,
 };
