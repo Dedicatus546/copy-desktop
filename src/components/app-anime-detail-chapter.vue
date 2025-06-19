@@ -1,11 +1,14 @@
 <script setup lang="ts">
-import { usePagination } from "alova/client";
+import { usePagination, useRequest } from "alova/client";
 
-import { getAnimeChapterListApi } from "@/apis";
+import { getAnimeChapterDetailApi, getAnimeChapterListApi } from "@/apis";
+import { trpcClient } from "@/apis/ipc";
 import EMPTY_STATE_IMG from "@/assets/empty-state/1.jpg";
+import { useDownloadStore } from "@/stores/use-download-store";
 
-const { animePathWord } = defineProps<{
+const { animePathWord, animeName } = defineProps<{
   animePathWord: string;
+  animeName: string;
 }>();
 
 const lastReadChapterModel = defineModel<{
@@ -13,6 +16,8 @@ const lastReadChapterModel = defineModel<{
   chapterUuid: string;
   linePathWord: string;
 }>("lastReadChapter");
+
+const downloadStore = useDownloadStore();
 
 const updateLastReadChapter = (chapter: {
   uuid: string;
@@ -38,6 +43,36 @@ const { loading, data } = usePagination(
     total: (res) => res.results.total,
   },
 );
+
+const { data: chapterData, send } = useRequest(
+  (animeChapterUuid: string, linePathWord: string) =>
+    getAnimeChapterDetailApi({
+      animeChapterUuid,
+      animePathWord,
+      linePathWord,
+    }),
+  {
+    immediate: false,
+  },
+);
+
+const downloadAnime = async (
+  animeChapterUuid: string,
+  animeChapterName: string,
+  linePathWord: string,
+) => {
+  await send(animeChapterUuid, linePathWord);
+  await downloadStore.addDownloadTaskAction({
+    uuid: await trpcClient.getUuid.query(),
+    type: "anime",
+    animeName,
+    animePathWord,
+    chapterName: animeChapterName,
+    chapterId: animeChapterUuid,
+    videoM3u8Url: chapterData.value.results.chapter.video,
+    filepath: "",
+  });
+};
 </script>
 
 <template>
@@ -96,6 +131,17 @@ const { loading, data } = usePagination(
                       {{ line.name }}
                     </app-scroll-wrapper>
                   </v-btn>
+                  <v-btn
+                    class="wind-ml-2"
+                    @click="
+                      downloadAnime(
+                        item.raw.uuid,
+                        item.raw.name,
+                        line.path_word,
+                      )
+                    "
+                    >下载</v-btn
+                  >
                 </template>
               </router-link>
             </template>

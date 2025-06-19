@@ -1,4 +1,5 @@
 import {
+  DownloadAnimeItem,
   DownloadComicItem,
   DownloadItem,
   DownloadLightNovelItem,
@@ -112,7 +113,6 @@ export const useDownloadStore = defineStore("download", () => {
     emitter.emit("DownloadSuccess", downloadItem);
   };
 
-  // TODO
   const downloadLightNovelAction = async (
     downloadItem: WithDownloadingInfo<DownloadLightNovelItem>,
   ) => {
@@ -168,6 +168,61 @@ export const useDownloadStore = defineStore("download", () => {
     emitter.emit("DownloadSuccess", downloadItem);
   };
 
+  const downloadAnimeAction = async (
+    downloadItem: WithDownloadingInfo<DownloadAnimeItem>,
+  ) => {
+    const { promise, resolve, reject } = Promise.withResolvers<void>();
+    trpcClient.onDownloadAnime.subscribe(
+      {
+        animelName: downloadItem.animeName,
+        animelPathWord: downloadItem.animePathWord,
+        chapterId: downloadItem.chapterId,
+        chapterName: downloadItem.chapterName,
+        videoM3u8Url: downloadItem.videoM3u8Url,
+      },
+      {
+        onStarted() {
+          downloadItem.status = "downloading";
+        },
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        onData(_value) {
+          resolve();
+          // if (value.type === "downloading") {
+          //   downloadItem.percent = value.data.complete! / value.data.total!;
+          // } else if (value.type === "complete") {
+          //   downloadItem.status = "complete";
+          //   downloadItem.filepath = value.data.filepath!;
+          //   const index = state.downloadingList.findIndex(
+          //     (item) => item.uuid === downloadItem.uuid,
+          //   );
+          //   if (index > -1) {
+          //     const [item] = state.downloadingList.splice(index, 1);
+          //     state.completeList.push(
+          //       omit(item as WithDownloadingInfo<DownloadLightNovelItem>, [
+          //         "status",
+          //         "percent",
+          //       ]),
+          //     );
+          //     resolve();
+          //   } else {
+          //     reject(
+          //       new Error(
+          //         "下载列表内找不到对应项，uuid 为 " + downloadItem.uuid,
+          //       ),
+          //     );
+          //   }
+          // }
+        },
+        onError(err) {
+          reject(err);
+        },
+      },
+    );
+    await promise;
+    await syncAction();
+    emitter.emit("DownloadSuccess", downloadItem);
+  };
+
   const syncAction = async () => {
     await trpcClient.saveDownloadDownloadingList.query(
       state.downloadingList.map((item) => omit(item, ["status", "percent"])),
@@ -182,5 +237,6 @@ export const useDownloadStore = defineStore("download", () => {
     addDownloadTaskAction,
     downloadComicAction,
     downloadLightNovelAction,
+    downloadAnimeAction,
   };
 });

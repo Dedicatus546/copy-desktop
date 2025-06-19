@@ -1,7 +1,10 @@
+import { spawn } from "node:child_process";
 import { createWriteStream, existsSync, mkdirSync } from "node:fs";
 import { resolve } from "node:path";
 
+import { getConfig } from "@electron/module/config";
 import {
+  animeDownloadDir,
   comicDownloadDir,
   getDownloadCompleteList,
   getDownloadDownloadingList,
@@ -9,6 +12,8 @@ import {
   saveDownloadCompleteList,
   saveDownloadDownloadingList,
 } from "@electron/module/download";
+import { ffmpegPath } from "@electron/shared/ffmpeg";
+import { resolveProxyUrl } from "@electron/shared/utils";
 import archiver from "archiver";
 import { net } from "electron";
 import pLimit from "p-limit";
@@ -172,6 +177,83 @@ const onDownloadLightNovelRpc = trpc.procedure
     };
   });
 
+const onDownloadAnimeRpc = trpc.procedure
+  .input(
+    z.object({
+      animelName: z.string(),
+      animelPathWord: z.string(),
+      chapterId: z.string(),
+      chapterName: z.string(),
+      videoM3u8Url: z.string(),
+    }),
+  )
+  .subscription(async function* (opts) {
+    const query = opts.input;
+    const filename = query.chapterName + ".mp4";
+    const fileDir = resolve(animeDownloadDir, query.animelName);
+    const filepath = resolve(fileDir, filename);
+    const config = await getConfig();
+    const proxyUrl = resolveProxyUrl(config.proxyInfo);
+
+    // TODO 如何将类似事件的编码形式转为可用 yield 的语法。
+    // emiiter -> generator ？
+    const ffmpegSpawn = spawn(
+      ffmpegPath,
+      [
+        proxyUrl ? ["-http_proxy", proxyUrl] : [],
+        ["-i", query.videoM3u8Url],
+        ["-c", "copy"],
+        ["-f", "mp4"],
+        filepath,
+      ].flat(),
+    );
+
+    let isNotEnd = true;
+    let {
+      promise,
+      resolve: pResolve,
+      reject: pReject,
+    } = Promise.withResolvers<string>();
+
+    // TODO 取第一帧可以拿到 Duration 解析 time ，然后转化为秒，取百分比
+    ffmpegSpawn.stderr.on("data", (data: string) => {
+      pResolve(data);
+      const {
+        promise: nextPromise,
+        resolve: nextPResolve,
+        reject: nextPReject,
+      } = Promise.withResolvers<string>();
+      promise = nextPromise;
+      pResolve = nextPResolve;
+      pReject = nextPReject;
+    });
+
+    // TODO 取第一帧可以拿到 Duration 解析 time ，然后转化为秒，取百分比
+    ffmpegSpawn.stderr.on("error", (error: string) => {
+      pReject(error);
+    });
+
+    ffmpegSpawn.stderr.on("end", () => {
+      isNotEnd = false;
+    });
+
+    while (isNotEnd) {
+      const content = await promise;
+      const timeMatch = content.match(/time=(\d{2}):(\d{2}):(\d{2})\.(\d{2})/);
+      if (timeMatch) {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        const [_, h, m, s] = timeMatch;
+        yield {
+          type: "downloading",
+          data: {
+            total: 1000,
+            complete: +h * 60 * 60 + +m * 60 + +s,
+          },
+        };
+      }
+    }
+  });
+
 const getDownloadDownloadingListRpc = trpc.procedure.query(() => {
   return getDownloadDownloadingList();
 });
@@ -199,4 +281,5 @@ export const router = {
   getDownloadCompleteList: getDownloadCompleteListRpc,
   saveDownloadDownloadingList: saveDownloadDownloadingListRpc,
   saveDownloadCompleteList: saveDownloadCompleteListRpc,
+  onDownloadAnime: onDownloadAnimeRpc,
 };

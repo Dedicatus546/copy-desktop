@@ -16,6 +16,10 @@ export const dataDir = import.meta.env.DEV
   ? join(appRoot, "data")
   : join(dirname(app.getPath("exe")), "data");
 
+export const ffmpegDir = import.meta.env.DEV
+  ? join(appRoot, "ffmpeg")
+  : join(dirname(app.getPath("exe")), "ffmpeg");
+
 if (!existsSync(dataDir)) {
   mkdirSync(dataDir, {
     recursive: true,

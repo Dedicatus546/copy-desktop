@@ -281,6 +281,7 @@ const toAnimeCompanyPage = (pathWord: string, name: string) => {
             <v-tabs-window-item value="chapter">
               <app-anime-detail-chapter
                 v-model:last-read-chapter="lastReadChapter"
+                :anime-name="animeInfo.results.cartoon.name"
                 :anime-path-word="animePathWord"
               />
             </v-tabs-window-item>

@@ -37,7 +37,7 @@ export interface DownloadAnimeItem extends DownloadBaseItem {
   animeName: string;
   chapterName: string;
   chapterId: string;
-  videoUrl: string;
+  videoM3u8Url: string;
 }
 
 export type DownloadItem =
