@@ -2,10 +2,12 @@
 import { ComponentPublicInstance } from "vue";
 
 import useInitApp from "./compositions/use-init-app";
+import { useDownloadStore } from "./stores/use-download-store";
 // import useRecoveryScrollPosition from "./compositions/use-recovery-scroll-position";
 // import useRefreshUser from "./compositions/use-refresh-user";
 
 const { loading, error, currentStatus, init: reInit } = useInitApp();
+useDownloadStore();
 const scrollViewRef = ref<ComponentPublicInstance | null>(null);
 // useRecoveryScrollPosition(scrollViewRef);
 // useRefreshUser();

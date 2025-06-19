@@ -27,19 +27,24 @@ export const useDownloadStore = defineStore("download", () => {
     downloadingList: [],
   });
 
-  const initAction = () => {
-    trpcClient.getDownloadDownloadingList.query().then((list) => {
-      state.downloadingList = list.map((item) => {
-        return {
-          ...item,
-          status: "downloading",
-          percent: 0.3,
-        };
-      });
-    });
-    trpcClient.getDownloadCompleteList.query().then((list) => {
-      state.completeList = list;
-    });
+  const initAction = async () => {
+    await Promise.allSettled([
+      trpcClient.getDownloadDownloadingList.query().then((list) => {
+        state.downloadingList = list.map((item) => {
+          return {
+            ...item,
+            status: "pending",
+            percent: 0,
+          };
+        });
+      }),
+      trpcClient.getDownloadCompleteList.query().then((list) => {
+        state.completeList = list;
+      }),
+    ]);
+    if (state.downloadingList.length > 0) {
+      tryStartDownloadAction();
+    }
   };
 
   const addDownloadTaskAction = async (item: DownloadItem) => {
@@ -48,7 +53,14 @@ export const useDownloadStore = defineStore("download", () => {
       status: "pending",
       percent: 0,
     });
+    await tryStartDownloadAction();
+  };
+
+  const tryStartDownloadAction = async () => {
     const first = state.downloadingList[0];
+    if (!first) {
+      return;
+    }
     if (first.status === "pending") {
       if (first.type === "comic") {
         await downloadComicAction(first);
@@ -58,6 +70,8 @@ export const useDownloadStore = defineStore("download", () => {
         await downloadAnimeAction(first);
       }
     }
+    // 尝试下载下一项
+    tryStartDownloadAction();
   };
 
   const downloadComicAction = async (
@@ -234,6 +248,7 @@ export const useDownloadStore = defineStore("download", () => {
 
   return {
     ...toRefs(state),
+    initAction,
     addDownloadTaskAction,
     downloadComicAction,
     downloadLightNovelAction,
