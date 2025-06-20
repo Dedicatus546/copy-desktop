@@ -21,7 +21,7 @@ const changeDownloadDir = async () => {
   >
     <template #append-inner>
       <v-btn :loading="loading" color="primary" @click="changeDownloadDir">
-        更换
+        选择文件夹
       </v-btn>
     </template>
   </v-text-field>

@@ -86,17 +86,20 @@ onMounted(() => {
         </div>
         <v-row>
           <v-col :cols="12">
-            <v-btn-toggle
-              class="wind-w-full"
+            <v-select
               color="primary"
-              v-model="formState.theme"
-              mandatory
-              border
+              v-model:model-value="formState.theme"
+              hide-details
+              label="主题设置"
+              item-title="title"
+              item-value="value"
+              :items="[
+                { title: '自动', value: 'auto' },
+                { title: '日间模式', value: 'light' },
+                { title: '夜间模式', value: 'dark' },
+              ]"
             >
-              <v-btn class="wind-flex-grow" value="auto">自动</v-btn>
-              <v-btn class="wind-flex-grow" value="light">日间模式</v-btn>
-              <v-btn class="wind-flex-grow" value="dark">夜间模式</v-btn>
-            </v-btn-toggle>
+            </v-select>
           </v-col>
           <v-col :cols="12">
             <v-select
