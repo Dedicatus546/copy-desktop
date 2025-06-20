@@ -17,3 +17,24 @@ export const delay = async (timeout = 2000) => {
   setTimeout(resolve, timeout);
   return promise;
 };
+
+export const shouldRestartProxyServer = (
+  newProxyInfo?: ProxyInfo,
+  oldProxyInfo?: ProxyInfo,
+) => {
+  if (!oldProxyInfo && !newProxyInfo) {
+    return false;
+  }
+  if ((!oldProxyInfo && newProxyInfo) || (oldProxyInfo && !newProxyInfo)) {
+    return true;
+  }
+  if (
+    oldProxyInfo?.host === newProxyInfo?.host &&
+    oldProxyInfo?.port === newProxyInfo?.port &&
+    oldProxyInfo?.username === newProxyInfo?.username &&
+    oldProxyInfo?.password === newProxyInfo?.password
+  ) {
+    return false;
+  }
+  return true;
+};
