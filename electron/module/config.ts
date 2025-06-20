@@ -42,7 +42,7 @@ export const defaultConfig: Config = {
   ],
   downloadDir: "",
   readMode: "scroll",
-  autoLogin: true,
+  autoLogin: false,
   loginUserInfo: "",
   zoomFactor: 1.0,
   windowInfo: undefined,
