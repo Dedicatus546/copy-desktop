@@ -65,8 +65,6 @@ const createWindow = async () => {
     win!.webContents.setZoomFactor(config.zoomFactor);
   };
 
-  await setZoomFactor();
-
   const saveCurrentWindowInfo = debounce({ delay: 1000 }, async () => {
     const windowInfo = win!.getBounds();
     config.windowInfo = windowInfo;
@@ -83,6 +81,9 @@ const createWindow = async () => {
     const port = await getExpressServerPort();
     win.loadURL(`http://localhost:${port}`);
   }
+
+  // 放在 loadURL 后，不然白屏
+  await setZoomFactor();
 
   createIPCHandler({
     router,
