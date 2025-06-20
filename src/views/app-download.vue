@@ -2,6 +2,8 @@
 import { DownloadItem } from "@electron/module/download";
 
 import { trpcClient } from "@/apis/ipc";
+import EMPTY_STATE_IMG_1 from "@/assets/empty-state/1.jpg";
+import EMPTY_STATE_IMG_2 from "@/assets/empty-state/2.jpg";
 import { useDownloadStore } from "@/stores/use-download-store";
 
 const downloadStore = useDownloadStore();
@@ -36,6 +38,14 @@ const openFile = (item: DownloadItem) => {
               </tr>
             </thead>
             <tbody>
+              <tr v-if="downloadStore.downloadingList.length === 0">
+                <td colspan="3">
+                  <app-empty-state
+                    title="空空如也"
+                    :image="EMPTY_STATE_IMG_1"
+                  />
+                </td>
+              </tr>
               <tr
                 v-for="item in downloadStore.downloadingList"
                 :key="item.uuid"
@@ -98,6 +108,14 @@ const openFile = (item: DownloadItem) => {
               </tr>
             </thead>
             <tbody>
+              <tr v-if="downloadStore.completeList.length === 0">
+                <td colspan="3">
+                  <app-empty-state
+                    title="空空如也"
+                    :image="EMPTY_STATE_IMG_2"
+                  />
+                </td>
+              </tr>
               <tr v-for="item in downloadStore.completeList" :key="item.uuid">
                 <td>
                   <template v-if="item.type === 'comic'">
