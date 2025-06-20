@@ -47,9 +47,7 @@ const scrollViewRef = ref<ComponentPublicInstance | null>(null);
                 </div>
               </div>
               <router-view v-else v-slot="{ Component }">
-                <keep-alive
-                  include="app-home,app-search,app-person,app-category"
-                >
+                <keep-alive>
                   <component :is="Component" />
                 </keep-alive>
               </router-view>
