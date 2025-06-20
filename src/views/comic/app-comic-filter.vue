@@ -142,10 +142,10 @@ onMounted(() => {
           </div>
         </template>
         <template #no-data>
-          <app-empty-state
+          <v-empty-state
             title="搜索空空如也..."
             :image="EMPTY_STATE_IMG"
-          ></app-empty-state>
+          ></v-empty-state>
         </template>
         <template #default="{ items }">
           <v-row>

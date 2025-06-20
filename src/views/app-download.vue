@@ -40,10 +40,7 @@ const openFile = (item: DownloadItem) => {
             <tbody>
               <tr v-if="downloadStore.downloadingList.length === 0">
                 <td colspan="3">
-                  <app-empty-state
-                    title="空空如也"
-                    :image="EMPTY_STATE_IMG_1"
-                  />
+                  <v-empty-state title="空空如也" :image="EMPTY_STATE_IMG_1" />
                 </td>
               </tr>
               <tr
@@ -110,10 +107,7 @@ const openFile = (item: DownloadItem) => {
             <tbody>
               <tr v-if="downloadStore.completeList.length === 0">
                 <td colspan="3">
-                  <app-empty-state
-                    title="空空如也"
-                    :image="EMPTY_STATE_IMG_2"
-                  />
+                  <v-empty-state title="空空如也" :image="EMPTY_STATE_IMG_2" />
                 </td>
               </tr>
               <tr v-for="item in downloadStore.completeList" :key="item.uuid">

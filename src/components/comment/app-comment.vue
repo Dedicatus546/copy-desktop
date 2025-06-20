@@ -116,10 +116,10 @@ onSuccess(() => {
       </div>
     </template>
     <template #no-data>
-      <app-empty-state
+      <v-empty-state
         title="这看起来是一本没人评价过的漫画"
         :image="EMPTY_STATE_IMG"
-      ></app-empty-state>
+      ></v-empty-state>
     </template>
     <template #default="{ items }">
       <v-row>
