@@ -11,9 +11,11 @@ import { Intersect } from "vuetify/directives";
 
 import { trpcClient } from "./apis/ipc";
 import App from "./App.vue";
-// import logger from "./logger";
+import { createLogger } from "./logger";
 import router from "./router";
 import pinia from "./store";
+
+const { error } = createLogger("main");
 
 const config = await trpcClient.getConfig.query();
 
@@ -48,10 +50,10 @@ const vuetify = createVuetify({
 
 const app = createApp(App);
 
-// TODO
-// app.config.errorHandler = (err) => {
-//   logger.error(`[vue] ${normalizeError(err)}`);
-// };
+app.config.errorHandler = (err) => {
+  error(`vue 全局错误捕获钩子`, err);
+  throw err;
+};
 
 app.config.performance = true;
 

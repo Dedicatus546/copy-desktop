@@ -1,5 +1,9 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router";
 
+import { createLogger } from "./logger";
+
+const { info } = createLogger("router");
+
 const routes: RouteRecordRaw[] = [
   {
     path: "/",
@@ -221,6 +225,11 @@ const router = createRouter({
   history: createWebHistory(),
   routes,
   // scrollBehavior,
+});
+
+router.beforeEach((to, from, next) => {
+  info("router.beforeEach", "从", from.name, "跳转到", to.name);
+  next();
 });
 
 export default router;

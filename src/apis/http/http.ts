@@ -2,13 +2,17 @@ import { xhrRequestAdapter } from "@alova/adapter-xhr";
 import { Arg, createAlova } from "alova";
 import vueHook from "alova/vue";
 
+import { createLogger } from "@/logger";
 import useUserStore from "@/stores/use-user-store";
 
 import { trpcClient } from "../ipc";
 
 const port = await trpcClient.getProxyServerPort.query();
 const baseURL = `http://localhost:${port}/api`;
-console.log("baseURL: ", baseURL);
+
+const { info, error } = createLogger("api");
+
+info("baseURL: ", baseURL);
 
 const http = createAlova({
   statesHook: vueHook,
@@ -27,15 +31,16 @@ const http = createAlova({
   },
   responded: {
     async onSuccess(response, method) {
-      if (response.status >= 400) {
-        throw new Error(response.data.errorMsg ?? response.statusText);
+      if (response.status >= 400 || response.data.code !== 200) {
+        error(method.url, response.status, response.data);
+        throw new Error(response.data.message ?? response.statusText);
       }
-      const json = response.data;
-      if (json.code !== 200) {
-        throw new Error(json.message);
-      }
-      console.log(method.url, response.status, json);
-      return json;
+      info(
+        method.url,
+        response.status,
+        import.meta.env.DEV ? response.data : "",
+      );
+      return response.data;
     },
   },
 });
