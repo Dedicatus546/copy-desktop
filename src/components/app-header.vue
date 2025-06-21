@@ -89,7 +89,7 @@ const changeSector = (sector: (typeof sectorList)[number]) => {
         <v-menu :offset="15">
           <template #activator="{ props }">
             <v-btn v-bind="props" variant="text">
-              板块：{{ currentSector?.label }}
+              {{ currentSector ? `板块：${currentSector.label}` : "切换板块" }}
             </v-btn>
           </template>
           <v-list>
