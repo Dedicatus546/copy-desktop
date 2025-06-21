@@ -9,16 +9,17 @@ import { createApp } from "vue";
 import { createVuetify } from "vuetify";
 import { Intersect } from "vuetify/directives";
 
+import { trpcClient } from "./apis/ipc";
 import App from "./App.vue";
 // import logger from "./logger";
 import router from "./router";
 import pinia from "./store";
-// import { normalizeError } from "./utils";
 
-// TODO fix 这里默认主题可能得获取配置文件确定，不然会闪屏。
+const config = await trpcClient.getConfig.query();
+
 const vuetify = createVuetify({
   theme: {
-    defaultTheme: "light",
+    defaultTheme: config.theme,
     themes: {
       light: {
         dark: false,
