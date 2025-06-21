@@ -17,11 +17,17 @@ import pinia from "./store";
 
 const { error } = createLogger("main");
 
+const isDark = usePreferredDark();
 const config = await trpcClient.getConfig.query();
 
 const vuetify = createVuetify({
   theme: {
-    defaultTheme: config.theme,
+    defaultTheme:
+      config.theme === "auto"
+        ? isDark.value
+          ? "dark"
+          : "light"
+        : config.theme,
     themes: {
       light: {
         dark: false,
