@@ -8,6 +8,7 @@ import {
 } from "@/apis";
 import { trpcClient } from "@/apis/ipc";
 import EMPTY_STATE_IMG from "@/assets/empty-state/1.jpg";
+import useSnackbar from "@/compositions/use-snack-bar";
 import { useDownloadStore } from "@/stores/use-download-store";
 
 const { comicPathWord, groupPathWord, comicName, groupName } = defineProps<{
@@ -22,6 +23,7 @@ const lastChapterModel = defineModel<{
   chapterUuid: string;
 }>("lastReadChapter");
 
+const snackbar = useSnackbar();
 const downloadStore = useDownloadStore();
 
 const updateLastReadChapter = (chapter: ComicChapter) => {
@@ -81,7 +83,7 @@ const { data: picListData, send } = useRequest(
 
 const downloadComic = async () => {
   await send(contextMenuState.targetData!.uuid);
-  await downloadStore.addDownloadTaskAction({
+  downloadStore.addDownloadTaskAction({
     uuid: await trpcClient.getUuid.query(),
     type: "comic",
     comicPathWord,
@@ -95,6 +97,7 @@ const downloadComic = async () => {
     ),
     filepath: "",
   });
+  snackbar.success("添加下载任务成功");
 };
 </script>
 

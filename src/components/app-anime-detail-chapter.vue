@@ -70,7 +70,7 @@ const downloadAnime = async (
     return;
   }
   await send(animeChapterUuid, linePathWord);
-  await downloadStore.addDownloadTaskAction({
+  downloadStore.addDownloadTaskAction({
     uuid: await trpcClient.getUuid.query(),
     type: "anime",
     animeName,
@@ -80,6 +80,7 @@ const downloadAnime = async (
     videoM3u8Url: chapterData.value.results.chapter.video,
     filepath: "",
   });
+  snackbar.success("添加下载任务成功");
 };
 </script>
 

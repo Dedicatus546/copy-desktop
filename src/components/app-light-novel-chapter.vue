@@ -8,6 +8,7 @@ import {
 } from "@/apis";
 import { trpcClient } from "@/apis/ipc";
 import EMPTY_STATE_IMG from "@/assets/empty-state/1.jpg";
+import useSnackbar from "@/compositions/use-snack-bar";
 import { useDownloadStore } from "@/stores/use-download-store";
 
 const { lightNovelPathWord, lightNovelName } = defineProps<{
@@ -20,6 +21,7 @@ const lastReadChapterModel = defineModel<{
   chapterUuid: string;
 }>("lastReadChapter");
 
+const snackbar = useSnackbar();
 const downloadStore = useDownloadStore();
 
 const updateLastReadChapter = (chapter: { uuid: string; name: string }) => {
@@ -72,7 +74,7 @@ const { data: volumeData, send } = useRequest(
 
 const downloadLightNovel = async () => {
   await send(contextMenuState.targetData!.id);
-  await downloadStore.addDownloadTaskAction({
+  downloadStore.addDownloadTaskAction({
     uuid: await trpcClient.getUuid.query(),
     type: "light-novel",
     lightNovelName,
@@ -86,6 +88,7 @@ const downloadLightNovel = async () => {
       .map((item) => item.content!),
     filepath: "",
   });
+  snackbar.success("添加下载任务成功");
 };
 </script>
 

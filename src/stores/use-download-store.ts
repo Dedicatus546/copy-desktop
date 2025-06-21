@@ -47,13 +47,13 @@ export const useDownloadStore = defineStore("download", () => {
     }
   };
 
-  const addDownloadTaskAction = async (item: DownloadItem) => {
+  const addDownloadTaskAction = (item: DownloadItem) => {
     state.downloadingList.push({
       ...item,
       status: "pending",
       percent: 0,
     });
-    await tryStartDownloadAction();
+    tryStartDownloadAction();
   };
 
   const tryStartDownloadAction = async () => {
