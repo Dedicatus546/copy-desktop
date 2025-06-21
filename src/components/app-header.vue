@@ -43,20 +43,20 @@ const closeWin = () => {
   trpcClient.closeWin.query();
 };
 
-const tabRouteNameList = ["COMIC", "LIGHT_NOVEL", "ANIME"];
-const tab = computed({
-  get() {
-    const r = route.matched.find((item) =>
-      tabRouteNameList.includes(item.name as string),
-    );
-    return r?.name;
-  },
-  set(routeName) {
-    router.push({
-      name: routeName,
-    });
-  },
-});
+const sectorList = [
+  { value: "COMIC", label: "漫画" },
+  { value: "LIGHT_NOVEL", label: "小说" },
+  { value: "ANIME", label: "动漫" },
+];
+const currentSector = computed(() =>
+  sectorList.find((item) => route.matched.some((r) => r.name === item.value)),
+);
+
+const changeSector = (sector: (typeof sectorList)[number]) => {
+  router.push({
+    name: sector.value,
+  });
+};
 </script>
 
 <template>
@@ -82,17 +82,26 @@ const tab = computed({
             </div>
           </template>
         </router-link>
-        <div class="wind-ml-auto app-region-nodrag">
-          <v-tabs v-model="tab" height="40">
-            <v-tab value="COMIC">漫画</v-tab>
-            <v-tab value="LIGHT_NOVEL">轻小说</v-tab>
-            <v-tab value="ANIME">动漫</v-tab>
-          </v-tabs>
-        </div>
       </div>
     </v-app-bar-title>
     <template #append>
       <div class="app-region-nodrag">
+        <v-menu :offset="15">
+          <template #activator="{ props }">
+            <v-btn v-bind="props" variant="text">
+              板块：{{ currentSector?.label }}
+            </v-btn>
+          </template>
+          <v-list>
+            <v-list-item
+              v-for="sector of sectorList"
+              :key="sector.value"
+              @click="changeSector(sector)"
+            >
+              <v-list-item-title>{{ sector.label }}</v-list-item-title>
+            </v-list-item>
+          </v-list>
+        </v-menu>
         <template v-if="!simple">
           <app-header-icon-btn
             tooltip-text="返回"
