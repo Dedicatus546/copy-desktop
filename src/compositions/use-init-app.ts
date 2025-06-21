@@ -7,7 +7,6 @@ import { error, info, warn } from "@/logger";
 import useAppStore from "@/stores/use-app-store";
 import useUserStore from "@/stores/use-user-store";
 import { delay } from "@/utils";
-import { decryptLoginUser } from "@/utils/login-user-info";
 
 const useInitNetwork = () => {
   const appStore = useAppStore();
@@ -83,7 +82,9 @@ const useAutoLogin = () => {
         password = import.meta.env.VITE_LOGIN_PASSWORD;
       } else if (appStore.config.loginUserInfo) {
         info("检测到本地配置中开启了自动登录，使用本地配置中的用户信息");
-        const loginInfo = decryptLoginUser(appStore.config.loginUserInfo);
+        const loginInfo = await trpcClient.decryptLoginUser.query(
+          appStore.config.loginUserInfo,
+        );
         username = loginInfo.username;
         password = loginInfo.password;
       } else {

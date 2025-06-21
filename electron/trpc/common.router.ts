@@ -1,4 +1,9 @@
-import { randomUUID } from "node:crypto";
+import {
+  createCipheriv,
+  createDecipheriv,
+  createHash,
+  randomUUID,
+} from "node:crypto";
 
 import { createLogger } from "@electron/module/logger";
 import { dialog, shell } from "electron";
@@ -62,6 +67,50 @@ const hasFfmpegCommandRpc = trpc.procedure.query(async () => {
   }
 });
 
+// 32 位
+const key = Buffer.from(
+  createHash("sha256").update("copy-desktop-key").digest("hex").slice(0, 32),
+  "utf-8",
+);
+
+// 16位
+const iv = Buffer.from(
+  createHash("sha256").update("copy-desktop-iv").digest("hex").slice(0, 16),
+  "utf-8",
+);
+
+const encryptLoginUserRpc = trpc.procedure
+  .input(
+    z.object({
+      username: z.string(),
+      password: z.string(),
+    }),
+  )
+  .query(async ({ input }) => {
+    const { username, password } = input;
+    const cipher = createCipheriv("aes-256-cbc", key, iv);
+    let result = cipher.update(
+      JSON.stringify({
+        username,
+        password,
+      }),
+      "utf-8",
+      "base64",
+    );
+    result += cipher.final("base64");
+
+    return result;
+  });
+
+export const decryptLoginUserRpc = trpc.procedure
+  .input(z.string())
+  .query(async ({ input }) => {
+    const decipher = createDecipheriv("aes-256-cbc", key, iv);
+    let result = decipher.update(input, "base64", "utf-8");
+    result += decipher.final("utf-8");
+    return JSON.parse(result) as { username: string; password: string };
+  });
+
 export const router = {
   minimizeWin: minimizeWinRpc,
   closeWin: closeWinRpc,
@@ -70,4 +119,6 @@ export const router = {
   selectFolder: selectFolderRpc,
   getUuid: getUuidRpc,
   hasFfmpegCommand: hasFfmpegCommandRpc,
+  decryptLoginUser: decryptLoginUserRpc,
+  encryptLoginUser: encryptLoginUserRpc,
 };
