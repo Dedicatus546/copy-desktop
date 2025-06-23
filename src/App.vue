@@ -47,9 +47,11 @@ const scrollViewRef = ref<ComponentPublicInstance | null>(null);
                 </div>
               </div>
               <router-view v-else v-slot="{ Component }">
-                <keep-alive>
-                  <component :is="Component" />
-                </keep-alive>
+                <!-- TODO 似乎有 bug ，暂时关闭，仅通过 alova 缓存提升页面性能 -->
+                <!-- https://github.com/vuejs/router/issues/626 -->
+                <!-- <keep-alive> -->
+                <component :is="Component" />
+                <!-- </keep-alive> -->
               </router-view>
             </v-container>
           </v-main>
