@@ -11,6 +11,8 @@ const { page, pageCount, pageSize, loading, data } = usePagination(
       offset: (page - 1) * pageSize,
     }),
   {
+    preloadPreviousPage: false,
+    preloadNextPage: false,
     initialPage: 1,
     initialPageSize: 20,
     data: (res) => res.results.list,
