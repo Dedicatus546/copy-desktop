@@ -59,6 +59,9 @@ export const getCollectComicListApi = (query: {} & PaginationQuery) => {
       limit: query.limit,
       offset: query.offset,
     },
+    cacheFor: {
+      expire: 1000 * 30,
+    },
   });
 };
 
@@ -94,6 +97,9 @@ export const getCollectLightNovelListApi = (query: {} & PaginationQuery) => {
       ordering: "-datetime_modifier",
       limit: query.limit,
       offset: query.offset,
+    },
+    cacheFor: {
+      expire: 1000 * 30,
     },
   });
 };
@@ -145,6 +151,9 @@ export const getCollectAnimeListApi = (query: {} & PaginationQuery) => {
       limit: query.limit,
       offset: query.offset,
     },
+    cacheFor: {
+      expire: 1000 * 30,
+    },
   });
 };
 
@@ -168,6 +177,9 @@ export const getHistoryComicListApi = (query: {} & PaginationQuery) => {
       offset: query.offset,
       limit: query.limit,
     },
+    cacheFor: {
+      expire: 1000 * 30,
+    },
   });
 };
 
@@ -188,6 +200,9 @@ export const getHistoryLightNovelListApi = (query: {} & PaginationQuery) => {
       offset: query.offset,
       limit: query.limit,
     },
+    cacheFor: {
+      expire: 1000 * 30,
+    },
   });
 };
 export const getHistoryAnimeListApi = (query: {} & PaginationQuery) => {
@@ -206,6 +221,9 @@ export const getHistoryAnimeListApi = (query: {} & PaginationQuery) => {
     params: {
       offset: query.offset,
       limit: query.limit,
+    },
+    cacheFor: {
+      expire: 1000 * 30,
     },
   });
 };
