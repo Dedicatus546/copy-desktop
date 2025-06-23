@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { StorageSerializers } from "@vueuse/core";
+import { invalidateCache } from "alova";
 import { useRequest } from "alova/client";
 
 import {
@@ -128,6 +129,11 @@ onCollectComicSuccess(() => {
   } else {
     comicReadInfo.value.results.collect = 1;
   }
+  invalidateCache(
+    getComicReadDetailApi({
+      comicPathWord,
+    }),
+  );
   snackBar.success(collectComicData.value.message ?? "操作成功");
 });
 

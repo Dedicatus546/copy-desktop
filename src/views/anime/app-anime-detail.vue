@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { StorageSerializers } from "@vueuse/core";
+import { invalidateCache } from "alova";
 import { useRequest } from "alova/client";
 
 import {
@@ -97,6 +98,7 @@ onCollectLightNovelSuccess(() => {
   } else {
     animeInfo.value.results.collect = 1;
   }
+  invalidateCache(getAnimeDetailApi(animePathWord));
   snackBar.success(collectLightNovelData.value.message ?? "操作成功");
 });
 
