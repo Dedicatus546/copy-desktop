@@ -196,6 +196,7 @@ useEventListener(contentRef, "scroll", () => {
               <div class="wind-flex wind-gap-2 wind-items-center">
                 <div>第 {{ currentIndex + 1 }} / {{ txtlist.length }} 章</div>
                 <v-btn
+                  v-if="imageList.length > 0"
                   variant="text"
                   icon="mdi-image"
                   size="large"
