@@ -10,17 +10,18 @@
 
 - [x] 登录
 - [x] 日夜间模式
-- [x] 简易用户信息
+- [x] 简易用户信息（需要登录）
 - [x] 自动登录
-- [x] 历史记录
+- [x] 收藏记录（需要登录）
+- [x] 历史记录（需要登录）
 - [x] 漫画模块
   - [x] 搜索
   - [x] 阅读
-  - [x] 收藏
+  - [x] 收藏（需要登录）
   - [x] 详情
   - [x] 分类
   - [x] 下载
-  - [x] 发表评论
+  - [x] 发表评论（需要登录）
   - [x] 查看评论
   - [x] 首页推荐
   - [x] 目录阅读
@@ -28,20 +29,20 @@
   - [x] 阅读
   - [x] 搜索
   - [x] 详情
-  - [x] 收藏
+  - [x] 收藏（需要登录）
   - [x] 分类
   - [x] 下载
-  - [x] 发表评论
+  - [x] 发表评论（需要登录）
   - [x] 查看评论
 - [x] 动漫模块
   - [x] 推荐
   - [x] 搜索
   - [x] 详情
-  - [x] 收藏
+  - [x] 收藏（需要登录）
   - [x] 分类
-  - [x] 观看
+  - [x] 观看（由于接口限制需要登录）
   - [x] 下载
-  - [x] 发表评论
+  - [x] 发表评论（需要登录）
   - [x] 查看评论
 
 ## 截图
@@ -49,29 +50,87 @@
 ### 漫画
 
 #### 首页
-![](./readme-assets/首页1.png)
 
-![](./readme-assets/首页2.png)
+![](./readme-assets/comic/首页1.png)
 
-![](./readme-assets/首页3.png)
+![](./readme-assets/comic/首页2.png)
 
-#### 个人中心
-![](./readme-assets/个人中心.png)
+![](./readme-assets/comic/首页3.png)
+
+![](./readme-assets/comic/首页4.png)
+
+![](./readme-assets/comic/首页5.png)
 
 #### 详情（日间模式）
-![](./readme-assets/详情页（日间模式）.png)
+
+![](./readme-assets/comic/详情页（日间模式）.png)
 
 #### 详情（夜间模式）
-![](./readme-assets/详情页（夜间模式）.png)
+
+![](./readme-assets/comic/详情页（夜间模式）.png)
 
 #### 阅读（翻页模式）
-![](./readme-assets/阅读（翻页模式）.png)
+
+![](./readme-assets/comic/阅读（翻页模式）.png)
 
 #### 阅读（滚动模式）
-![](./readme-assets/阅读（滚动模式）.png)
+
+![](./readme-assets/comic/阅读（滚动模式）.png)
 
 #### 搜索
-![](./readme-assets/搜索.png)
+
+![](./readme-assets/comic/搜索.png)
+
+### 小说
+
+#### 首页
+
+![](./readme-assets/light-novel/首页1.png)
+
+![](./readme-assets/light-novel/首页2.png)
+
+#### 搜索
+
+![](./readme-assets/light-novel/搜索.png)
+
+#### 详情
+
+![](./readme-assets/light-novel/详情.png)
+
+#### 阅读
+
+![](./readme-assets/light-novel/阅读.png)
+
+### 动漫
+
+#### 首页
+
+![](./readme-assets/anime/首页1.png)
+
+![](./readme-assets/anime/首页2.png)
+
+#### 搜索
+
+![](./readme-assets/anime/搜索.png)
+
+#### 详情
+
+![](./readme-assets/anime/详情.png)
+
+#### 播放
+
+![](./readme-assets/anime/播放.png)
+
+### 其他
+
+#### 个人中心
+
+![](./readme-assets/个人中心.png)
+
+#### 设置
+
+![](./readme-assets/设置.png)
+
 
 ## 声明
 
@@ -81,7 +140,7 @@
 
 目前还在开发阶段，请自行构建。
 
-~~只提供 win 、 linux 的 x86 绿色包，所有数据只在解压的目录中，整体文件夹可随意拷贝移动（下载路径除外）。mac 用户请使用源码自行构建。~~
+~~只提供 win 、 linux 的 x86 绿色包，所有数据（包含下载文件）只在解压的目录中，整体文件夹可随意拷贝移动。mac 用户请使用源码自行构建。~~
 
 ## 问题
 
