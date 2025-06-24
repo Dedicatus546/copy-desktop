@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import "@fancyapps/ui/dist/fancybox/fancybox.css";
 
-import { Fancybox } from "@fancyapps/ui";
-import { zh_CN } from "@fancyapps/ui/l10n/Fancybox/zh_CN";
+import { Fancybox } from "@fancyapps/ui/dist/fancybox/";
 import { useRequest } from "alova/client";
 
 import { getLightNovelTxtContentApi, getLightNovelVolumeApi } from "@/apis";
+import { zhCN } from "@/l10n/fancybox";
 
 const { lightNovelPathWord, chapterId } = defineProps<{
   lightNovelPathWord: string;
@@ -105,13 +105,21 @@ const onSliderEnd = (value: [number, number] | number) => {
   currentIndex.value = (value as number) - 1;
 };
 
-const imageNodeListRef = useTemplateRef("imageNodeListRef");
 const showFancyBox = () => {
-  if (imageNodeListRef.value) {
-    Fancybox.fromNodes(imageNodeListRef.value, {
-      l10n: zh_CN,
-    });
+  if (imageList.value.length === 0) {
+    return;
   }
+  // 这里不知为何使用 Fancybox.fromNodes 会不显示 gallery...
+  Fancybox.show(
+    imageList.value.map((item, index) => ({
+      src: item,
+      thumbSrc: item,
+      caption: `${data.value.results.book.name} 插图 - ${index}`,
+    })),
+    {
+      l10n: zhCN,
+    },
+  );
 };
 const positionMap = reactive<Record<number, number | undefined>>({});
 const contentRef = useTemplateRef("contentRef");
@@ -215,17 +223,6 @@ useEventListener(contentRef, "scroll", () => {
           </v-slider>
         </v-card-text>
       </v-card>
-    </div>
-    <div class="wind-hidden">
-      <a
-        data-fancybox="pic-list"
-        :href="image"
-        v-for="image of imageList"
-        :key="image"
-        ref="imageNodeListRef"
-      >
-        <v-img cover :src="image"></v-img>
-      </a>
     </div>
   </div>
 </template>
