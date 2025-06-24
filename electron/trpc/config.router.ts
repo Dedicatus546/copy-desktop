@@ -13,7 +13,6 @@ const saveConfigRpc = trpc.procedure
       theme: z.enum(["light", "dark", "auto"]),
       apiUrl: z.string(),
       apiUrlList: z.array(z.string()),
-      downloadDir: z.string(),
       readMode: z.enum(["scroll", "click"]),
       autoLogin: z.boolean(),
       loginUserInfo: z.string(),

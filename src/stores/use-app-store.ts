@@ -16,7 +16,6 @@ const useAppStore = defineStore("app", () => {
     config: {
       theme: "light",
       apiUrl: "",
-      downloadDir: "",
       readMode: "scroll",
       autoLogin: false,
       loginUserInfo: "",

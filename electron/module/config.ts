@@ -24,7 +24,6 @@ export type Config = {
   theme: Theme;
   apiUrl: string;
   apiUrlList: Array<string>;
-  downloadDir: string;
   readMode: ReadMode;
   autoLogin: boolean;
   loginUserInfo: string;
@@ -42,7 +41,6 @@ export const defaultConfig: Config = {
     "https://api.copy2000.online/api/v3",
     "https://api.mangacopy.com/api/v3",
   ],
-  downloadDir: "",
   readMode: "scroll",
   autoLogin: false,
   loginUserInfo: "",

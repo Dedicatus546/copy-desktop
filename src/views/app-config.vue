@@ -20,7 +20,6 @@ const formState = reactive<
   theme: "light",
   apiUrl: "",
   apiUrlList: [],
-  downloadDir: "",
   readMode: "click",
   zoomFactor: 0,
   proxyInfo: undefined,
@@ -133,11 +132,6 @@ onMounted(() => {
                 },
               ]"
             ></v-select>
-          </v-col>
-          <v-col :cols="12">
-            <app-select-folder-input
-              v-model:model-value="formState.downloadDir"
-            />
           </v-col>
           <v-col :cols="12">
             <v-slider
