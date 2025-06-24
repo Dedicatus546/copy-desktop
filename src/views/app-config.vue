@@ -134,16 +134,17 @@ onMounted(() => {
             ></v-select>
           </v-col>
           <v-col :cols="12">
-            <v-slider
+            <v-number-input
               hide-details
               color="primary"
               v-model:model-value="formState.zoomFactor"
-              thumb-label="always"
-              :min="1"
-              :max="3"
-              :step="0.2"
               label="缩放等级"
-            ></v-slider>
+              :min="1"
+              :max="2"
+              :step="0.1"
+              :precision="1"
+              placeholder="系统默认缩放情况下 2k 可尝试 1.4 ，4k 可尝试 1.8"
+            ></v-number-input>
           </v-col>
           <v-col :cols="12">
             <v-select
@@ -182,6 +183,10 @@ onMounted(() => {
                 v-model:model-value="formState.proxyInfo.port"
                 label="端口"
                 placeholder="V2rayN 为 10809"
+                :min="0"
+                :max="65535"
+                :step="1"
+                :precision="0"
                 :rules="[(value?: number) => !!value || '端口不能为空']"
               ></v-number-input>
             </v-col>
