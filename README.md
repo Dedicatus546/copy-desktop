@@ -137,9 +137,11 @@
 
 ## 安装包
 
-目前还在开发阶段，请自行构建。
+只提供 win 、 linux 的 x86 绿色包，所有数据（包含下载文件）只在解压的目录中，整体文件夹可随意拷贝移动。mac 用户请使用源码自行构建。
 
-~~只提供 win 、 linux 的 x86 绿色包，所有数据（包含下载文件）只在解压的目录中，整体文件夹可随意拷贝移动。mac 用户请使用源码自行构建。~~
+点击[这里](https://github.com/Dedicatus546/copy-desktop/releases)或者右侧的 Release 处下载最新的版本，解压后执行目录内的 copy-desktop 或者 copy-desktop.exe 即可。
+
+相关更新请查看项目的 CHANGELOG 文件。
 
 ## 问题
 
