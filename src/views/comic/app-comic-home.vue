@@ -2,9 +2,9 @@
 import { breakpointsVuetifyV3 } from "@vueuse/core";
 import { useRequest } from "alova/client";
 
-import { getHomeIndexApi } from "@/apis";
+import { getComicIndexApi } from "@/apis";
 
-const { loading, data } = useRequest(() => getHomeIndexApi());
+const { loading, data } = useRequest(() => getComicIndexApi());
 
 const router = useRouter();
 const breakpoints = useBreakpoints(breakpointsVuetifyV3);
@@ -65,6 +65,7 @@ const search = () => {
         <v-col>
           <v-form @submit.prevent="search">
             <v-text-field
+              color="primary"
               v-model:model-value="searchText"
               variant="solo"
               placeholder="输入漫画名称进行搜索"
@@ -72,6 +73,9 @@ const search = () => {
             >
               <template #append-inner>
                 <v-btn
+                  :disabled="!searchText"
+                  color="primary"
+                  type="submit"
                   variant="text"
                   icon="mdi-magnify"
                   @click="search"
@@ -116,7 +120,7 @@ const search = () => {
               :key="item.comic.path_word"
               :cols="4"
             >
-              <comic-route-item :comic="item.comic" />
+              <app-comic-list-item :comic="item.comic" />
             </v-col>
           </v-row>
         </v-card-text>
@@ -139,7 +143,7 @@ const search = () => {
               :md="3"
               :lg="2"
             >
-              <comic-route-item :comic="item.comic" />
+              <app-comic-list-item :comic="item.comic" />
             </v-col>
           </v-row>
           <app-home-swiper
@@ -177,7 +181,7 @@ const search = () => {
               :md="3"
               :lg="2"
             >
-              <comic-route-item :comic="item.comic" />
+              <app-comic-list-item :comic="item.comic" />
             </v-col>
           </v-row>
           <app-home-swiper
@@ -215,7 +219,7 @@ const search = () => {
               :md="3"
               :lg="2"
             >
-              <comic-route-item :comic="item" />
+              <app-comic-list-item :comic="item" />
             </v-col>
           </v-row>
           <app-home-swiper
@@ -263,7 +267,7 @@ const search = () => {
                     :md="3"
                     :lg="2"
                   >
-                    <comic-route-item :comic="subItem.comic" />
+                    <app-comic-list-item :comic="subItem.comic" />
                   </v-col>
                 </v-row>
               </v-card>

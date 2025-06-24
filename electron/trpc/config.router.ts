@@ -10,13 +10,13 @@ const getConfigRpc = trpc.procedure.query(async () => {
 const saveConfigRpc = trpc.procedure
   .input(
     z.object({
-      theme: z.enum(["light", "dark"]).optional(),
-      apiUrl: z.string().optional(),
-      downloadDir: z.string().optional(),
-      readMode: z.enum(["scroll", "click"]).optional(),
-      autoLogin: z.boolean().optional(),
-      loginUserInfo: z.string().optional(),
-      zoomFactor: z.number().optional(),
+      theme: z.enum(["light", "dark", "auto"]),
+      apiUrl: z.string(),
+      apiUrlList: z.array(z.string()),
+      readMode: z.enum(["scroll", "click"]),
+      autoLogin: z.boolean(),
+      loginUserInfo: z.string(),
+      zoomFactor: z.number(),
       windowInfo: z
         .object({
           x: z.number(),
@@ -33,10 +33,10 @@ const saveConfigRpc = trpc.procedure
           password: z.string(),
         })
         .optional(),
-    }) satisfies z.ZodType<Partial<Config>>,
+    }) satisfies z.ZodType<Config>,
   )
-  .query(async ({ input }) => {
-    await saveConfig(input);
+  .query(async ({ input: newConfig }) => {
+    await saveConfig(newConfig);
   });
 
 export const router = {

@@ -1,14 +1,7 @@
 <script setup lang="ts">
-import { ComponentPublicInstance } from "vue";
-
 import useInitApp from "./compositions/use-init-app";
-// import useRecoveryScrollPosition from "./compositions/use-recovery-scroll-position";
-// import useRefreshUser from "./compositions/use-refresh-user";
 
 const { loading, error, currentStatus, init: reInit } = useInitApp();
-const scrollViewRef = ref<ComponentPublicInstance | null>(null);
-// useRecoveryScrollPosition(scrollViewRef);
-// useRefreshUser();
 </script>
 
 <template>
@@ -19,8 +12,6 @@ const scrollViewRef = ref<ComponentPublicInstance | null>(null);
           <app-header :simple="!!(loading || error)" />
           <v-main>
             <v-container
-              id="scroll-view"
-              ref="scrollViewRef"
               fluid
               style="height: calc(100vh - var(--v-layout-top, 0px))"
               class="wind-h-full wind-w-full wind-relative wind-overflow-y-auto"
@@ -45,14 +36,15 @@ const scrollViewRef = ref<ComponentPublicInstance | null>(null);
                 </div>
               </div>
               <router-view v-else v-slot="{ Component }">
-                <keep-alive
-                  include="app-home,app-search,app-person,app-category"
-                >
-                  <component :is="Component" />
-                </keep-alive>
+                <!-- TODO 似乎有 bug ，暂时关闭，仅通过 alova 缓存提升页面性能 -->
+                <!-- https://github.com/vuejs/router/issues/626 -->
+                <!-- <keep-alive> -->
+                <component :is="Component" />
+                <!-- </keep-alive> -->
               </router-view>
             </v-container>
           </v-main>
+          <app-download-notice />
         </app-snackbar-provider>
       </app-dialog-provider>
     </v-app>

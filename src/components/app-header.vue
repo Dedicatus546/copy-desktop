@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { useTheme } from "vuetify";
+import { useDisplay } from "vuetify";
 
 import { trpcClient } from "@/apis/ipc";
 import useAppStore from "@/stores/use-app-store";
@@ -14,7 +14,7 @@ const userStore = useUserStore();
 const userInfo = computed(() => userStore.userInfo);
 const router = useRouter();
 const route = useRoute();
-const gTheme = useTheme();
+const { smAndDown } = useDisplay();
 
 onKeyStroke(
   "Escape",
@@ -26,18 +26,16 @@ onKeyStroke(
   },
 );
 
-const changeMode = (theme: "dark" | "light") => {
-  appStore.updateConfigAction({ theme });
-  gTheme.global.name.value = theme;
-};
-
 const logout = () => {
   userStore.logoutAction();
-  appStore.updateConfigAction({
-    autoLogin: false,
-    loginUserInfo: "",
-  });
-  router.replace({ name: "LOGIN" });
+  appStore.updateConfigAction(
+    {
+      autoLogin: false,
+      loginUserInfo: "",
+    },
+    true,
+  );
+  router.push({ name: "LOGIN" });
 };
 
 const minimizeWin = () => {
@@ -48,26 +46,25 @@ const closeWin = () => {
   trpcClient.closeWin.query();
 };
 
-const tabRouteNameList = ["COMIC", "LIGHT_NOVEL", "ANIME"];
-const tab = computed({
-  get() {
-    const r = route.matched.find((item) =>
-      tabRouteNameList.includes(item.name as string),
-    );
-    return r?.name;
-  },
-  set(routeName) {
-    router.push({
-      name: routeName,
-    });
-  },
-});
+const sectorList = [
+  { value: "COMIC", label: "漫画" },
+  { value: "LIGHT_NOVEL", label: "小说" },
+  { value: "ANIME", label: "动漫" },
+];
+const currentSector = computed(() =>
+  sectorList.find((item) => route.matched.some((r) => r.name === item.value)),
+);
+
+const changeSector = (sector: (typeof sectorList)[number]) => {
+  router.push({
+    name: sector.value,
+  });
+};
 </script>
 
 <template>
   <v-app-bar color="primary" class="app-region-drag">
     <v-app-bar-title>
-      <!-- TODO -->
       <div class="wind-flex wind-gap-4 wind-items-center">
         <router-link :to="{ name: 'COMIC_HOME' }" custom>
           <template #default="{ navigate }">
@@ -88,75 +85,174 @@ const tab = computed({
             </div>
           </template>
         </router-link>
-        <div class="wind-ml-auto app-region-nodrag">
-          <v-tabs v-model="tab" height="40">
-            <v-tab value="COMIC">漫画</v-tab>
-            <v-tab value="LIGHT_NOVEL">轻小说</v-tab>
-            <v-tab value="ANIME">动漫</v-tab>
-          </v-tabs>
-        </div>
       </div>
     </v-app-bar-title>
     <template #append>
       <div class="app-region-nodrag">
-        <template v-if="!simple">
-          <app-header-icon-btn
-            tooltip-text="返回"
-            icon="mdi-arrow-u-left-top"
-            @click="router.back()"
-          />
-          <app-header-icon-btn
-            :tooltip-text="`切换${appStore.config.theme === 'dark' ? '日间模式' : '夜间模式'}`"
-            icon="mdi-swap-horizontal"
-            @click="
-              changeMode(appStore.config.theme === 'dark' ? 'light' : 'dark')
-            "
-          />
-          <template v-if="userInfo">
+        <v-menu :offset="15">
+          <template #activator="{ props }">
+            <v-btn v-bind="props" variant="text">
+              {{ currentSector ? `板块：${currentSector.label}` : "切换板块" }}
+            </v-btn>
+          </template>
+          <v-list>
+            <v-list-item
+              v-for="sector of sectorList"
+              :key="sector.value"
+              @click="changeSector(sector)"
+            >
+              <v-list-item-title>{{ sector.label }}</v-list-item-title>
+            </v-list-item>
+          </v-list>
+        </v-menu>
+        <template v-if="smAndDown">
+          <v-menu :offset="15">
+            <template #activator="{ props }">
+              <v-btn v-bind="props" variant="text" icon="mdi-menu"></v-btn>
+            </template>
+            <v-list>
+              <v-list-item @click="router.back()">
+                <template v-slot:prepend>
+                  <v-icon icon="mdi-arrow-u-left-top"></v-icon>
+                </template>
+                <v-list-item-title>返回</v-list-item-title>
+              </v-list-item>
+              <template v-if="!simple">
+                <template v-if="userInfo">
+                  <v-list-item
+                    @click="
+                      router.push({
+                        name: 'PERSON',
+                      })
+                    "
+                  >
+                    <template v-slot:prepend>
+                      <v-icon icon="mdi-account"></v-icon>
+                    </template>
+                    <v-list-item-title>个人中心</v-list-item-title>
+                  </v-list-item>
+                  <v-list-item @click="logout">
+                    <template v-slot:prepend>
+                      <v-icon icon="mdi-logout"></v-icon>
+                    </template>
+                    <v-list-item-title>退出</v-list-item-title>
+                  </v-list-item>
+                </template>
+                <v-list-item
+                  v-else
+                  @click="
+                    router.push({
+                      name: 'LOGIN',
+                    })
+                  "
+                >
+                  <template v-slot:prepend>
+                    <v-icon icon="mdi-login"></v-icon>
+                  </template>
+                  <v-list-item-title>登录</v-list-item-title>
+                </v-list-item>
+              </template>
+              <v-list-item
+                @click="
+                  router.push({
+                    name: 'CONFIG',
+                  })
+                "
+              >
+                <template v-slot:prepend>
+                  <v-icon icon="mdi-cog"></v-icon>
+                </template>
+                <v-list-item-title>设置</v-list-item-title>
+              </v-list-item>
+              <v-list-item
+                @click="
+                  router.push({
+                    name: 'DOWNLOAD',
+                  })
+                "
+              >
+                <template v-slot:prepend>
+                  <v-icon icon="mdi-download"></v-icon>
+                </template>
+                <v-list-item-title>下载</v-list-item-title>
+              </v-list-item>
+              <v-list-item
+                @click="
+                  router.push({
+                    name: 'ABOUT',
+                  })
+                "
+              >
+                <template v-slot:prepend>
+                  <v-icon icon="mdi-information"></v-icon>
+                </template>
+                <v-list-item-title>关于</v-list-item-title>
+              </v-list-item>
+            </v-list>
+          </v-menu>
+        </template>
+        <template v-else>
+          <template v-if="!simple">
             <app-header-icon-btn
-              tooltip-text="个人中心"
-              icon="mdi-account"
+              tooltip-text="返回"
+              icon="mdi-arrow-u-left-top"
+              @click="router.back()"
+            />
+            <template v-if="userInfo">
+              <app-header-icon-btn
+                tooltip-text="个人中心"
+                icon="mdi-account"
+                @click="
+                  router.push({
+                    name: 'PERSON',
+                  })
+                "
+              />
+              <app-header-icon-btn
+                tooltip-text="退出"
+                icon="mdi-logout"
+                @click="logout"
+              />
+            </template>
+            <app-header-icon-btn
+              v-else
+              tooltip-text="登录"
+              icon="mdi-login"
               @click="
                 router.push({
-                  name: 'PERSON',
+                  name: 'LOGIN',
                 })
               "
             />
-            <app-header-icon-btn
-              tooltip-text="退出"
-              icon="mdi-logout"
-              @click="logout"
-            />
           </template>
           <app-header-icon-btn
-            v-else
-            tooltip-text="登录"
-            icon="mdi-login"
+            tooltip-text="下载"
+            icon="mdi-download"
             @click="
               router.push({
-                name: 'LOGIN',
+                name: 'DOWNLOAD',
+              })
+            "
+          />
+          <app-header-icon-btn
+            tooltip-text="设置"
+            icon="mdi-cog"
+            @click="
+              router.push({
+                name: 'CONFIG',
+              })
+            "
+          />
+          <app-header-icon-btn
+            tooltip-text="关于"
+            icon="mdi-information"
+            @click="
+              router.push({
+                name: 'ABOUT',
               })
             "
           />
         </template>
-        <app-header-icon-btn
-          tooltip-text="设置"
-          icon="mdi-cog"
-          @click="
-            router.push({
-              name: 'CONFIG',
-            })
-          "
-        />
-        <app-header-icon-btn
-          tooltip-text="关于"
-          icon="mdi-information"
-          @click="
-            router.push({
-              name: 'ABOUT',
-            })
-          "
-        />
         <app-header-icon-btn
           tooltip-text="最小化"
           icon="mdi-minus"

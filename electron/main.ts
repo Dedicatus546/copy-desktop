@@ -3,13 +3,17 @@ import { fileURLToPath } from "node:url";
 
 import { app, BrowserWindow, session } from "electron";
 import { debounce } from "radash";
-import { createIPCHandler } from "trpc-electron/main";
+import { createIPCHandler } from "trpc-electron-fork/main";
 
 import { getConfig, saveConfig } from "./module/config";
 import { getExpressServerPort } from "./module/express-server";
+import { createLogger } from "./module/logger";
+import { emitter } from "./shared/mitt";
 import { resolveProxyUrl } from "./shared/utils";
 import { router } from "./trpc";
-// const require = createRequire(import.meta.url);
+
+const { info } = createLogger("main");
+
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
 process.env.APP_ROOT = join(__dirname, "..");
@@ -26,7 +30,7 @@ process.env.VITE_PUBLIC = VITE_DEV_SERVER_URL
 let win: BrowserWindow | null;
 
 const createWindow = async () => {
-  const config = await getConfig();
+  let config = await getConfig();
 
   win = new BrowserWindow({
     icon: join(process.env.VITE_PUBLIC!, "electron-vite.svg"),
@@ -39,17 +43,27 @@ const createWindow = async () => {
     ...(config.windowInfo ?? {}),
   });
 
-  if (config.proxyInfo) {
-    const proxyUrl = resolveProxyUrl(config.proxyInfo);
-    await session.defaultSession.setProxy({
-      mode: "fixed_servers",
-      proxyRules: proxyUrl,
-    });
-  } else {
-    await session.defaultSession.setProxy({
-      mode: "direct",
-    });
-  }
+  const setSessionProxy = async () => {
+    if (config.proxyInfo) {
+      const proxyUrl = resolveProxyUrl(config.proxyInfo);
+      await session.defaultSession.setProxy({
+        mode: "fixed_servers",
+        proxyRules: proxyUrl,
+      });
+    } else {
+      await session.defaultSession.setProxy({
+        mode: "direct",
+      });
+    }
+  };
+
+  await setSessionProxy();
+
+  const setZoomFactor = async () => {
+    // 必须先调用 setVisualZoomLevelLimits 解除缩放限制
+    await win!.webContents.setVisualZoomLevelLimits(1, 3);
+    win!.webContents.setZoomFactor(config.zoomFactor);
+  };
 
   const saveCurrentWindowInfo = debounce({ delay: 1000 }, async () => {
     const windowInfo = win!.getBounds();
@@ -68,12 +82,22 @@ const createWindow = async () => {
     win.loadURL(`http://localhost:${port}`);
   }
 
+  // 放在 loadURL 后，不然白屏
+  await setZoomFactor();
+
   createIPCHandler({
     router,
     windows: [win],
     createContext: async () => ({
       win: win!,
     }),
+  });
+
+  emitter.on("configChange", async ([newConifg]) => {
+    info("检测到配置文件变化");
+    config = newConifg;
+    await setSessionProxy();
+    await setZoomFactor();
   });
 };
 

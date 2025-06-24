@@ -9,6 +9,8 @@ type State = {
 };
 
 const useUserStore = defineStore("user", () => {
+  // TODO 这里获取把用户信息存下来，然后不用重新调用 login 接口
+  // 因为 token 可能有效
   const state = reactive<State>({
     userInfo: null,
     loginInfo: null,

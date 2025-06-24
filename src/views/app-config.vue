@@ -3,7 +3,7 @@ import { Config } from "@electron/module/config";
 import { clone } from "radash";
 
 import { trpcClient } from "@/apis/ipc";
-import useDialog from "@/compositions/use-dialog";
+import useSnackbar from "@/compositions/use-snack-bar";
 import useAppStore from "@/stores/use-app-store.ts";
 
 const loading = ref(false);
@@ -20,7 +20,6 @@ const formState = reactive<
   theme: "light",
   apiUrl: "",
   apiUrlList: [],
-  downloadDir: "",
   readMode: "click",
   zoomFactor: 0,
   proxyInfo: undefined,
@@ -42,23 +41,14 @@ const getConfig = async () => {
   }
 };
 
-const dialog = useDialog();
+const snackbar = useSnackbar();
 const submit = async () => {
   if (!formValid.value) {
     return;
   }
   try {
-    await trpcClient.saveConfig.query(toRaw(formState));
-    getConfig();
-    dialog({
-      width: "50%",
-      title: "更新成功",
-      content: "除下载位置、阅读模式之外的配置重启后生效，是否立即重启？",
-      okText: "重启",
-      onOk() {
-        trpcClient.relaunchApp.query();
-      },
-    });
+    await appStore.updateConfigAction(formState, true);
+    snackbar.success("更新成功");
   } catch (e) {
     console.error("保存配置失败", e);
   }
@@ -96,6 +86,23 @@ onMounted(() => {
         <v-row>
           <v-col :cols="12">
             <v-select
+              color="primary"
+              v-model:model-value="formState.theme"
+              hide-details
+              label="主题设置"
+              item-title="title"
+              item-value="value"
+              :items="[
+                { title: '自动', value: 'auto' },
+                { title: '日间模式', value: 'light' },
+                { title: '夜间模式', value: 'dark' },
+              ]"
+            >
+            </v-select>
+          </v-col>
+          <v-col :cols="12">
+            <v-select
+              color="primary"
               v-model:model-value="formState.apiUrl"
               hide-details
               label="代理域名"
@@ -108,6 +115,7 @@ onMounted(() => {
           </v-col>
           <v-col :cols="12">
             <v-select
+              color="primary"
               hide-details
               v-model:model-value="formState.readMode"
               label="阅读模式"
@@ -126,10 +134,9 @@ onMounted(() => {
             ></v-select>
           </v-col>
           <v-col :cols="12">
-            <select-folder-input v-model:model-value="formState.downloadDir" />
-          </v-col>
-          <v-col :cols="12">
             <v-slider
+              hide-details
+              color="primary"
               v-model:model-value="formState.zoomFactor"
               thumb-label="always"
               :min="1"
@@ -140,6 +147,7 @@ onMounted(() => {
           </v-col>
           <v-col :cols="12">
             <v-select
+              color="primary"
               hide-details
               :model-value="formState.useProxy"
               label="代理设置"
@@ -161,6 +169,7 @@ onMounted(() => {
           <template v-if="formState.useProxy && formState.proxyInfo">
             <v-col :cols="6">
               <v-text-field
+                color="primary"
                 v-model:model-value="formState.proxyInfo.host"
                 label="IP"
                 placeholder="一般为 127.0.0.1"
@@ -169,6 +178,7 @@ onMounted(() => {
             </v-col>
             <v-col :cols="6">
               <v-number-input
+                color="primary"
                 v-model:model-value="formState.proxyInfo.port"
                 label="端口"
                 placeholder="V2rayN 为 10809"
@@ -177,6 +187,7 @@ onMounted(() => {
             </v-col>
             <v-col :cols="6">
               <v-text-field
+                color="primary"
                 v-model:model-value="formState.proxyInfo.username"
                 label="用户名"
                 placeholder="一般为空"
@@ -184,6 +195,7 @@ onMounted(() => {
             </v-col>
             <v-col :cols="6">
               <v-text-field
+                color="primary"
                 v-model:model-value="formState.proxyInfo.password"
                 label="密码"
                 placeholder="一般为空"

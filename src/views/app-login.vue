@@ -2,10 +2,10 @@
 import { useRequest } from "alova/client";
 
 import { loginApi } from "@/apis";
+import { trpcClient } from "@/apis/ipc";
 import useSnackbar from "@/compositions/use-snack-bar";
 import useAppStore from "@/stores/use-app-store";
 import useUserStore from "@/stores/use-user-store";
-import { encryptLoginUser } from "@/utils/login-user-info";
 
 const router = useRouter();
 const userStore = useUserStore();
@@ -30,24 +30,30 @@ const { loading, data, onSuccess, onError, send } = useRequest(
 
 const snackbar = useSnackbar();
 
-onSuccess(() => {
+onSuccess(async () => {
   snackbar.primary("登录成功");
   userStore.updateUserInfoAction(data.value.results);
   userStore.updateLoginInfoAction(formState.username, formState.password);
   if (formState.autoLogin) {
-    const encryptStr = encryptLoginUser({
+    const encryptStr = await trpcClient.encryptLoginUser.query({
       username: formState.username,
       password: formState.password,
     });
-    appStore.updateConfigAction({
-      loginUserInfo: encryptStr,
-      autoLogin: true,
-    });
+    appStore.updateConfigAction(
+      {
+        loginUserInfo: encryptStr,
+        autoLogin: true,
+      },
+      true,
+    );
   } else {
-    appStore.updateConfigAction({
-      loginUserInfo: "",
-      autoLogin: false,
-    });
+    appStore.updateConfigAction(
+      {
+        loginUserInfo: "",
+        autoLogin: false,
+      },
+      true,
+    );
   }
   router.replace({ name: "PERSON" });
 });
@@ -64,6 +70,7 @@ onError((e) => {
         <v-row>
           <v-col :cols="12">
             <v-text-field
+              color="primary"
               v-model:model-value="formState.username"
               label="用户名"
               placeholder="请输入用户名"
@@ -72,6 +79,7 @@ onError((e) => {
           </v-col>
           <v-col :cols="12">
             <v-text-field
+              color="primary"
               v-model:model-value="formState.password"
               label="密码"
               placeholder="请输入密码"
@@ -81,6 +89,7 @@ onError((e) => {
           </v-col>
           <v-col :cols="12">
             <v-checkbox
+              color="primary"
               v-model:model-value="formState.autoLogin"
               density="compact"
               hide-details

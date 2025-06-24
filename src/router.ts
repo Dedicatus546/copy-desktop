@@ -1,5 +1,9 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router";
 
+import { createLogger } from "./logger";
+
+const { info } = createLogger("router");
+
 const routes: RouteRecordRaw[] = [
   {
     path: "/",
@@ -27,7 +31,7 @@ const routes: RouteRecordRaw[] = [
         component: () => import("@/views/comic/app-comic-detail.vue"),
       },
       {
-        path: "read/:comicPathWord/:seriesId",
+        path: "read/:comicPathWord/:chapterId",
         name: "COMIC_READ",
         props: true,
         component: () => import("@/views/comic/app-comic-read.vue"),
@@ -87,6 +91,37 @@ const routes: RouteRecordRaw[] = [
         name: "LIGHT_NOVEL_HOME",
         component: () => import("@/views/light-novel/app-light-novel-home.vue"),
       },
+      {
+        path: "detail/:lightNovelPathWord",
+        name: "LIGHT_NOVEL_DETAIL",
+        props: true,
+        component: () =>
+          import("@/views/light-novel/app-light-novel-detail.vue"),
+      },
+      {
+        path: "search",
+        name: "LIGHT_NOVEL_SEARCH",
+        component: () =>
+          import("@/views/light-novel/app-light-novel-search.vue"),
+      },
+      {
+        path: "theme/:themePathWord/:themeName",
+        name: "LIGHT_NOVEL_THEME",
+        component: () =>
+          import("@/views/light-novel/app-light-novel-theme.vue"),
+      },
+      {
+        path: "author/:authorPathWord/:authorName",
+        name: "LIGHT_NOVEL_AUTHOR",
+        component: () =>
+          import("@/views/light-novel/app-light-novel-author.vue"),
+      },
+      {
+        path: "read/:lightNovelPathWord/:chapterId",
+        name: "LIGHT_NOVEL_READ",
+        props: true,
+        component: () => import("@/views/light-novel/app-light-novel-read.vue"),
+      },
     ],
   },
   {
@@ -101,6 +136,38 @@ const routes: RouteRecordRaw[] = [
         path: "home",
         name: "ANIME_HOME",
         component: () => import("@/views/anime/app-anime-home.vue"),
+      },
+      {
+        path: "recommend",
+        name: "ANIME_RECOMMEND",
+        component: () => import("@/views/anime/app-anime-recommend.vue"),
+      },
+      {
+        path: "detail/:animePathWord",
+        name: "ANIME_DETAIL",
+        props: true,
+        component: () => import("@/views/anime/app-anime-detail.vue"),
+      },
+      {
+        path: "search",
+        name: "ANIME_SEARCH",
+        component: () => import("@/views/anime/app-anime-search.vue"),
+      },
+      {
+        path: "theme/:themePathWord/:themeName",
+        name: "ANIME_THEME",
+        component: () => import("@/views/anime/app-anime-theme.vue"),
+      },
+      {
+        path: "company/:companyPathWord/:companyName",
+        name: "ANIME_COMPANY",
+        component: () => import("@/views/anime/app-anime-company.vue"),
+      },
+      {
+        path: "watch/:animePathWord/:animeChapterUuid/:linePathWord",
+        name: "ANIME_WATCH",
+        props: true,
+        component: () => import("@/views/anime/app-anime-watch.vue"),
       },
     ],
   },
@@ -147,12 +214,22 @@ const routes: RouteRecordRaw[] = [
     name: "ABOUT",
     component: () => import("@/views/app-about.vue"),
   },
+  {
+    path: "/download",
+    name: "DOWNLOAD",
+    component: () => import("@/views/app-download.vue"),
+  },
 ];
 
 const router = createRouter({
   history: createWebHistory(),
   routes,
   // scrollBehavior,
+});
+
+router.beforeEach((to, from, next) => {
+  info("router.beforeEach", "从", from.name, "跳转到", to.name);
+  next();
 });
 
 export default router;

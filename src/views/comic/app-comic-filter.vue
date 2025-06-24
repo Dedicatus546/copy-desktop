@@ -4,21 +4,10 @@ import { usePagination, useRequest } from "alova/client";
 
 import { getComicFilterApi, getComicListApi } from "@/apis";
 import EMPTY_STATE_IMG from "@/assets/empty-state/2.jpg";
+import { createComputed } from "@/utils";
 
 const query = useRouteQuery("q");
 const searchText = ref("");
-
-const createComputed = <T,>(r: Ref<T>, fn: () => void) => {
-  return computed<T>({
-    get() {
-      return r.value;
-    },
-    set(val) {
-      r.value = val;
-      fn();
-    },
-  });
-};
 
 const search = () => {
   data.value = [];
@@ -153,16 +142,16 @@ onMounted(() => {
           </div>
         </template>
         <template #no-data>
-          <app-empty-state
+          <v-empty-state
             title="搜索空空如也..."
             :image="EMPTY_STATE_IMG"
-          ></app-empty-state>
+          ></v-empty-state>
         </template>
         <template #default="{ items }">
           <v-row>
             <template v-for="item of items" :key="item.raw.id">
               <v-col cols="6" :sm="4" :md="3" :lg="2">
-                <comic-route-item :comic="item.raw" />
+                <app-comic-list-item :comic="item.raw" />
               </v-col>
             </template>
           </v-row>

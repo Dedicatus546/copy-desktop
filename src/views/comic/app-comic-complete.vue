@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { usePagination } from "alova/client";
 
-import { getComicCompleteListApi } from "@/apis";
+import { getComicListApi } from "@/apis";
 import EMPTY_STATE_IMG from "@/assets/empty-state/4.jpg";
 
 const _ordering = ref<string>("-datetime_updated");
@@ -17,7 +17,7 @@ const ordering = computed({
 
 const { loading, data, page, total } = usePagination(
   (page, pageSize) =>
-    getComicCompleteListApi({
+    getComicListApi({
       ordering: ordering.value,
       limit: pageSize,
       offset: (page - 1) * pageSize,
@@ -82,16 +82,16 @@ const { loading, data, page, total } = usePagination(
           </div>
         </template>
         <template #no-data>
-          <app-empty-state
+          <v-empty-state
             title="出现这个就大概率是出 BUG 了，请提 issue"
             :image="EMPTY_STATE_IMG"
-          ></app-empty-state>
+          ></v-empty-state>
         </template>
         <template #default="{ items }">
           <v-row>
             <template v-for="item of items" :key="item.raw.id">
               <v-col cols="6" :sm="4" :md="3" :lg="2">
-                <comic-route-item :comic="item.raw" />
+                <app-comic-list-item :comic="item.raw" />
               </v-col>
             </template>
           </v-row>

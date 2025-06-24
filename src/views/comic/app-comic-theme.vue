@@ -2,20 +2,9 @@
 import { useRouteParams } from "@vueuse/router";
 import { usePagination } from "alova/client";
 
-import { getComicListByThemeApi } from "@/apis";
+import { getComicListApi } from "@/apis";
 import EMPTY_STATE_IMG from "@/assets/empty-state/5.jpg";
-
-const createComputed = <T,>(r: Ref<T>, fn: () => void) => {
-  return computed<T>({
-    get() {
-      return r.value;
-    },
-    set(val) {
-      r.value = val;
-      fn();
-    },
-  });
-};
+import { createComputed } from "@/utils";
 
 const themeName = useRouteParams("themeName") as Ref<string>;
 const themePathWord = useRouteParams("themePathWord") as Ref<string>;
@@ -25,7 +14,7 @@ const ordering = createComputed(
 );
 const { loading, data, page, total } = usePagination(
   (page, pageSize) =>
-    getComicListByThemeApi({
+    getComicListApi({
       theme: themePathWord.value,
       ordering: ordering.value,
       limit: pageSize,
@@ -91,16 +80,16 @@ const { loading, data, page, total } = usePagination(
           </div>
         </template>
         <template #no-data>
-          <app-empty-state
+          <v-empty-state
             title="出现这个就大概率是出 BUG 了，请提 issue"
             :image="EMPTY_STATE_IMG"
-          ></app-empty-state>
+          ></v-empty-state>
         </template>
         <template #default="{ items }">
           <v-row>
             <template v-for="item of items" :key="item.raw.id">
               <v-col cols="6" :sm="4" :md="3" :lg="2">
-                <comic-route-item :comic="item.raw" />
+                <app-comic-list-item :comic="item.raw" />
               </v-col>
             </template>
           </v-row>

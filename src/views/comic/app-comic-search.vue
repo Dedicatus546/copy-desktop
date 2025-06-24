@@ -4,27 +4,20 @@ import { usePagination } from "alova/client";
 
 import { searchComicListApi } from "@/apis";
 import EMPTY_STATE_IMG from "@/assets/empty-state/2.jpg";
+import { createComputed } from "@/utils";
 
 const query = useRouteQuery("q");
 const searchText = ref("");
-
-const createComputed = <T,>(r: Ref<T>, fn: () => void) => {
-  return computed<T>({
-    get() {
-      return r.value;
-    },
-    set(val) {
-      r.value = val;
-      fn();
-    },
-  });
-};
 
 const type = createComputed(ref(""), () => {
   data.value = [];
 });
 
 const search = () => {
+  if (!searchText.value) {
+    return;
+  }
+  query.value = searchText.value;
   data.value = [];
   page.value = 1;
   send(1, 18);
@@ -83,8 +76,39 @@ onMounted(() => {
               placeholder="搜索"
               hide-details
             >
+              <template #prepend>
+                <v-select
+                  v-model:model-value="type"
+                  color="primary"
+                  variant="outlined"
+                  class="wind-w-[120px]"
+                  hide-details
+                  item-title="title"
+                  item-value="value"
+                  :items="[
+                    {
+                      title: '全部',
+                      value: '',
+                    },
+                    {
+                      title: '名称',
+                      value: 'name',
+                    },
+                    {
+                      title: '作者',
+                      value: 'author',
+                    },
+                    {
+                      title: '汉化组',
+                      value: 'local',
+                    },
+                  ]"
+                ></v-select>
+              </template>
               <template #append-inner>
                 <v-btn
+                  :disabled="!searchText"
+                  type="submit"
                   variant="text"
                   icon="mdi-magnify"
                   @click="search"
@@ -92,17 +116,6 @@ onMounted(() => {
               </template>
             </v-text-field>
           </v-form>
-          <v-divider />
-          <v-chip-group
-            filter
-            column
-            color="primary"
-            v-model:model-value="type"
-          >
-            <v-chip value="name">名称</v-chip>
-            <v-chip value="author">作者</v-chip>
-            <v-chip value="local">汉化组</v-chip>
-          </v-chip-group>
           <div class="wind-h-8"></div>
         </template>
         <template #loader>
@@ -113,16 +126,16 @@ onMounted(() => {
           </div>
         </template>
         <template #no-data>
-          <app-empty-state
+          <v-empty-state
             title="搜索空空如也..."
             :image="EMPTY_STATE_IMG"
-          ></app-empty-state>
+          ></v-empty-state>
         </template>
         <template #default="{ items }">
           <v-row>
             <template v-for="item of items" :key="item.raw.id">
               <v-col cols="6" :sm="4" :md="3" :lg="2">
-                <comic-route-item :comic="item.raw" />
+                <app-comic-list-item :comic="item.raw" />
               </v-col>
             </template>
           </v-row>
