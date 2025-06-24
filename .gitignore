@@ -27,3 +27,4 @@ dist-ssr
 release
 data
 ffmpeg
+components.d.ts
