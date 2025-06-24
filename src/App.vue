@@ -1,16 +1,7 @@
 <script setup lang="ts">
-import { ComponentPublicInstance } from "vue";
-
 import useInitApp from "./compositions/use-init-app";
-import { useDownloadStore } from "./stores/use-download-store";
-// import useRecoveryScrollPosition from "./compositions/use-recovery-scroll-position";
-// import useRefreshUser from "./compositions/use-refresh-user";
 
 const { loading, error, currentStatus, init: reInit } = useInitApp();
-useDownloadStore();
-const scrollViewRef = ref<ComponentPublicInstance | null>(null);
-// useRecoveryScrollPosition(scrollViewRef);
-// useRefreshUser();
 </script>
 
 <template>
@@ -21,8 +12,6 @@ const scrollViewRef = ref<ComponentPublicInstance | null>(null);
           <app-header :simple="!!(loading || error)" />
           <v-main>
             <v-container
-              id="scroll-view"
-              ref="scrollViewRef"
               fluid
               style="height: calc(100vh - var(--v-layout-top, 0px))"
               class="wind-h-full wind-w-full wind-relative wind-overflow-y-auto"
