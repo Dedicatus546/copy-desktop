@@ -11,8 +11,11 @@ import {
   getComicReadDetailApi,
 } from "@/apis";
 import useSnackbar from "@/compositions/use-snack-bar";
+import { createLogger } from "@/logger";
 import useUserStore from "@/stores/use-user-store";
 import { resolveCover } from "@/utils";
+
+const { info } = createLogger("comic");
 
 const { comicPathWord } = defineProps<{
   comicPathWord: string;
@@ -126,8 +129,10 @@ const {
 onCollectComicSuccess(() => {
   if (comicReadInfo.value.results.collect) {
     comicReadInfo.value.results.collect = 0;
+    info("取消收藏 %s", comicInfo.value.results.comic.name);
   } else {
     comicReadInfo.value.results.collect = 1;
+    info("收藏 %s", comicInfo.value.results.comic.name);
   }
   invalidateCache(
     getComicReadDetailApi({

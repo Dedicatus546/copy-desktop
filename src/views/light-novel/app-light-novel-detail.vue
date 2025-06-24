@@ -11,8 +11,11 @@ import {
   getLightNovelReadDetailApi,
 } from "@/apis";
 import useSnackbar from "@/compositions/use-snack-bar";
+import { createLogger } from "@/logger";
 import useUserStore from "@/stores/use-user-store";
 import { resolveCover } from "@/utils";
+
+const { info } = createLogger("light-novel");
 
 const { lightNovelPathWord } = defineProps<{
   lightNovelPathWord: string;
@@ -109,8 +112,10 @@ const {
 onCollectLightNovelSuccess(() => {
   if (lightNovelReadInfo.value.results.collect) {
     lightNovelReadInfo.value.results.collect = 0;
+    info("取消收藏 %s", lightNovelInfo.value.results.book.name);
   } else {
     lightNovelReadInfo.value.results.collect = 1;
+    info("收藏 %s", lightNovelInfo.value.results.book.name);
   }
   invalidateCache(
     getLightNovelReadDetailApi({

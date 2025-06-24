@@ -9,7 +9,10 @@ import {
 import { trpcClient } from "@/apis/ipc";
 import EMPTY_STATE_IMG from "@/assets/empty-state/1.jpg";
 import useSnackbar from "@/compositions/use-snack-bar";
+import { createLogger } from "@/logger";
 import { useDownloadStore } from "@/stores/use-download-store";
+
+const { info } = createLogger("light-novel");
 
 const { lightNovelPathWord, lightNovelName } = defineProps<{
   lightNovelPathWord: string;
@@ -89,6 +92,7 @@ const downloadLightNovel = async () => {
     filepath: "",
   });
   snackbar.success("添加下载任务成功");
+  info("添加 %s 下载任务", lightNovelName);
 };
 </script>
 

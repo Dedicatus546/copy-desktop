@@ -9,7 +9,10 @@ import {
 import { trpcClient } from "@/apis/ipc";
 import EMPTY_STATE_IMG from "@/assets/empty-state/1.jpg";
 import useSnackbar from "@/compositions/use-snack-bar";
+import { createLogger } from "@/logger";
 import { useDownloadStore } from "@/stores/use-download-store";
+
+const { info } = createLogger("comic");
 
 const { comicPathWord, groupPathWord, comicName, groupName } = defineProps<{
   comicPathWord: string;
@@ -98,6 +101,7 @@ const downloadComic = async () => {
     filepath: "",
   });
   snackbar.success("添加下载任务成功");
+  info("添加 %s 下载任务", comicName);
 };
 </script>
 

@@ -9,8 +9,11 @@ import {
   getAnimeDetailApi,
 } from "@/apis";
 import useSnackbar from "@/compositions/use-snack-bar";
+import { createLogger } from "@/logger";
 import useUserStore from "@/stores/use-user-store";
 import { resolveCover } from "@/utils";
+
+const { info } = createLogger("anime");
 
 const { animePathWord } = defineProps<{
   animePathWord: string;
@@ -95,8 +98,10 @@ const {
 onCollectLightNovelSuccess(() => {
   if (animeInfo.value.results.collect) {
     animeInfo.value.results.collect = 0;
+    info("取消收藏 %s", animeInfo.value.results.cartoon.name);
   } else {
     animeInfo.value.results.collect = 1;
+    info("收藏 %s", animeInfo.value.results.cartoon.name);
   }
   invalidateCache(getAnimeDetailApi(animePathWord));
   snackBar.success(collectLightNovelData.value.message ?? "操作成功");

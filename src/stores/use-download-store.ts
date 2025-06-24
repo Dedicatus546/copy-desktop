@@ -7,7 +7,10 @@ import {
 import { omit } from "radash";
 
 import { trpcClient } from "@/apis/ipc";
+import { createLogger } from "@/logger";
 import { emitter } from "@/mitt";
+
+const { info, warn } = createLogger("download");
 
 type WithDownloadingInfo<T> = T & {
   status: "downloading" | "pending" | "complete";
@@ -43,6 +46,7 @@ export const useDownloadStore = defineStore("download", () => {
       }),
     ]);
     if (state.downloadingList.length > 0) {
+      info("初始化检测到存在未完成下载任务，尝试开始下载。");
       tryStartDownloadAction();
     }
   };
@@ -59,6 +63,7 @@ export const useDownloadStore = defineStore("download", () => {
   const tryStartDownloadAction = async () => {
     const first = state.downloadingList[0];
     if (!first) {
+      warn("未检测到可下载的任务");
       return;
     }
     if (first.status === "pending") {
@@ -243,8 +248,6 @@ export const useDownloadStore = defineStore("download", () => {
     );
     await trpcClient.saveDownloadCompleteList.query(state.completeList);
   };
-
-  initAction();
 
   return {
     ...toRefs(state),

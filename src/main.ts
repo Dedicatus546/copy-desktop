@@ -15,9 +15,10 @@ import { createLogger } from "./logger";
 import router from "./router";
 import pinia from "./store";
 
-const { error } = createLogger("main");
+const { error, info } = createLogger("main");
 
 const isDark = usePreferredDark();
+info("获取一次应用配置，用于设置 vuetify 主题");
 const config = await trpcClient.getConfig.query();
 
 const vuetify = createVuetify({
