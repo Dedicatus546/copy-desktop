@@ -103,6 +103,7 @@ onMounted(() => {
               </template>
               <template #append-inner>
                 <v-btn
+                  color="primary"
                   :disabled="!searchText"
                   type="submit"
                   variant="text"
