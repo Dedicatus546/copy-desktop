@@ -6,8 +6,6 @@ import { trpcClient } from "@/apis/ipc";
 import useSnackbar from "@/compositions/use-snack-bar";
 import useAppStore from "@/stores/use-app-store.ts";
 
-const loading = ref(false);
-const saveLoading = ref(false);
 const appStore = useAppStore();
 
 const formValid = ref<boolean | null>(null);
@@ -77,15 +75,10 @@ onMounted(() => {
   <v-card title="软件设置">
     <v-card-text>
       <v-form v-model:model-value="formValid" @submit.prevent="submit">
-        <div
-          v-if="loading"
-          class="wind-flex wind-h-[30vh] wind-items-center wind-justify-center"
-        >
-          <v-progress-circular indeterminate></v-progress-circular>
-        </div>
         <v-row>
           <v-col :cols="12">
             <v-select
+              variant="outlined"
               color="primary"
               v-model:model-value="formState.theme"
               hide-details
@@ -102,6 +95,7 @@ onMounted(() => {
           </v-col>
           <v-col :cols="12">
             <v-select
+              variant="outlined"
               color="primary"
               v-model:model-value="formState.apiUrl"
               hide-details
@@ -115,6 +109,7 @@ onMounted(() => {
           </v-col>
           <v-col :cols="12">
             <v-select
+              variant="outlined"
               color="primary"
               hide-details
               v-model:model-value="formState.readMode"
@@ -136,6 +131,7 @@ onMounted(() => {
           <v-col :cols="12">
             <v-number-input
               hide-details
+              variant="outlined"
               color="primary"
               v-model:model-value="formState.zoomFactor"
               label="缩放等级"
@@ -148,6 +144,7 @@ onMounted(() => {
           </v-col>
           <v-col :cols="12">
             <v-select
+              variant="outlined"
               color="primary"
               hide-details
               :model-value="formState.useProxy"
@@ -170,6 +167,7 @@ onMounted(() => {
           <template v-if="formState.useProxy && formState.proxyInfo">
             <v-col :cols="6">
               <v-text-field
+                variant="outlined"
                 color="primary"
                 v-model:model-value="formState.proxyInfo.host"
                 label="IP"
@@ -179,6 +177,7 @@ onMounted(() => {
             </v-col>
             <v-col :cols="6">
               <v-number-input
+                variant="outlined"
                 color="primary"
                 v-model:model-value="formState.proxyInfo.port"
                 label="端口"
@@ -192,6 +191,7 @@ onMounted(() => {
             </v-col>
             <v-col :cols="6">
               <v-text-field
+                variant="outlined"
                 color="primary"
                 v-model:model-value="formState.proxyInfo.username"
                 label="用户名"
@@ -200,6 +200,7 @@ onMounted(() => {
             </v-col>
             <v-col :cols="6">
               <v-text-field
+                variant="outlined"
                 color="primary"
                 v-model:model-value="formState.proxyInfo.password"
                 label="密码"
@@ -208,13 +209,7 @@ onMounted(() => {
             </v-col>
           </template>
           <v-col :cols="12">
-            <v-btn
-              size="large"
-              block
-              color="primary"
-              type="submit"
-              :loading="saveLoading"
-            >
+            <v-btn size="large" block color="primary" type="submit">
               保存
             </v-btn>
           </v-col>
