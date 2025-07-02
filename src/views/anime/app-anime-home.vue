@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { useRouteQuery } from "@vueuse/router";
 import { usePagination, useRequest } from "alova/client";
 
 import {
@@ -7,7 +8,6 @@ import {
   getAnimeThemeListApi,
 } from "@/apis";
 import EMPTY_STATE_IMG from "@/assets/empty-state/5.jpg";
-import { createComputed } from "@/utils";
 
 const router = useRouter();
 const searchText = ref("");
@@ -16,8 +16,12 @@ const { data: animeIndexData, loading: animeIndexLoading } = useRequest(() =>
   getAnimeIndexApi(),
 );
 
-const theme = createComputed(ref(""), () => (data.value = []));
-const ordering = createComputed(ref(""), () => (data.value = []));
+const theme = useRouteQuery("theme", "", {
+  mode: "push",
+});
+const ordering = useRouteQuery("ordering", "", {
+  mode: "push",
+});
 
 const { loading: themeFilterLoading, data: themeFilterData } = useRequest(
   () => getAnimeThemeListApi(),
@@ -127,7 +131,7 @@ const { loading, data, page, total } = usePagination(
           <v-data-iterator
             :items="data"
             :items-per-page="data.length"
-            :loading="data.length === 0 && (themeFilterLoading || loading)"
+            :loading="page === 1 && (themeFilterLoading || loading)"
           >
             <template #header>
               <template v-if="!themeFilterLoading">
@@ -172,7 +176,7 @@ const { loading, data, page, total } = usePagination(
                   </v-chip>
                 </v-chip-group>
               </template>
-              <div class="wind-h-8"></div>
+              <div class="wind-h-4"></div>
             </template>
             <template #loader>
               <div
@@ -198,7 +202,10 @@ const { loading, data, page, total } = usePagination(
             </template>
             <template #footer>
               <v-btn
-                v-if="data.length > 0 && data.length < (total ?? 0)"
+                v-if="
+                  !(page === 1 && (themeFilterLoading || loading)) &&
+                  data.length < (total ?? 0)
+                "
                 :loading="loading"
                 block
                 color="primary"

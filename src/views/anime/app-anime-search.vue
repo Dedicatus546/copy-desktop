@@ -5,7 +5,9 @@ import { usePagination } from "alova/client";
 import { searchAnimeListApi } from "@/apis";
 import EMPTY_STATE_IMG from "@/assets/empty-state/2.jpg";
 
-const query = useRouteQuery("q");
+const query = useRouteQuery<string>("q", "", {
+  mode: "push",
+});
 const searchText = ref("");
 
 const search = () => {
@@ -13,12 +15,9 @@ const search = () => {
     return;
   }
   query.value = searchText.value;
-  data.value = [];
-  page.value = 1;
-  send(1, 18);
 };
 
-const { loading, data, page, send, total } = usePagination(
+const { loading, data, page, total, send } = usePagination(
   (page, pageSize) =>
     searchAnimeListApi({
       text: searchText.value,
@@ -32,6 +31,7 @@ const { loading, data, page, send, total } = usePagination(
     append: true,
     initialPage: 1,
     initialPageSize: 18,
+    watchingStates: [query],
     data: (res) => res.results.list,
     total: (res) => res.results.total,
     initialData: {
@@ -43,13 +43,18 @@ const { loading, data, page, send, total } = usePagination(
   },
 );
 
-onMounted(() => {
-  if (query.value) {
-    searchText.value = query.value as string;
-    query.value = null;
-    search();
-  }
-});
+watch(
+  query,
+  (query) => {
+    if (query) {
+      searchText.value = query;
+      send();
+    }
+  },
+  {
+    immediate: true,
+  },
+);
 </script>
 
 <template>
@@ -58,7 +63,7 @@ onMounted(() => {
       <v-data-iterator
         :items="data"
         :items-per-page="data.length"
-        :loading="data.length === 0 && loading"
+        :loading="page === 1 && loading"
       >
         <template #header>
           <v-form @submit.prevent="search">
@@ -71,6 +76,7 @@ onMounted(() => {
             >
               <template #append-inner>
                 <v-btn
+                  color="primary"
                   :disabled="!searchText"
                   type="submit"
                   variant="text"
@@ -80,7 +86,7 @@ onMounted(() => {
               </template>
             </v-text-field>
           </v-form>
-          <div class="wind-h-8"></div>
+          <div class="wind-h-4"></div>
         </template>
         <template #loader>
           <div
@@ -106,7 +112,7 @@ onMounted(() => {
         </template>
         <template #footer>
           <v-btn
-            v-if="data.length > 0 && data.length < (total ?? 0)"
+            v-if="!(page === 1 && loading) && data.length < (total ?? 0)"
             :loading="loading"
             block
             color="primary"

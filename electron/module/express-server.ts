@@ -1,5 +1,5 @@
 import { createHash } from "node:crypto";
-import { Agent, Server } from "node:http";
+import { Server } from "node:http";
 import { AddressInfo } from "node:net";
 import { join } from "node:path";
 
@@ -48,7 +48,7 @@ const getExpressInstance = async () => {
   const config = await getConfig();
 
   info("读取代理信息");
-  let agent: Agent | undefined;
+  let agent: HttpsProxyAgent<string> | undefined;
   const proxyUrl = resolveProxyUrl(config.proxyInfo);
   if (proxyUrl) {
     info("代理已配置，地址为：%s", proxyUrl);
