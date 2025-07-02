@@ -1,15 +1,16 @@
 <script setup lang="ts">
+import { useRouteQuery } from "@vueuse/router";
 import { usePagination } from "alova/client";
 
 import { getComicRankListApi } from "@/apis";
 import EMPTY_STATE_IMG from "@/assets/empty-state/2.jpg";
-import { createComputed } from "@/utils";
 
-const audienceType = createComputed(
-  ref<string>("male"),
-  () => (data.value = []),
-);
-const dateType = createComputed(ref<string>("day"), () => (data.value = []));
+const audienceType = useRouteQuery<string>("audienceType", "male", {
+  mode: "push",
+});
+const dateType = useRouteQuery<string>("dateType", "day", {
+  mode: "push",
+});
 
 const { loading, data, page, total } = usePagination(
   (page, pageSize) =>
@@ -43,7 +44,7 @@ const { loading, data, page, total } = usePagination(
       <v-data-iterator
         :items="data"
         :items-per-page="data.length"
-        :loading="data.length === 0 && loading"
+        :loading="page === 1 && loading"
       >
         <template #header>
           <v-chip-group
@@ -67,7 +68,7 @@ const { loading, data, page, total } = usePagination(
             <v-chip value="month">月榜</v-chip>
             <v-chip value="total">总榜</v-chip>
           </v-chip-group>
-          <div class="wind-h-8"></div>
+          <div class="wind-h-4"></div>
         </template>
         <template #loader>
           <div
@@ -93,7 +94,7 @@ const { loading, data, page, total } = usePagination(
         </template>
         <template #footer>
           <v-btn
-            v-if="data.length > 0 && data.length < (total ?? 0)"
+            v-if="!(page === 1 && loading) && data.length < (total ?? 0)"
             :loading="loading"
             block
             color="primary"

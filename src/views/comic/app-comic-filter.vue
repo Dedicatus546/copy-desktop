@@ -4,20 +4,16 @@ import { usePagination, useRequest } from "alova/client";
 
 import { getComicFilterApi, getComicListApi } from "@/apis";
 import EMPTY_STATE_IMG from "@/assets/empty-state/2.jpg";
-import { createComputed } from "@/utils";
 
-const query = useRouteQuery("q");
-const searchText = ref("");
-
-const search = () => {
-  data.value = [];
-  page.value = 1;
-  send(1, 18);
-};
-
-const theme = createComputed(ref(""), () => (data.value = []));
-const ordering = createComputed(ref(""), () => (data.value = []));
-const top = createComputed(ref(""), () => (data.value = []));
+const theme = useRouteQuery<string>("theme", "", {
+  mode: "push",
+});
+const ordering = useRouteQuery<string>("ordering", "", {
+  mode: "push",
+});
+const top = useRouteQuery<string>("top", "", {
+  mode: "push",
+});
 
 const { loading: filterLoading, data: filterData } = useRequest(
   () => getComicFilterApi(),
@@ -32,7 +28,7 @@ const { loading: filterLoading, data: filterData } = useRequest(
   },
 );
 
-const { loading, data, page, send, total } = usePagination(
+const { loading, data, page, total } = usePagination(
   (page, pageSize) =>
     getComicListApi({
       theme: theme.value,
@@ -58,14 +54,6 @@ const { loading, data, page, send, total } = usePagination(
     },
   },
 );
-
-onMounted(() => {
-  if (query.value) {
-    searchText.value = query.value as string;
-    query.value = null;
-    search();
-  }
-});
 </script>
 
 <template>
@@ -74,7 +62,7 @@ onMounted(() => {
       <v-data-iterator
         :items="data"
         :items-per-page="data.length"
-        :loading="data.length === 0 && (filterLoading || loading)"
+        :loading="page === 1 && (filterLoading || loading)"
       >
         <template #header>
           <template v-if="!filterLoading">
@@ -132,7 +120,7 @@ onMounted(() => {
               </v-chip>
             </v-chip-group>
           </template>
-          <div class="wind-h-8"></div>
+          <div class="wind-h-4"></div>
         </template>
         <template #loader>
           <div
@@ -158,7 +146,10 @@ onMounted(() => {
         </template>
         <template #footer>
           <v-btn
-            v-if="data.length > 0 && data.length < (total ?? 0)"
+            v-if="
+              !(page === 1 && (filterLoading || loading)) &&
+              data.length < (total ?? 0)
+            "
             :loading="loading"
             block
             color="primary"

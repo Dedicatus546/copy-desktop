@@ -1,17 +1,16 @@
 <script setup lang="ts">
-import { useRouteParams } from "@vueuse/router";
+import { useRouteParams, useRouteQuery } from "@vueuse/router";
 import { usePagination } from "alova/client";
 
 import { getComicListApi } from "@/apis";
 import EMPTY_STATE_IMG from "@/assets/empty-state/5.jpg";
-import { createComputed } from "@/utils";
 
 const authorName = useRouteParams("authorName") as Ref<string>;
 const authorPathWord = useRouteParams("authorPathWord") as Ref<string>;
-const ordering = createComputed(
-  ref("-datetime_updated"),
-  () => (data.value = []),
-);
+const ordering = useRouteQuery<string>("ordering", "", {
+  mode: "push",
+});
+
 const { loading, data, page, total } = usePagination(
   (page, pageSize) =>
     getComicListApi({
@@ -44,7 +43,7 @@ const { loading, data, page, total } = usePagination(
       <v-data-iterator
         :items="data"
         :items-per-page="data.length"
-        :loading="data.length === 0 && loading"
+        :loading="page === 1 && loading"
       >
         <template #header>
           <v-chip-group
@@ -70,7 +69,7 @@ const { loading, data, page, total } = usePagination(
               <v-icon icon="mdi-chevron-up"></v-icon>
             </v-chip>
           </v-chip-group>
-          <div class="wind-h-8"></div>
+          <div class="wind-h-4"></div>
         </template>
         <template #loader>
           <div
@@ -96,7 +95,7 @@ const { loading, data, page, total } = usePagination(
         </template>
         <template #footer>
           <v-btn
-            v-if="data.length > 0 && data.length < (total ?? 0)"
+            v-if="!(page === 1 && loading) && data.length < (total ?? 0)"
             :loading="loading"
             block
             color="primary"
