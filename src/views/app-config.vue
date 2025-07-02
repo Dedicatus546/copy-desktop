@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { Config } from "@electron/module/config";
 import { clone } from "radash";
+import { SubmitEventPromise } from "vuetify";
 
 import { trpcClient } from "@/apis/ipc";
 import useSnackbar from "@/compositions/use-snack-bar";
@@ -40,8 +41,12 @@ const getConfig = async () => {
 };
 
 const snackbar = useSnackbar();
-const submit = async () => {
-  if (!formValid.value) {
+const submit = async (e: SubmitEventPromise) => {
+  const res = await e;
+  if (!res.valid) {
+    const { errors } = res;
+    const [error] = errors;
+    snackbar.error(error.errorMessages[0]);
     return;
   }
   try {
@@ -74,7 +79,11 @@ onMounted(() => {
 <template>
   <v-card title="软件设置">
     <v-card-text>
-      <v-form v-model:model-value="formValid" @submit.prevent="submit">
+      <v-form
+        validate-on="submit"
+        v-model:model-value="formValid"
+        @submit.prevent="submit"
+      >
         <v-row>
           <v-col :cols="12">
             <v-select
@@ -169,6 +178,7 @@ onMounted(() => {
               <v-text-field
                 variant="outlined"
                 color="primary"
+                hide-details
                 v-model:model-value="formState.proxyInfo.host"
                 label="IP"
                 placeholder="一般为 127.0.0.1"
@@ -179,6 +189,7 @@ onMounted(() => {
               <v-number-input
                 variant="outlined"
                 color="primary"
+                hide-details
                 v-model:model-value="formState.proxyInfo.port"
                 label="端口"
                 placeholder="V2rayN 为 10809"
@@ -191,6 +202,7 @@ onMounted(() => {
             </v-col>
             <v-col :cols="6">
               <v-text-field
+                hide-details
                 variant="outlined"
                 color="primary"
                 v-model:model-value="formState.proxyInfo.username"
@@ -200,6 +212,7 @@ onMounted(() => {
             </v-col>
             <v-col :cols="6">
               <v-text-field
+                hide-details
                 variant="outlined"
                 color="primary"
                 v-model:model-value="formState.proxyInfo.password"
