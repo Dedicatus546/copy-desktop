@@ -228,7 +228,7 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from, next) => {
-  info("router.beforeEach", "从", from.name, "跳转到", to.name);
+  info("router.beforeEach", "从", from.fullPath, "跳转到", to.fullPath);
   next();
 });
 
