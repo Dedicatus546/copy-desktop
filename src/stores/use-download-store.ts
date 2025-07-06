@@ -108,7 +108,7 @@ export const useDownloadStore = defineStore("download", () => {
             );
             if (index > -1) {
               const [item] = state.downloadingList.splice(index, 1);
-              state.completeList.push(
+              state.completeList.unshift(
                 omit(item as WithDownloadingInfo<DownloadComicItem>, [
                   "status",
                   "percent",
@@ -163,7 +163,7 @@ export const useDownloadStore = defineStore("download", () => {
             );
             if (index > -1) {
               const [item] = state.downloadingList.splice(index, 1);
-              state.completeList.push(
+              state.completeList.unshift(
                 omit(item as WithDownloadingInfo<DownloadLightNovelItem>, [
                   "status",
                   "percent",
@@ -216,7 +216,7 @@ export const useDownloadStore = defineStore("download", () => {
             );
             if (index > -1) {
               const [item] = state.downloadingList.splice(index, 1);
-              state.completeList.push(
+              state.completeList.unshift(
                 omit(item as WithDownloadingInfo<DownloadAnimeItem>, [
                   "status",
                   "percent",
