@@ -81,6 +81,8 @@ onError((e) => {
         <v-row>
           <v-col :cols="12">
             <v-text-field
+              hide-details
+              variant="outlined"
               color="primary"
               v-model:model-value="formState.username"
               label="用户名"
@@ -90,6 +92,8 @@ onError((e) => {
           </v-col>
           <v-col :cols="12">
             <v-text-field
+              hide-details
+              variant="outlined"
               color="primary"
               v-model:model-value="formState.password"
               label="密码"
@@ -106,6 +110,8 @@ onError((e) => {
               hide-details
               label="自动登录"
             ></v-checkbox>
+          </v-col>
+          <v-col :cols="12">
             <v-alert
               border="start"
               density="compact"
@@ -126,6 +132,7 @@ onError((e) => {
           </v-col>
           <v-col :cols="12">
             <v-btn
+              variant="flat"
               :loading="loading"
               type="submit"
               size="large"
