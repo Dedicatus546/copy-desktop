@@ -138,7 +138,7 @@ onSuccess(() => {
       </v-row>
     </template>
     <template #footer>
-      <div class="mt-4 wind-flex wind-justify-end">
+      <div class="wind-mt-4 wind-flex wind-justify-end">
         <v-pagination
           v-model="page"
           :length="pageCount"

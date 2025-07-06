@@ -146,7 +146,7 @@ watch(
             :loading="loading"
             block
             color="primary"
-            class="mt-4"
+            class="wind-mt-4"
             size="large"
             @click="page++"
           >
