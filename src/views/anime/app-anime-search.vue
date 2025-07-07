@@ -26,8 +26,6 @@ const { loading, data, page, total, send } = usePagination(
     }),
   {
     immediate: false,
-    preloadPreviousPage: false,
-    preloadNextPage: false,
     append: true,
     initialPage: 1,
     initialPageSize: 18,

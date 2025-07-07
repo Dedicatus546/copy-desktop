@@ -38,8 +38,6 @@ const { loading, data, page, total } = usePagination(
       offset: (page - 1) * pageSize,
     }),
   {
-    preloadPreviousPage: false,
-    preloadNextPage: false,
     append: true,
     initialPage: 1,
     initialPageSize: 18,
