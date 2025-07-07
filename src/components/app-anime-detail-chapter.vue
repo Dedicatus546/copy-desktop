@@ -158,7 +158,6 @@ const downloadAnime = async (
                   <template #default="{ navigate }">
                     <v-btn
                       variant="flat"
-                      color="primary"
                       class="chapter-btn"
                       @click="
                         (updateLastReadChapter({
