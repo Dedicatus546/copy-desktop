@@ -1,5 +1,6 @@
-import { spawn, spawnSync } from "node:child_process";
-import { createWriteStream, existsSync, mkdirSync } from "node:fs";
+import { spawn } from "node:child_process";
+import { createWriteStream } from "node:fs";
+import { mkdir } from "node:fs/promises";
 import { resolve } from "node:path";
 
 import { getConfig } from "@electron/module/config";
@@ -13,7 +14,7 @@ import {
   saveDownloadDownloadingList,
 } from "@electron/module/download";
 import { createLogger } from "@electron/module/logger";
-import { resolveProxyUrl } from "@electron/shared/utils";
+import { exists, resolveProxyUrl } from "@electron/shared/utils";
 import archiver from "archiver";
 import { net } from "electron";
 import pLimit from "p-limit";
@@ -73,8 +74,8 @@ const onDownloadComicRpc = trpc.procedure
         name: `${index + 1}.webp`,
       });
     });
-    if (!existsSync(fileDir)) {
-      mkdirSync(fileDir, {
+    if (!(await exists(fileDir))) {
+      await mkdir(fileDir, {
         recursive: true,
       });
     }
@@ -163,8 +164,8 @@ const onDownloadLightNovelRpc = trpc.procedure
         });
       }
     });
-    if (!existsSync(fileDir)) {
-      mkdirSync(fileDir, {
+    if (!(await exists(fileDir))) {
+      await mkdir(fileDir, {
         recursive: true,
       });
     }
@@ -198,7 +199,7 @@ const onDownloadAnimeRpc = trpc.procedure
     const proxyUrl = resolveProxyUrl(config.proxyInfo);
 
     info("开始解析视频长度");
-    const { stdout } = spawnSync(
+    const ffprobeSpawn = spawn(
       "ffprobe",
       [
         proxyUrl ? ["-http_proxy", proxyUrl] : [],
@@ -208,11 +209,14 @@ const onDownloadAnimeRpc = trpc.procedure
         query.videoM3u8Url,
       ].flat(),
     );
-    const duration = Number.parseFloat(stdout.toString("utf-8"));
+    const stdout = await ffprobeSpawn.stdout
+      .setEncoding("utf-8")
+      .reduce((str, item) => str + item, "");
+    const duration = Number.parseFloat(stdout);
     info("视频长度为", duration);
 
-    if (!existsSync(fileDir)) {
-      mkdirSync(fileDir, {
+    if (!(await exists(fileDir))) {
+      await mkdir(fileDir, {
         recursive: true,
       });
     }
