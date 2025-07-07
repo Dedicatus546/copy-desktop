@@ -157,6 +157,11 @@ const downloadAnime = async (
                 >
                   <template #default="{ navigate }">
                     <v-btn
+                      :color="
+                        lastReadChapterModel?.chapterUuid === item.raw.uuid
+                          ? 'primary'
+                          : undefined
+                      "
                       variant="flat"
                       class="chapter-btn"
                       @click="
