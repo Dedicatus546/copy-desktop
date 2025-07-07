@@ -85,6 +85,8 @@ onSuccess(() => {
     <v-row>
       <v-col :cols="12">
         <v-textarea
+          color="primary"
+          variant="outlined"
           v-model:model-value="formState.content"
           size="large"
           placeholder="请理性讨论~"
@@ -99,6 +101,7 @@ onSuccess(() => {
           block
           size="large"
           color="primary"
+          variant="flat"
           :loading="commentComicLoading"
           type="submit"
         >
@@ -140,6 +143,7 @@ onSuccess(() => {
     <template #footer>
       <div class="wind-mt-4 wind-flex wind-justify-end">
         <v-pagination
+          color="primary"
           v-model="page"
           :length="pageCount"
           :disabled="loading"
