@@ -66,26 +66,28 @@ const { loading, data, page, total } = usePagination(
   <v-row>
     <v-col :cols="12">
       <v-card>
-        <v-form @submit.prevent="search">
-          <v-text-field
-            color="primary"
-            v-model:model-value="searchText"
-            variant="solo"
-            placeholder="输入轻小说名称进行搜索"
-            hide-details
-          >
-            <template #append-inner>
-              <v-btn
-                :disabled="!searchText"
-                color="primary"
-                type="submit"
-                variant="text"
-                icon="mdi-magnify"
-                @click="search"
-              ></v-btn>
-            </template>
-          </v-text-field>
-        </v-form>
+        <v-card-text>
+          <v-form @submit.prevent="search">
+            <v-text-field
+              color="primary"
+              v-model:model-value="searchText"
+              variant="outlined"
+              placeholder="输入轻小说名称进行搜索"
+              hide-details
+            >
+              <template #append-inner>
+                <v-btn
+                  :disabled="!searchText"
+                  color="primary"
+                  type="submit"
+                  variant="text"
+                  icon="mdi-magnify"
+                  @click="search"
+                ></v-btn>
+              </template>
+            </v-text-field>
+          </v-form>
+        </v-card-text>
       </v-card>
     </v-col>
     <v-col :cols="12">
