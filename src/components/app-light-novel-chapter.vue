@@ -8,6 +8,7 @@ import {
 } from "@/apis";
 import { trpcClient } from "@/apis/ipc";
 import EMPTY_STATE_IMG from "@/assets/empty-state/1.jpg";
+import useDialog from "@/compositions/use-dialog";
 import useSnackbar from "@/compositions/use-snack-bar";
 import { createLogger } from "@/logger";
 import { useDownloadStore } from "@/stores/use-download-store";
@@ -24,6 +25,7 @@ const lastReadChapterModel = defineModel<{
   chapterUuid: string;
 }>("lastReadChapter");
 
+const dialog = useDialog();
 const snackbar = useSnackbar();
 const downloadStore = useDownloadStore();
 
@@ -47,23 +49,6 @@ const { loading, data } = usePagination(
   },
 );
 
-const contextMenuState = reactive({
-  show: false,
-  target: null as Element | null,
-  targetData: null as LightNovelChapter | null,
-});
-
-const showContextMenu = (e: Event, item: LightNovelChapter) => {
-  const target = e.currentTarget as HTMLButtonElement;
-  if (contextMenuState.target === target) {
-    contextMenuState.show = !contextMenuState.show;
-  } else {
-    contextMenuState.target = target;
-    contextMenuState.show = true;
-    contextMenuState.targetData = item;
-  }
-};
-
 const { data: volumeData, send } = useRequest(
   (chapterId: string) =>
     getLightNovelVolumeApi({
@@ -75,15 +60,47 @@ const { data: volumeData, send } = useRequest(
   },
 );
 
-const downloadLightNovel = async () => {
-  await send(contextMenuState.targetData!.id);
+const downloadLightNovel = async (chapter: LightNovelChapter) => {
+  const key = lightNovelPathWord + "-" + chapter.id;
+  if (downloadStore.animeDownloadingMap[key]) {
+    snackbar.warning("任务正在下载中，请勿重复点击");
+    return;
+  }
+  if (downloadStore.lightNovelCompleteMap[key]) {
+    dialog({
+      width: 300,
+      title: "确认",
+      content: "该章节已下载，是否重新下载？",
+      async onOk() {
+        await send(chapter.id);
+        downloadStore.addDownloadTaskAction({
+          uuid: await trpcClient.getUuid.query(),
+          type: "light-novel",
+          lightNovelName,
+          lightNovelPathWord,
+          chapterName: chapter.name,
+          chapterId: chapter.id,
+          txtUrl: volumeData.value.results.volume.txt_addr,
+          txtEncoding: volumeData.value.results.volume.txt_encoding,
+          picUrlList: volumeData.value.results.volume.contents
+            .filter((item) => item.content_type === 2 && item.content !== null)
+            .map((item) => item.content!),
+          filepath: "",
+        });
+        snackbar.success("添加下载任务成功");
+        info("添加 %s 下载任务", lightNovelName);
+      },
+    });
+    return;
+  }
+  await send(chapter.id);
   downloadStore.addDownloadTaskAction({
     uuid: await trpcClient.getUuid.query(),
     type: "light-novel",
     lightNovelName,
     lightNovelPathWord,
-    chapterName: contextMenuState.targetData!.name,
-    chapterId: contextMenuState.targetData!.id,
+    chapterName: chapter.name,
+    chapterId: chapter.id,
     txtUrl: volumeData.value.results.volume.txt_addr,
     txtEncoding: volumeData.value.results.volume.txt_encoding,
     picUrlList: volumeData.value.results.volume.contents
@@ -117,66 +134,89 @@ const downloadLightNovel = async () => {
     </template>
     <template #default="{ items }">
       <v-row class="wind-p-1">
-        <v-col
-          v-for="item of items"
-          :key="item.raw.id"
-          :cols="6"
-          :sm="4"
-          :md="3"
-          :lg="2"
-        >
-          <router-link
-            :to="{
-              name: 'LIGHT_NOVEL_READ',
-              params: {
-                lightNovelPathWord: item.raw.book_path_word,
-                chapterId: item.raw.id,
-              },
-            }"
-            custom
-          >
-            <template #default="{ navigate }">
-              <v-btn
-                size="large"
-                :color="
-                  lastReadChapterModel?.chapterUuid === item.raw.id
-                    ? 'primary'
-                    : undefined
-                "
-                block
-                class="chapter-btn"
-                @click="
-                  () => (
-                    updateLastReadChapter({
-                      name: item.raw.name,
-                      uuid: item.raw.id,
-                    }),
-                    navigate()
-                  )
-                "
-                @contextmenu="(e: Event) => showContextMenu(e, item.raw)"
+        <v-col v-for="item of items" :key="item.raw.id" :cols="12" :lg="6">
+          <v-row no-gutters class="wind-gap-2 wind-items-center">
+            <v-col class="wind-min-w-0">
+              <app-scroll-wrapper>{{ item.raw.name }}</app-scroll-wrapper>
+            </v-col>
+            <v-col cols="auto">
+              <router-link
+                :to="{
+                  name: 'LIGHT_NOVEL_READ',
+                  params: {
+                    lightNovelPathWord: item.raw.book_path_word,
+                    chapterId: item.raw.id,
+                  },
+                }"
+                custom
               >
-                <app-scroll-wrapper>{{ item.raw.name }}</app-scroll-wrapper>
+                <template #default="{ navigate }">
+                  <v-btn
+                    variant="flat"
+                    :color="
+                      lastReadChapterModel?.chapterUuid === item.raw.id
+                        ? 'primary'
+                        : undefined
+                    "
+                    class="chapter-btn"
+                    @click="
+                      () => (
+                        updateLastReadChapter({
+                          name: item.raw.name,
+                          uuid: item.raw.id,
+                        }),
+                        navigate()
+                      )
+                    "
+                  >
+                    <template #prepend>
+                      <v-icon icon="mdi-book-open"></v-icon>
+                    </template>
+                    阅读
+                  </v-btn>
+                </template>
+              </router-link>
+              <v-btn
+                :color="
+                  downloadStore.lightNovelDownloadingMap[
+                    lightNovelPathWord + '-' + item.raw.id
+                  ]
+                    ? 'info'
+                    : downloadStore.lightNovelCompleteMap[
+                          lightNovelPathWord + '-' + item.raw.id
+                        ]
+                      ? 'success'
+                      : undefined
+                "
+                variant="flat"
+                class="chapter-btn wind-ml-2"
+                @click="downloadLightNovel(item.raw)"
+              >
+                <template #prepend>
+                  <v-icon icon="mdi-download"></v-icon>
+                </template>
+                {{
+                  downloadStore.lightNovelDownloadingMap[
+                    lightNovelPathWord + "-" + item.raw.id
+                  ]
+                    ? "正在下载 " +
+                      ((
+                        downloadStore.lightNovelDownloadingMap[
+                          lightNovelPathWord + "-" + item.raw.id
+                        ]!.percent * 100
+                      ).toFixed(2) +
+                        "%")
+                    : downloadStore.lightNovelCompleteMap[
+                          lightNovelPathWord + "-" + item.raw.id
+                        ]
+                      ? "已下载"
+                      : "下载"
+                }}
               </v-btn>
-            </template>
-          </router-link>
+            </v-col>
+          </v-row>
         </v-col>
       </v-row>
-      <v-menu
-        v-model:model-value="contextMenuState.show"
-        :target="contextMenuState.target!"
-        absolute
-        close-on-content-click
-      >
-        <v-list dense>
-          <v-list-item @click="downloadLightNovel">
-            <template #prepend>
-              <v-icon small icon="mdi-download"></v-icon>
-            </template>
-            <template #title>下载</template>
-          </v-list-item>
-        </v-list>
-      </v-menu>
     </template>
   </v-data-iterator>
 </template>
