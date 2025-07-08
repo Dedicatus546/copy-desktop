@@ -18,7 +18,7 @@
   },
   "dependencies": {
     "@alova/adapter-xhr": "^2.2.0",
-    "@fancyapps/ui": "^6.0.7",
+    "@fancyapps/ui": "^6.0.8",
     "@trpc/client": "^11.4.3",
     "@trpc/server": "^11.4.3",
     "@vueuse/core": "^13.5.0",
@@ -30,7 +30,7 @@
     "cors": "^2.8.5",
     "date-fns": "^4.1.0",
     "express": "^5.1.0",
-    "hls.js": "^1.6.6",
+    "hls.js": "^1.6.7",
     "http-proxy-middleware": "^3.0.5",
     "https-proxy-agent": "^7.0.6",
     "mitt": "^3.0.1",
@@ -46,7 +46,7 @@
     "vue-router": "^4.5.1",
     "vuetify": "^3.8.12",
     "which": "^5.0.0",
-    "zod": "^3.25.74"
+    "zod": "^3.25.75"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3.3.1",
@@ -71,7 +71,7 @@
     "sass-embedded": "^1.89.2",
     "simple-git-hooks": "^2.13.0",
     "typescript": "^5.8.3",
-    "typescript-eslint": "^8.35.1",
+    "typescript-eslint": "^8.36.0",
     "unocss": "^66.3.3",
     "unplugin-auto-import": "^19.3.0",
     "unplugin-vue-components": "^28.8.0",
