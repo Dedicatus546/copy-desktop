@@ -39,6 +39,7 @@ export default defineConfig(async () => ({
           build: {
             target: "esnext",
             rollupOptions: {
+              platform: "node",
               // https://github.com/electron-vite/vite-plugin-electron/blob/main/README.zh-CN.md
               // Here are some C/C++ modules them can't be built properly.
               external: [],
