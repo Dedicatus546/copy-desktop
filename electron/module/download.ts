@@ -1,8 +1,8 @@
-import { existsSync, mkdirSync, writeFileSync } from "node:fs";
-import { readFile, writeFile } from "node:fs/promises";
+import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { resolve } from "node:path";
 
 import { dataDir } from "@electron/shared/path";
+import { exists } from "@electron/shared/utils";
 
 export interface DownloadBaseItem {
   uuid: string;
@@ -57,19 +57,25 @@ export const downloadDownloadingFilepath = resolve(
 );
 export const downloadCompleteFilepath = resolve(downloadDir, "complete.json");
 
-[animeDownloadDir, comicDownloadDir, lightNovelDownloadDir].forEach((dir) => {
-  if (!existsSync(dir)) {
-    mkdirSync(dir, {
-      recursive: true,
-    });
-  }
-});
+await Promise.all(
+  [animeDownloadDir, comicDownloadDir, lightNovelDownloadDir].map(
+    async (dir) => {
+      if (!(await exists(dir))) {
+        await mkdir(dir, {
+          recursive: true,
+        });
+      }
+    },
+  ),
+);
 
-[downloadDownloadingFilepath, downloadCompleteFilepath].forEach((path) => {
-  if (!existsSync(path)) {
-    writeFileSync(path, "[]");
-  }
-});
+await Promise.all(
+  [downloadDownloadingFilepath, downloadCompleteFilepath].map(async (path) => {
+    if (!(await exists(path))) {
+      await writeFile(path, "[]");
+    }
+  }),
+);
 
 export const getDownloadDownloadingList = async () => {
   const content = await readFile(downloadDownloadingFilepath, {

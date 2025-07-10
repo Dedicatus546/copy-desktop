@@ -8,6 +8,7 @@ import {
 } from "@/apis";
 import { trpcClient } from "@/apis/ipc";
 import EMPTY_STATE_IMG from "@/assets/empty-state/1.jpg";
+import useDialog from "@/compositions/use-dialog";
 import useSnackbar from "@/compositions/use-snack-bar";
 import { createLogger } from "@/logger";
 import { useDownloadStore } from "@/stores/use-download-store";
@@ -26,6 +27,7 @@ const lastChapterModel = defineModel<{
   chapterUuid: string;
 }>("lastReadChapter");
 
+const dialog = useDialog();
 const snackbar = useSnackbar();
 const downloadStore = useDownloadStore();
 
@@ -56,23 +58,6 @@ const pageCount = computed(() => {
   return count;
 });
 
-const contextMenuState = reactive({
-  show: false,
-  target: null as Element | null,
-  targetData: null as ComicChapter | null,
-});
-
-const showContextMenu = (e: Event, item: ComicChapter) => {
-  const target = e.currentTarget as HTMLButtonElement;
-  if (contextMenuState.target === target) {
-    contextMenuState.show = !contextMenuState.show;
-  } else {
-    contextMenuState.target = target;
-    contextMenuState.show = true;
-    contextMenuState.targetData = item;
-  }
-};
-
 const { data: picListData, send } = useRequest(
   (chapterId: string) =>
     getComicPicListApi({
@@ -84,8 +69,40 @@ const { data: picListData, send } = useRequest(
   },
 );
 
-const downloadComic = async () => {
-  await send(contextMenuState.targetData!.uuid);
+const downloadComic = async (chapter: ComicChapter) => {
+  const key = comicPathWord + "-" + chapter.uuid;
+  if (downloadStore.comicDownloadingMap[key]) {
+    snackbar.warning("任务正在下载中，请勿重复点击");
+    return;
+  }
+  if (downloadStore.comicCompleteMap[key]) {
+    dialog({
+      width: 300,
+      title: "确认",
+      content: "该章节已下载，是否重新下载？",
+      async onOk() {
+        await send(chapter.uuid);
+        downloadStore.addDownloadTaskAction({
+          uuid: await trpcClient.getUuid.query(),
+          type: "comic",
+          comicPathWord,
+          comicName,
+          groupPathWord,
+          groupName,
+          chapterName: chapter.name,
+          chapterId: chapter.uuid,
+          picUrlList: picListData.value.results.chapter.contents.map(
+            (item) => item.url,
+          ),
+          filepath: "",
+        });
+        snackbar.success("添加下载任务成功");
+        info("添加 %s 下载任务", comicName);
+      },
+    });
+    return;
+  }
+  await send(chapter.uuid);
   downloadStore.addDownloadTaskAction({
     uuid: await trpcClient.getUuid.query(),
     type: "comic",
@@ -93,8 +110,8 @@ const downloadComic = async () => {
     comicName,
     groupPathWord,
     groupName,
-    chapterName: contextMenuState.targetData!.name,
-    chapterId: contextMenuState.targetData!.uuid,
+    chapterName: chapter.name,
+    chapterId: chapter.uuid,
     picUrlList: picListData.value.results.chapter.contents.map(
       (item) => item.url,
     ),
@@ -133,60 +150,83 @@ const downloadComic = async () => {
             </v-tab>
           </v-tabs>
         </v-col>
-        <v-col
-          v-for="item of items"
-          :key="item.raw.uuid"
-          :cols="6"
-          :sm="4"
-          :md="3"
-          :lg="2"
-        >
-          <router-link
-            :to="{
-              name: 'COMIC_READ',
-              params: {
-                comicPathWord: item.raw.comic_path_word,
-                chapterId: item.raw.uuid,
-              },
-            }"
-            custom
-          >
-            <template #default="{ navigate }">
-              <v-btn
-                size="large"
-                class="chapter-btn"
-                :color="
-                  lastChapterModel?.chapterUuid === item.raw.uuid
-                    ? 'primary'
-                    : undefined
-                "
-                block
-                @click="() => (updateLastReadChapter(item.raw), navigate())"
-                @contextmenu="(e: Event) => showContextMenu(e, item.raw)"
+        <v-col v-for="item of items" :key="item.raw.uuid" :cols="12" :lg="6">
+          <v-row no-gutters class="wind-gap-2 wind-items-center">
+            <v-col class="wind-min-w-0">
+              <app-scroll-wrapper>
+                {{ item.raw.name }}
+              </app-scroll-wrapper>
+            </v-col>
+            <v-col cols="auto">
+              <router-link
+                :to="{
+                  name: 'COMIC_READ',
+                  params: {
+                    comicPathWord: item.raw.comic_path_word,
+                    chapterId: item.raw.uuid,
+                  },
+                }"
+                custom
               >
-                <app-scroll-wrapper>
-                  {{ item.raw.name }}
-                </app-scroll-wrapper>
+                <template #default="{ navigate }">
+                  <v-btn
+                    class="chapter-btn"
+                    variant="flat"
+                    :color="
+                      lastChapterModel?.chapterUuid === item.raw.uuid
+                        ? 'primary'
+                        : undefined
+                    "
+                    @click="() => (updateLastReadChapter(item.raw), navigate())"
+                  >
+                    <template #prepend>
+                      <v-icon icon="mdi-book-open"></v-icon>
+                    </template>
+                    阅读
+                  </v-btn>
+                </template>
+              </router-link>
+              <v-btn
+                :color="
+                  downloadStore.comicDownloadingMap[
+                    comicPathWord + '-' + item.raw.uuid
+                  ]
+                    ? 'info'
+                    : downloadStore.comicCompleteMap[
+                          comicPathWord + '-' + item.raw.uuid
+                        ]
+                      ? 'success'
+                      : undefined
+                "
+                variant="flat"
+                class="chapter-btn wind-ml-2"
+                @click="downloadComic(item.raw)"
+              >
+                <template #prepend>
+                  <v-icon icon="mdi-download"></v-icon>
+                </template>
+                {{
+                  downloadStore.comicDownloadingMap[
+                    comicPathWord + "-" + item.raw.uuid
+                  ]
+                    ? "正在下载 " +
+                      ((
+                        downloadStore.comicDownloadingMap[
+                          comicPathWord + "-" + item.raw.uuid
+                        ]!.percent * 100
+                      ).toFixed(2) +
+                        "%")
+                    : downloadStore.comicCompleteMap[
+                          comicPathWord + "-" + item.raw.uuid
+                        ]
+                      ? "已下载"
+                      : "下载"
+                }}
               </v-btn>
-            </template>
-          </router-link>
+            </v-col>
+          </v-row>
         </v-col>
       </v-row>
-      <v-menu
-        v-model:model-value="contextMenuState.show"
-        :target="contextMenuState.target!"
-        absolute
-        close-on-content-click
-      >
-        <v-list dense>
-          <v-list-item @click="downloadComic">
-            <template #prepend>
-              <v-icon small icon="mdi-download"></v-icon>
-            </template>
-            <template #title>下载</template>
-          </v-list-item>
-        </v-list>
-      </v-menu>
     </template>
   </v-data-iterator>
 </template>

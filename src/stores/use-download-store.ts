@@ -30,6 +30,87 @@ export const useDownloadStore = defineStore("download", () => {
     downloadingList: [],
   });
 
+  const comicDownloadingMap = computed(() => {
+    return state.downloadingList
+      .filter((item) => item.type === "comic")
+      .reduce(
+        (map, item) => {
+          map[item.comicPathWord + "-" + item.chapterId] = item;
+          return map;
+        },
+        {} as Record<
+          string,
+          WithDownloadingInfo<DownloadComicItem> | undefined
+        >,
+      );
+  });
+
+  const comicCompleteMap = computed(() => {
+    return state.completeList
+      .filter((item) => item.type === "comic")
+      .reduce(
+        (map, item) => {
+          map[item.comicPathWord + "-" + item.chapterId] = item;
+          return map;
+        },
+        {} as Record<string, DownloadComicItem | undefined>,
+      );
+  });
+
+  const lightNovelDownloadingMap = computed(() => {
+    return state.downloadingList
+      .filter((item) => item.type === "light-novel")
+      .reduce(
+        (map, item) => {
+          map[item.lightNovelPathWord + "-" + item.chapterId] = item;
+          return map;
+        },
+        {} as Record<
+          string,
+          WithDownloadingInfo<DownloadLightNovelItem> | undefined
+        >,
+      );
+  });
+
+  const lightNovelCompleteMap = computed(() => {
+    return state.completeList
+      .filter((item) => item.type === "light-novel")
+      .reduce(
+        (map, item) => {
+          map[item.lightNovelPathWord + "-" + item.chapterId] = item;
+          return map;
+        },
+        {} as Record<string, DownloadLightNovelItem | undefined>,
+      );
+  });
+
+  const animeDownloadingMap = computed(() => {
+    return state.downloadingList
+      .filter((item) => item.type === "anime")
+      .reduce(
+        (map, item) => {
+          map[item.animePathWord + "-" + item.chapterId] = item;
+          return map;
+        },
+        {} as Record<
+          string,
+          WithDownloadingInfo<DownloadAnimeItem> | undefined
+        >,
+      );
+  });
+
+  const animeCompleteMap = computed(() => {
+    return state.completeList
+      .filter((item) => item.type === "anime")
+      .reduce(
+        (map, item) => {
+          map[item.animePathWord + "-" + item.chapterId] = item;
+          return map;
+        },
+        {} as Record<string, DownloadAnimeItem | undefined>,
+      );
+  });
+
   const initAction = async () => {
     await Promise.allSettled([
       trpcClient.getDownloadDownloadingList.query().then((list) => {
@@ -108,7 +189,7 @@ export const useDownloadStore = defineStore("download", () => {
             );
             if (index > -1) {
               const [item] = state.downloadingList.splice(index, 1);
-              state.completeList.push(
+              state.completeList.unshift(
                 omit(item as WithDownloadingInfo<DownloadComicItem>, [
                   "status",
                   "percent",
@@ -163,7 +244,7 @@ export const useDownloadStore = defineStore("download", () => {
             );
             if (index > -1) {
               const [item] = state.downloadingList.splice(index, 1);
-              state.completeList.push(
+              state.completeList.unshift(
                 omit(item as WithDownloadingInfo<DownloadLightNovelItem>, [
                   "status",
                   "percent",
@@ -216,7 +297,7 @@ export const useDownloadStore = defineStore("download", () => {
             );
             if (index > -1) {
               const [item] = state.downloadingList.splice(index, 1);
-              state.completeList.push(
+              state.completeList.unshift(
                 omit(item as WithDownloadingInfo<DownloadAnimeItem>, [
                   "status",
                   "percent",
@@ -251,6 +332,12 @@ export const useDownloadStore = defineStore("download", () => {
 
   return {
     ...toRefs(state),
+    comicDownloadingMap,
+    comicCompleteMap,
+    lightNovelDownloadingMap,
+    lightNovelCompleteMap,
+    animeDownloadingMap,
+    animeCompleteMap,
     initAction,
     addDownloadTaskAction,
     downloadComicAction,

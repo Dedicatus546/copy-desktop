@@ -120,7 +120,8 @@ onSuccess(() => {
       <v-row no-gutters class="wind-gap-2">
         <v-col v-if="!isReply && comment.count > 0" cols="auto">
           <v-btn
-            variant="tonal"
+            color="primary"
+            variant="flat"
             size="small"
             :loading="loading"
             @click="triggerReplyList"
@@ -130,7 +131,8 @@ onSuccess(() => {
         </v-col>
         <v-col cols="auto">
           <v-btn
-            variant="tonal"
+            color="primary"
+            variant="flat"
             size="small"
             @click="isShowReplyPanel = !isShowReplyPanel"
           >
@@ -142,10 +144,12 @@ onSuccess(() => {
             <v-row no-gutters class="wind-gap-2">
               <v-col :cols="12">
                 <v-textarea
+                  color="primary"
+                  variant="outlined"
                   v-model:model-value="formState.content"
                   :rows="2"
                   size="small"
-                  :placeholder="`回复${comment.user_name}`"
+                  :placeholder="`回复 @${comment.user_name}`"
                   hide-details
                   :disabled="!userStore.isLogin"
                 >
@@ -184,6 +188,7 @@ onSuccess(() => {
           <v-col :cols="12">
             <div class="wind-flex wind-justify-end">
               <v-pagination
+                color="primary"
                 v-model="page"
                 size="small"
                 :length="pageCount"

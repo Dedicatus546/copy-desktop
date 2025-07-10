@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { useRequest } from "alova/client";
+import { SubmitEventPromise } from "vuetify";
 
 import { loginApi } from "@/apis";
 import { trpcClient } from "@/apis/ipc";
@@ -10,6 +11,7 @@ import useUserStore from "@/stores/use-user-store";
 const router = useRouter();
 const userStore = useUserStore();
 const appStore = useAppStore();
+const snackbar = useSnackbar();
 
 const formState = reactive({
   username: "",
@@ -28,7 +30,16 @@ const { loading, data, onSuccess, onError, send } = useRequest(
   },
 );
 
-const snackbar = useSnackbar();
+const submit = async (e: SubmitEventPromise) => {
+  const res = await e;
+  if (!res.valid) {
+    const { errors } = res;
+    const [error] = errors;
+    snackbar.error(error.errorMessages[0]);
+    return;
+  }
+  send();
+};
 
 onSuccess(async () => {
   snackbar.primary("登录成功");
@@ -66,10 +77,12 @@ onError((e) => {
 <template>
   <v-card title="登录到">
     <v-card-text>
-      <v-form :disabled="loading" @submit.prevent="send">
+      <v-form validate-on="submit" :disabled="loading" @submit.prevent="submit">
         <v-row>
           <v-col :cols="12">
             <v-text-field
+              hide-details
+              variant="outlined"
               color="primary"
               v-model:model-value="formState.username"
               label="用户名"
@@ -79,6 +92,8 @@ onError((e) => {
           </v-col>
           <v-col :cols="12">
             <v-text-field
+              hide-details
+              variant="outlined"
               color="primary"
               v-model:model-value="formState.password"
               label="密码"
@@ -95,6 +110,8 @@ onError((e) => {
               hide-details
               label="自动登录"
             ></v-checkbox>
+          </v-col>
+          <v-col :cols="12">
             <v-alert
               border="start"
               density="compact"
@@ -115,6 +132,7 @@ onError((e) => {
           </v-col>
           <v-col :cols="12">
             <v-btn
+              variant="flat"
               :loading="loading"
               type="submit"
               size="large"
@@ -129,5 +147,3 @@ onError((e) => {
     </v-card-text>
   </v-card>
 </template>
-
-<style scoped></style>

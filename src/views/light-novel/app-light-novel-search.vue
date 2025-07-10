@@ -21,7 +21,7 @@ const search = () => {
   query.value = searchText.value;
 };
 
-const { loading, data, page, total, send } = usePagination(
+const { loading, data, page, pageCount, send } = usePagination(
   (page, pageSize) =>
     searchLightNovelListApi({
       text: query.value,
@@ -31,9 +31,6 @@ const { loading, data, page, total, send } = usePagination(
     }),
   {
     immediate: false,
-    preloadPreviousPage: false,
-    preloadNextPage: false,
-    append: true,
     initialPage: 1,
     initialPageSize: 18,
     watchingStates: [type, query],
@@ -141,17 +138,15 @@ watch(
           </v-row>
         </template>
         <template #footer>
-          <v-btn
-            v-if="!(page === 1 && loading) && data.length < (total ?? 0)"
-            :loading="loading"
-            block
-            color="primary"
-            class="mt-4"
-            size="large"
-            @click="page++"
-          >
-            查看更多
-          </v-btn>
+          <div class="wind-mt-4 wind-flex wind-justify-end">
+            <v-pagination
+              color="primary"
+              v-model="page"
+              :length="pageCount"
+              :disabled="loading"
+              :total-visible="8"
+            ></v-pagination>
+          </div>
         </template>
       </v-data-iterator>
     </v-card-text>

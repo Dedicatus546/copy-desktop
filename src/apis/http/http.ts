@@ -35,11 +35,10 @@ const http = createAlova({
         error(method.url, response.status, response.data);
         throw new Error(response.data.message ?? response.statusText);
       }
-      info(
-        method.url,
-        response.status,
-        import.meta.env.DEV ? response.data : "",
-      );
+      info(method.url, response.status);
+      if (import.meta.env.DEV) {
+        console.log(method.url, response.status, response.data);
+      }
       return response.data;
     },
   },

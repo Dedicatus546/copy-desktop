@@ -35,7 +35,7 @@ const { loading: themeFilterLoading, data: themeFilterData } = useRequest(
   },
 );
 
-const { loading, data, page, total } = usePagination(
+const { loading, data, page, pageCount } = usePagination(
   (page, pageSize) =>
     getLightNovelListApi({
       theme: theme.value,
@@ -44,9 +44,6 @@ const { loading, data, page, total } = usePagination(
       offset: (page - 1) * pageSize,
     }),
   {
-    preloadPreviousPage: false,
-    preloadNextPage: false,
-    append: true,
     initialPage: 1,
     initialPageSize: 18,
     watchingStates: [theme, ordering],
@@ -66,26 +63,28 @@ const { loading, data, page, total } = usePagination(
   <v-row>
     <v-col :cols="12">
       <v-card>
-        <v-form @submit.prevent="search">
-          <v-text-field
-            color="primary"
-            v-model:model-value="searchText"
-            variant="solo"
-            placeholder="输入轻小说名称进行搜索"
-            hide-details
-          >
-            <template #append-inner>
-              <v-btn
-                :disabled="!searchText"
-                color="primary"
-                type="submit"
-                variant="text"
-                icon="mdi-magnify"
-                @click="search"
-              ></v-btn>
-            </template>
-          </v-text-field>
-        </v-form>
+        <v-card-text>
+          <v-form @submit.prevent="search">
+            <v-text-field
+              color="primary"
+              v-model:model-value="searchText"
+              variant="outlined"
+              placeholder="输入轻小说名称进行搜索"
+              hide-details
+            >
+              <template #append-inner>
+                <v-btn
+                  :disabled="!searchText"
+                  color="primary"
+                  type="submit"
+                  variant="text"
+                  icon="mdi-magnify"
+                  @click="search"
+                ></v-btn>
+              </template>
+            </v-text-field>
+          </v-form>
+        </v-card-text>
       </v-card>
     </v-col>
     <v-col :cols="12">
@@ -164,20 +163,15 @@ const { loading, data, page, total } = usePagination(
               </v-row>
             </template>
             <template #footer>
-              <v-btn
-                v-if="
-                  !(page === 1 && (themeFilterLoading || loading)) &&
-                  data.length < (total ?? 0)
-                "
-                :loading="loading"
-                block
-                color="primary"
-                class="mt-4"
-                size="large"
-                @click="page++"
-              >
-                查看更多
-              </v-btn>
+              <div class="wind-mt-4 wind-flex wind-justify-end">
+                <v-pagination
+                  color="primary"
+                  v-model="page"
+                  :length="pageCount"
+                  :disabled="loading"
+                  :total-visible="8"
+                ></v-pagination>
+              </div>
             </template>
           </v-data-iterator>
         </v-card-text>
