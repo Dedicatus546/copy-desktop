@@ -46,7 +46,7 @@
     "vue-router": "^4.5.1",
     "vuetify": "^3.9.0",
     "which": "^5.0.0",
-    "zod": "^3.25.76"
+    "zod": "^4.0.2"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3.3.1",
@@ -55,7 +55,7 @@
     "@types/archiver": "^6.0.3",
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.3",
-    "@types/node": "^24.0.10",
+    "@types/node": "^24.0.12",
     "@types/which": "^3.0.4",
     "@unocss/eslint-config": "^66.3.3",
     "@vitejs/plugin-vue": "^6.0.0",
