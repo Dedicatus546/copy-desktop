@@ -75,7 +75,7 @@
     "unocss": "^66.3.3",
     "unplugin-auto-import": "^19.3.0",
     "unplugin-vue-components": "^28.8.0",
-    "vite": "npm:rolldown-vite@7.0.6",
+    "vite": "npm:rolldown-vite@7.0.8",
     "vite-plugin-electron": "^0.29.0",
     "vite-plugin-electron-renderer": "^0.14.6",
     "vite-plugin-vue-devtools": "^7.7.7",
